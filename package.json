@@ -1,0 +1,28 @@
+{
+  "name": "logout",
+  "version": "1.0.3",
+  "private": true,
+  "author": "piesku.com <piesku.com@gmail.com>",
+  "description": "Logout. A submission for js13kGames.",
+  "license": "ISC",
+  "scripts": {
+    "deploy": "rollup -c rollup-gh.js && gh-pages -d public",
+    "dev": "rollup -c rollup-dev.js -w",
+    "lint": "eslint src",
+    "prod": "rollup -c rollup-prod.js && printf \"Size gzipped (including HTML): %s\n\" $(gzip public/index.html public/game.min.js --stdout | wc -c | awk '{print $1/1024\"K\"}')"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.0.0",
+    "eslint": "^4.7.0",
+    "eslint-config-defaults": "^9.0.0",
+    "gh-pages": "^1.0.0",
+    "rollup": "^0.50.0",
+    "rollup-plugin-babel-minify": "^3.1.2",
+    "rollup-plugin-livereload": "^0.6.0",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-serve": "^0.4.2"
+  },
+  "dependencies": {
+    "cervus": "0.0.35"
+  }
+}
