@@ -78,8 +78,8 @@ function find_end(i, j, input) {
     let flag_col = 0;
     let flag_row = 0;
 
-    for (var m = i; m < x; m++) {
-        if (input[m][j] != 1) {
+    for (var m = i; m < y; m++) {
+        if (input[m][j] !== 1) {
             flag_row = 1;
             break;
         }
@@ -88,8 +88,8 @@ function find_end(i, j, input) {
             continue;
         }
 
-        for (var n = j; n < y; n++) {
-            if (input[m][n] != 1) {
+        for (var n = j; n < x; n++) {
+            if (input[m][n] !== 1) {
                 flag_col = 1;
                 break;
             }
@@ -100,16 +100,15 @@ function find_end(i, j, input) {
     }
 
     if (flag_row === 1) {
-        output.x = m - 1;
+        output.y = m - 1;
     } else {
-        output.x = m;
+        output.y = m;
     }
 
-
     if (flag_col === 1) {
-        output.y = n - 1;
+        output.x = n - 1;
     } else {
-        output.y = n;
+        output.x = n;
     }
 
     return output;
