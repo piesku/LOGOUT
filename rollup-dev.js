@@ -1,6 +1,7 @@
 import resolve from 'rollup-plugin-node-resolve';
 import serve from 'rollup-plugin-serve'
 import livereload from 'rollup-plugin-livereload'
+import json from 'rollup-plugin-json';
 
 export default {
     input: './src/index.js',
@@ -16,6 +17,7 @@ export default {
         }),
         livereload({
             watch: ['src', 'public']
-        })
+        }),
+        json()
     ],
 };
