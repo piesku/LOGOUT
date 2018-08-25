@@ -2,11 +2,16 @@ import { Game } from 'cervus/core';
 import { Box, Plane } from 'cervus/shapes';
 import { PhongMaterial } from 'cervus/materials';
 import { Render, Transform, Move } from 'cervus/components';
+import { integer } from 'cervus/core/random';
+
 import map from './map.json';
+const max_building_height = 20;
+const min_building_height = 12;
 
 export const game = new Game({
     width: window.innerWidth,
     height: window.innerHeight,
+    clear_color: '#000'
     // fps: 1
 });
 
@@ -33,10 +38,19 @@ plane_render.material = material;
 plane_render.color = "#ff00ff";
 game.add(plane);
 
+map.buildings.forEach((building) => {
+    const { x1, y1, x2, y2 } = building;
+    const width = Math.abs(x2-x1);
+    const height = Math.abs(y2-y1);
+    console.log({width, height});
 
-const box = new Box();
-box.get_component(Transform).position = [0, 0, 3];
-window.box_transform = box.get_component(Transform);
-box.get_component(Render).material = material;
-box.get_component(Render).color = '0F0';
-game.add(box);
+    const center_x = x1 + (width/2);
+    const center_y = y1 + (height/2);
+
+    const box = new Box();
+    box.get_component(Transform).position = [center_x, 0, center_y];
+    box.get_component(Transform).scale = [width, integer(min_building_height, max_building_height), height];
+    box.get_component(Render).material = material;
+    box.get_component(Render).color = '000';
+    game.add(box);
+});
