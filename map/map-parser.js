@@ -1,8 +1,10 @@
 const vox = require('./vox-parser');
 const parser = new vox.Parser();
 const palette = require('./palette');
+const fs = require('fs');
 
 const output_map = {
+    size: {},
     buildings: [],
     items: [],
     starting_point: {}
@@ -17,11 +19,15 @@ function toHex(obj) {
 }
 
 parser.parse('./map.vox').then((result) => {
-    const width = result.size.x;
+    output_map.size = {
+        x: result.size.x,
+        y: result.size.y
+    };
+
     const map = result.voxels.reduce((memo, curr) => {
         let current_cell;
 
-        memo[curr.x] = memo[curr.x] || [];
+        memo[curr.y] = memo[curr.y] || [];
 
         const cell_type = palette[toHex(result.palette[curr.colorIndex])];
 
@@ -39,12 +45,29 @@ parser.parse('./map.vox').then((result) => {
                 current_cell = 0;
         }
 
-        memo[curr.x][curr.y] = current_cell;
+        memo[curr.y][curr.x] = current_cell;
 
         return memo;
     }, []);
 
-    console.log(map);
+    map.forEach((row, y) => {
+        row.forEach((cell, x) => {
+            if (cell === 1) {
+                const end_point = find_end(y, x, map);
+                output_map.buildings.push({
+                    x1: x,
+                    y1: y,
+                    x2: end_point.x,
+                    y2: end_point.y
+                });
+            }
+        });
+    });
+
+    console.log(output_map);
+    fs.writeFile('./src/map.json', JSON.stringify(output_map), (err) => {
+        console.log(err);
+    });
 });
 
 function find_end(i, j, input) {
