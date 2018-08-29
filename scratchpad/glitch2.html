@@ -1,0 +1,234 @@
+<!doctype html>
+<meta charset="utf8">
+<title>LOGOUT GLITCH 02</title>
+<style>
+    html, body {
+        padding: 0;
+        margin: 0;
+        background-color: #111;
+        font-family: Consolas, "Lucida Console", "Lucida Sans Typewriter", Monaco, Tahoma, Helvetica, Arial, monospace;
+        font-size: 200%;
+        color: #eee;
+        text-transform: uppercase;
+    }
+
+    .screen {
+        width: 98vw;
+        height: 98vh;
+        padding: 1vh;
+    }
+
+    .layout {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        align-content: space-between;
+    }
+
+    .block {
+    }
+
+    .em {
+        border: #eee solid 2px;
+    }
+
+    .scanlines {
+        background: linear-gradient(
+            to bottom,
+            rgba(255,255,255,0),
+            rgba(255,255,255,0) 50%,
+            rgba(0,0,0,0.2) 70%,
+            rgba(0,0,0,0.6)
+        );
+        background-size: 100% 0.3rem;
+        border-radius: 2rem;
+        position: absolute;
+    }
+
+    .glitch {
+        position: relative;
+        animation: glitch1 2.5s infinite;
+        transform: none;
+    }
+
+    .glitch::before,
+    .glitch::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    } 
+
+    .glitch::before {
+        color: cyan;
+        animation: glitch2 2.5s infinite;
+    }
+
+    .glitch::after {
+        color: rgb(255, 169, 255);
+        animation: glitch3 2.5s infinite;
+    }
+
+    @keyframes glitch1 {
+        0% {
+            opacity: 1;
+        }
+        7% {
+            opacity: 0.75;
+        }
+        10% {
+            opacity: 1;
+        }
+        27% {
+            opacity: 1;
+        }
+        30% {
+            opacity: 0.75;
+        }
+        35% {
+            opacity: 1;
+        }
+        52% {
+            opacity: 1;
+        }
+        55% {
+            opacity: 0.75;
+        }
+        50% {
+            opacity: 1;
+        }
+        72% {
+            opacity: 1;
+        }
+        75% {
+            opacity: 0.75;
+        }
+        80% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes glitch2 {
+        0% {
+            transform: none;
+            opacity: 0.25;
+        }
+        7% {
+            transform: translate(-2px, -3px);
+            opacity: 0.5;
+        }
+        10% {
+            transform: none;
+            opacity: 0.25;
+        }
+        27% {
+            transform: none;
+            opacity: 0.25;
+        }
+        30% {
+            transform: translate(-5px, -2px);
+            opacity: 0.5;
+        }
+        35% {
+            transform: none;
+            opacity: 0.25;
+        }
+        52% {
+            transform: none;
+            opacity: 0.25;
+        }
+        55% {
+            transform: translate(-5px, -1px);
+            opacity: 0.5;
+        }
+        50% {
+            transform: none;
+            opacity: 0.25;
+        }
+        72% {
+            transform: none;
+            opacity: 0.25;
+        }
+        75% {
+            transform: translate(-2px, -6px);
+            opacity: 0.5;
+        }
+        80% {
+            transform: none;
+            opacity: 0.25;
+        }
+        100% {
+            transform: none;
+            opacity: 0.25;
+        }
+    }
+
+    @keyframes glitch3 {
+        0% {
+            transform: none;
+            opacity: 0.25;
+        }
+        7% {
+            transform: translate(2px, 3px);
+            opacity: 0.5;
+        }
+        10% {
+            transform: none;
+            opacity: 0.25;
+        }
+        27% {
+            transform: none;
+            opacity: 0.25;
+        }
+        30% {
+            transform: translate(5px, 2px);
+            opacity: 0.5;
+        }
+        35% {
+            transform: none;
+            opacity: 0.25;
+        }
+        52% {
+            transform: none;
+            opacity: 0.25;
+        }
+        55% {
+            transform: translate(5px, 1px);
+            opacity: 0.5;
+        }
+        50% {
+            transform: none;
+            opacity: 0.25;
+        }
+        72% {
+            transform: none;
+            opacity: 0.25;
+        }
+        75% {
+            transform: translate(2px, 6px);
+            opacity: 0.5;
+        }
+        80% {
+            transform: none;
+            opacity: 0.25;
+        }
+        100% {
+            transform: none;
+            opacity: 0.25;
+        }
+    }
+</style>
+
+<div class="screen layout">
+  <div class="block glitch" data-text="Initializing…">
+      Initializing…
+  </div> 
+</div>
+
+<script>
+</script>

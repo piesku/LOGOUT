@@ -1,0 +1,93 @@
+<!doctype html>
+<meta charset="utf8">
+<title>LOGOUT GLITCH 05</title>
+<style>
+    html, body {
+        padding: 0;
+        margin: 0;
+        background-color: #111;
+        font-family: Consolas, "Lucida Console", "Lucida Sans Typewriter", Monaco, Tahoma, Helvetica, Arial, monospace;
+        font-size: 100%;
+        color: #eee;
+        text-transform: uppercase;
+    }
+
+    .screen {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        bottom: 2px;
+        left: 2px;
+        padding: 1vh;
+    }
+
+    .screen--red {
+        left: 4px;
+        text-shadow: -4px 0 red;
+        animation: noise 2s linear infinite alternate-reverse;
+    }
+
+    .screen--blue {
+        left: 0px;
+        text-shadow: 4px 0 blue;
+        animation: noise 3s linear infinite alternate;
+    }
+
+    .layout {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+    }
+
+    .block {
+        flex: 1;
+    }
+
+    .em {
+        border: #eee solid 2px;
+    }
+</style>
+
+<div class="screen layout">
+  <div class="block">
+    <div>Grid Movement: Online</div>
+    <div>Camera: Online</div>
+    <div>Freelook: Offline</div> 
+    <div>Chromatic Vision: Offline</div>
+  </div> 
+</div>
+
+<div class="screen screen--red layout">
+  <div class="block">
+    <div>Grid Movement: Online</div>
+    <div>Camera: Online</div>
+    <div>Freelook: Offline</div> 
+    <div>Chromatic Vision: Offline</div>
+  </div> 
+</div>
+
+<div class="screen screen--blue layout">
+  <div class="block">
+    <div>Grid Movement: Online</div>
+    <div>Camera: Online</div>
+    <div>Freelook: Offline</div> 
+    <div>Chromatic Vision: Offline</div>
+  </div> 
+</div>
+
+<script>
+    const percent = new Intl.NumberFormat("en", {style: "percent"});
+    document.styleSheets[0].insertRule(`
+        @keyframes noise {
+            ${new Array(20).fill(1).map((_, i) => `
+                ${percent.format(i / 20)} {
+                    clip-path: inset(
+                        ${percent.format(Math.random())} 0
+                        ${percent.format(Math.random())}
+                    );
+                }
+            `).join("")
+            }
+        }
+    `);
+</script>

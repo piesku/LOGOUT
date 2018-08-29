@@ -1,0 +1,171 @@
+<!doctype html>
+<meta charset="utf8">
+<title>LOGOUT HUD 04</title>
+<style>
+    @keyframes typing {
+        0%{
+            width: 0;
+        }
+        100%{
+            width: 100%;
+        }
+    }
+
+    html, body {
+        padding: 0;
+        margin: 0;
+        background-color: #111;
+        font-family: Consolas, "Lucida Console", "Lucida Sans Typewriter", Monaco, Tahoma, Helvetica, Arial, monospace;
+        font-size: 100%;
+        color: #eee;
+        text-transform: uppercase;
+    }
+
+    .screen {
+        width: 98vw;
+        height: 98vh;
+        padding: 1vh;
+    }
+
+    .layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr;
+        grid-template-areas: 
+            "tl tm tr"
+            "ml mm mr"
+            "bl bm br"
+        }
+
+    .line {
+        overflow: hidden;
+        animation: typing 1s 1 steps(30, start);
+    }
+
+    .box {
+        border: #eee solid 2px;
+    }
+
+    .glitch {
+        position: relative;
+        display: inline-block;
+        white-space: nowrap;
+    }
+
+    .red, .blue {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    } 
+
+    .red {
+        left: 1px;
+        text-shadow: -3px 0 #111, -1px 0 red;
+    }
+
+    .blue {
+        left: -1px;
+        text-shadow: 3px 0 #111, 1px 0 blue;
+    }
+</style>
+
+            <div class="screen layout">
+                <div class="block tl" style="grid-area: tl; align-self: start; justify-self: start"></div>
+                <div class="block tm" style="grid-area: tm; align-self: start; justify-self: center"></div>
+                <div class="block tr" style="grid-area: tr; align-self: start; justify-self: end"></div>
+                <div class="block ml" style="grid-area: ml; align-self: start; justify-self: start"></div>
+                <div class="block mr" style="grid-area: mr; align-self: start; justify-self: start"></div>
+                <div class="block bl" style="grid-area: bl; align-self: start; justify-self: end"></div>
+                <div class="block br" style="grid-area: br; align-self: start; justify-self: end"></div>
+            </div>
+
+<script>
+    let sheet = document.styleSheets[0];
+    let steps = 20;
+    let percent = new Intl.NumberFormat("en", {style: "percent"});
+    for (let i = 0; i < 20; i++) {
+        sheet.insertRule(`
+            @keyframes glitch${i} {
+                ${new Array(steps).fill(1).map((_, step) => `
+                    ${percent.format(step / steps)} {
+                        clip-path: inset(
+                            ${percent.format(Math.random())} 0
+                            ${percent.format(Math.random())}
+                        );
+                    }
+                `).join("")}
+            }
+        `);
+        sheet.insertRule(`
+            .red.glitch${i} {
+                animation: glitch${i} ${Math.random() * 5}s linear infinite alternate;
+            }
+        `);
+        sheet.insertRule(`
+            .blue.glitch${i} {
+                animation: glitch${i} ${Math.random() * 5}s linear infinite alternate;
+            }
+        `);
+    }
+</script>
+<script src="fragment.js"></script>
+<script src="innerself.js"></script>
+<script>
+    const store = createStore(state => state);
+
+    function Line(text) {
+        // A deterministic digest function.
+        let glitchIndex = text.length % 20;
+        return html`
+            <div class="line">
+                <div class="glitch">
+                    <div class="white glitch${glitchIndex}">${text}</div>
+                    <div class="red glitch${glitchIndex}">${text}</div>
+                    <div class="blue glitch${glitchIndex}">${text}</div>
+                </div> 
+            </div> 
+        `;
+    }
+
+    function Block(area, lines, {align = "start", justify = "start"} = {}) {
+        return html`
+            <div class="block"
+                style="grid-area: ${area}; align-self: ${align}; justify-self: ${justify};">
+                ${lines.map(Line)}
+            </div>
+        `;
+    }
+
+    function SystemStatus() {
+        let lines = [
+            "System status",
+            "Grid Movement: Online",
+            "Camera: Online",
+            "Freelook: Offline",
+            "Chromatic Vision: Offline",
+        ];
+        return html`
+            ${lines.map(Line)}
+        `;
+    }
+
+    let tl = document.querySelector(".block.tl");
+    let interval;
+    tl.addEventListener("beforerender", function() {
+        clearInterval(interval);
+    });
+    tl.addEventListener("afterrender", function() {
+        interval = setInterval(() => {
+            tl.removeChild(tl.firstElementChild);
+            let div = document.createElement("div");
+            div.innerHTML = Line(code.next().value);
+            tl.appendChild(div.firstElementChild);
+        }, 900);
+    });
+    store.attach(SystemStatus, tl);
+
+
+
+</script>

@@ -1,0 +1,121 @@
+<!doctype html>
+<meta charset="utf8">
+<title>LOGOUT GLITCH 07</title>
+<style>
+    html, body {
+        padding: 0;
+        margin: 0;
+        background-color: #111;
+        font-family: Consolas, "Lucida Console", "Lucida Sans Typewriter", Monaco, Tahoma, Helvetica, Arial, monospace;
+        font-size: 100%;
+        color: #eee;
+        text-transform: uppercase;
+    }
+
+    .screen {
+        width: 98vw;
+        height: 98vh;
+        padding: 1vh;
+    }
+
+    .layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr;
+        grid-template-areas: 
+            "tl . tr"
+            "ml . mr"
+            "bl . br"
+        }
+
+    .block {
+        white-space: nowrap;
+        animation: typing 1s 1 steps(30, start);
+    }
+
+    .em {
+        border: #eee solid 2px;
+    }
+
+    .glitch {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .glitch--red,
+    .glitch--blue {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    } 
+
+    .glitch--red {
+        left: 1px;
+        text-shadow: -3px 0 #111, -1px 0 red;
+        animation: 2s linear infinite alternate-reverse;
+    }
+
+    .glitch--blue {
+        left: -1px;
+        text-shadow: 3px 0 #111, 1px 0 blue;
+        animation: 3s linear infinite alternate;
+    }
+
+    @keyframes typing {
+        0%{
+            width: 0;
+        }
+        100%{
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="screen layout">
+  <div class="block">
+    <div class="glitch">
+      <div class="glitch--white">Grid Movement: Online</div> 
+      <div class="glitch--red" style="animation-name: noise1">Grid Movement: Online</div> 
+      <div class="glitch--blue" style="animation-name: noise2">Grid Movement: Online</div> 
+    </div>
+
+    <div class="glitch">
+      <div class="glitch--white">Camera: Online</div>
+      <div class="glitch--red" style="animation-name: noise3">Camera: Online</div>
+      <div class="glitch--blue" style="animation-name: noise4">Camera: Online</div>
+    </div>
+
+    <div class="glitch">
+      <div class="glitch--white">Freelook: Offline</div>
+      <div class="glitch--red" style="animation-name: noise5">Freelook: Offline</div>
+      <div class="glitch--blue" style="animation-name: noise6">Freelook: Offline</div>
+    </div>
+
+    <div class="glitch">
+      <div class="glitch--white">Chromatic Vision: Offline</div>
+      <div class="glitch--red" style="animation-name: noise7">Chromatic Vision: Offline</div>
+      <div class="glitch--blue" style="animation-name: noise8">Chromatic Vision: Offline</div>
+    </div>
+  </div> 
+</div>
+
+<script>
+    let steps = 20;
+    let percent = new Intl.NumberFormat("en", {style: "percent"});
+    for (let i = 0; i < 20; i++) {
+        document.styleSheets[0].insertRule(`
+            @keyframes noise${i} {
+                ${new Array(steps).fill(1).map((_, step) => `
+                    ${percent.format(step / steps)} {
+                        clip-path: inset(
+                            ${percent.format(Math.random())} 0
+                            ${percent.format(Math.random())}
+                        );
+                    }
+                `).join("")}
+            }
+        `);
+    }
+</script>

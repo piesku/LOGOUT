@@ -1,0 +1,96 @@
+<!doctype html>
+<meta charset="utf8">
+<title>LOGOUT GLITCH 03</title>
+<style>
+    html, body {
+        padding: 0;
+        margin: 0;
+        background-color: #111;
+        font-family: Consolas, "Lucida Console", "Lucida Sans Typewriter", Monaco, Tahoma, Helvetica, Arial, monospace;
+        font-size: 200%;
+        color: #eee;
+        text-transform: uppercase;
+    }
+
+    .screen {
+        width: 98vw;
+        height: 98vh;
+        padding: 1vh;
+    }
+
+    .layout {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+    }
+
+    .block {
+        flex: 1;
+    }
+
+    .em {
+        border: #eee solid 2px;
+    }
+
+    .glitch {
+        position: relative;
+    }
+
+    .glitch::before,
+    .glitch::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    } 
+
+    .glitch::before {
+        left: 2px;
+        text-shadow: -1px 0 red;
+        background: #111;
+        animation: noise 2s linear infinite alternate-reverse;
+    }
+
+    .glitch::after {
+        left: -2px;
+        text-shadow: -1px 0 blue;
+        background: #111;
+        animation: noise 3s linear infinite alternate;
+    }
+</style>
+
+<div class="screen layout">
+  <div class="block">
+    <div class="glitch" data-text="Grid-Movement: Online">
+        Grid Movement: Online
+    </div> 
+    <div class="glitch" data-text="Camera: Online">
+        Camera: Online
+    </div> 
+    <div class="glitch" data-text="Freelook: Offline">
+        Freelook: Offline
+    </div> 
+    <div class="glitch" data-text="Chromatic Vision: Offline">
+        Chromatic Vision: Offline
+    </div> 
+  </div> 
+</div>
+
+<script>
+    const percent = new Intl.NumberFormat("en", {style: "percent"});
+    document.styleSheets[0].insertRule(`
+        @keyframes noise {
+            ${new Array(20).fill(1).map((_, i) => `
+                ${percent.format(i / 20)} {
+                    clip-path: inset(
+                        ${percent.format(Math.random())} 0
+                        ${percent.format(Math.random())}
+                    );
+                }
+            `).join("")
+            }
+        }
+    `);
+</script>

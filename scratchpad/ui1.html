@@ -1,0 +1,198 @@
+<!doctype html>
+<meta charset="utf8">
+<title>LOGOUT HUD 01</title>
+<style>
+    @keyframes typing {
+        0%{
+            width: 0;
+        }
+        100%{
+            width: 100%;
+        }
+    }
+
+    html, body {
+        padding: 0;
+        margin: 0;
+        background-color: #111;
+        font-family: Consolas, "Lucida Console", "Lucida Sans Typewriter", Monaco, Tahoma, Helvetica, Arial, monospace;
+        font-size: 100%;
+        color: #eee;
+        text-transform: uppercase;
+    }
+
+    .screen {
+        width: 98vw;
+        height: 98vh;
+        padding: 1vh;
+    }
+
+    .layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr;
+        grid-template-areas: 
+            "tl tm tr"
+            "ml mm mr"
+            "bl bm br"
+        }
+
+    .block {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .line {
+        overflow: hidden;
+        animation: typing 1s 1 steps(30, start);
+    }
+
+    .box {
+        border: #eee solid 2px;
+    }
+
+    .glitch {
+        white-space: nowrap;
+        position: relative;
+        display: inline-block;
+    }
+
+    .glitch::before, .glitch::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    } 
+
+    .glitch::before {
+        left: 1px;
+        text-shadow: -3px 0 #111, -1px 0 red;
+    }
+
+    .glitch::after {
+        left: -1px;
+        text-shadow: 3px 0 #111, 1px 0 blue;
+    }
+</style>
+
+<div class="screen layout">
+  <div class="block" style="grid-area: tl">
+    <div class="line glitch glitch1" data-text="5y5tem 5t4tu5:">
+        System Status:
+    </div> 
+    <div class="line glitch glitch1" data-text="Gr1d-Movement: 0nl1ne">
+        Grid Movement: Online
+    </div> 
+    <div class="line glitch glitch2" data-text="C4mer4: 0nl1ne">
+        Camera: Online
+    </div> 
+    <div class="line glitch glitch3" data-text="Freel00k: 0ffl1ne">
+        Freelook: Offline
+    </div> 
+    <div class="line glitch glitch4" data-text="Chr0m4t1c V1510n: 0ffl1ne">
+        Chromatic Vision: Offline
+    </div> 
+  </div> 
+
+  <div class="block" style="grid-area: tm; justify-self: center">
+    <div class="line glitch glitch5" data-text="N ----- NE ----- E">
+        N ----- NE ----- E
+    </div> 
+  </div> 
+
+  <div class="block" style="grid-area: tr; justify-self: end;">
+    <div class="line glitch glitch6" data-text="2018-08-27 +02:00">
+        2018-08-27 +02:00
+    </div> 
+  </div> 
+
+  <div class="block" style="grid-area: ml">
+    <div class="line glitch glitch14" data-text="Active objectives">
+        Active objectives
+    </div> 
+    <div class="line glitch glitch15" data-text="1. Locate exit">
+        1. Locate exit
+    </div> 
+  </div> 
+
+  <div class="block" style="grid-area: mr">
+    <div class="line glitch glitch7" data-text="Running analysis">
+        Running analysis
+    </div> 
+    <div class="line glitch glitch8" data-text="Assessment complete">
+        Assessment complete
+    </div> 
+    <div class="line">
+        <div class="glitch glitch9 box" data-text="No threats found">
+            No threats found
+        </div> 
+    </div> 
+  </div> 
+
+  <div class="block" style="grid-area: bl; align-self:end">
+    <div class="line glitch glitch10" data-text="Tracking">
+        Tracking
+    </div> 
+    <div class="line glitch glitch11" data-text="0.02 13.27 1.03">
+        0.02 13.27 1.03
+    </div> 
+    <div class="line glitch glitch12" data-text="2.98 91.34 12.81">
+        2.98 91.34 12.81
+    </div> 
+    <div class="line glitch glitch13" data-text="0.18 63.06 22.83">
+        0.18 63.06 22.84
+    </div> 
+  </div> 
+
+  <div class="block" style="grid-area: br; align-self:end;">
+    <div class="line glitch glitch16" data-text="mov al, '*'">
+        mov     al, '*'
+    </div> 
+    <div class="line glitch glitch17" data-text="mov ah, 09h">
+        mov     ah, 09h
+    </div> 
+    <div class="line glitch glitch18" data-text="mov bl, 0eh">
+        mov     bl, 0eh
+    </div> 
+    <div class="line glitch glitch19" data-text="mov cx, 1">
+        mov     cx, 1
+    </div> 
+    <div class="line glitch glitch19" data-text="int 10h">
+        int     10h
+    </div> 
+  </div> 
+
+</div>
+
+<script>
+    let sheet = document.styleSheets[0];
+    let steps = 20;
+    let percent = new Intl.NumberFormat("en", {style: "percent"});
+    for (let i = 0; i < 20; i++) {
+        sheet.insertRule(`
+            @keyframes glitch${i} {
+                ${new Array(steps).fill(1).map((_, step) => `
+                    ${percent.format(step / steps)} {
+                        clip-path: inset(
+                            ${percent.format(Math.random())} 0
+                            ${percent.format(Math.random())}
+                        );
+                    }
+                `).join("")}
+            }
+        `);
+        sheet.insertRule(`
+            .glitch${i}::before {
+                animation: glitch${i} ${Math.random() * 5}s linear infinite alternate;
+            }
+        `);
+        sheet.insertRule(`
+            .glitch${i}::after {
+                animation: glitch${i} ${Math.random() * 5}s linear infinite alternate;
+            }
+        `);
+    }
+</script>

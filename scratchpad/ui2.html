@@ -1,0 +1,190 @@
+<!doctype html>
+<meta charset="utf8">
+<title>LOGOUT HUD 02</title>
+<style>
+    @keyframes typing {
+        0%{
+            width: 0;
+        }
+        100%{
+            width: 100%;
+        }
+    }
+
+    html, body {
+        padding: 0;
+        margin: 0;
+        background-color: #111;
+        font-family: Consolas, "Lucida Console", "Lucida Sans Typewriter", Monaco, Tahoma, Helvetica, Arial, monospace;
+        font-size: 100%;
+        color: #eee;
+        text-transform: uppercase;
+    }
+
+    .screen {
+        width: 98vw;
+        height: 98vh;
+        padding: 1vh;
+    }
+
+    .layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr;
+        grid-template-areas: 
+            "tl tm tr"
+            "ml mm mr"
+            "bl bm br"
+        }
+
+    .block {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .line {
+        overflow: hidden;
+        animation: typing 1s 1 steps(30, start);
+    }
+
+    .box {
+        border: #eee solid 2px;
+    }
+
+    .glitch {
+        white-space: nowrap;
+        position: relative;
+        display: inline-block;
+    }
+
+    .glitch::before, .glitch::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    } 
+
+    .glitch::before {
+        left: 1px;
+        text-shadow: -3px 0 #111, -1px 0 red;
+    }
+
+    .glitch::after {
+        left: -1px;
+        text-shadow: 3px 0 #111, 1px 0 blue;
+    }
+</style>
+
+<div id="root"></div>
+
+<script>
+    let sheet = document.styleSheets[0];
+    let steps = 20;
+    let percent = new Intl.NumberFormat("en", {style: "percent"});
+    for (let i = 0; i < 20; i++) {
+        sheet.insertRule(`
+            @keyframes glitch${i} {
+                ${new Array(steps).fill(1).map((_, step) => `
+                    ${percent.format(step / steps)} {
+                        clip-path: inset(
+                            ${percent.format(Math.random())} 0
+                            ${percent.format(Math.random())}
+                        );
+                    }
+                `).join("")}
+            }
+        `);
+        sheet.insertRule(`
+            .glitch${i}::before {
+                animation: glitch${i} ${Math.random() * 5}s linear infinite alternate;
+            }
+        `);
+        sheet.insertRule(`
+            .glitch${i}::after {
+                animation: glitch${i} ${Math.random() * 5}s linear infinite alternate;
+            }
+        `);
+    }
+</script>
+<script src="innerself.js"></script>
+<script>
+    const store = createStore(state => state);
+
+    function * generateGlitchClass() {
+        let i = 0;
+        while (true) {
+            yield `glitch glitch${i}`;
+            i = (i + 1) % 20;
+        }
+    }
+
+    const glitch = generateGlitchClass();
+
+    function Line(text) {
+        return html`
+            <div class="line">
+                <div class="${glitch.next().value}" data-text="${text}">
+                    ${text}
+                </div> 
+            </div> 
+        `;
+    }
+
+    function Block(area, lines, {align = "start", justify = "start"} = {}) {
+        return html`
+            <div class="block"
+                style="grid-area: ${area}; align-self: ${align}; justify-self: ${justify};">
+                ${lines.map(Line)}
+            </div>
+        `;
+    }
+
+    function ui() {
+        return html`
+            <div class="screen layout">
+                ${Block("tl", [
+                    "System status",
+                    "Grid Movement: Online",
+                    "Camera: Online",
+                    "Freelook: Offline",
+                    "Chromatic Vision: Offline",
+                ])}
+                ${Block("tm", [
+                    "N ----- NE ----- E",
+                ], {justify: "center"})}
+                ${Block("tr", [
+                    "2018-08-27 +02:00",
+                ], {justify: "end"})}
+                ${Block("ml", [
+                    "Active objectives",
+                    "1. Locate exit",
+                ])}
+                ${Block("mr", [
+                    "Running analysis",
+                    "Assessment complete",
+                    "No threats found",
+                ])}
+                ${Block("bl", [
+                    "Tracking",
+                    "0.02 13.27 1.03",
+                    "2.98 91.34 12.81",
+                    "0.18 63.06 22.84",
+                ], {align: "end"})}
+                ${Block("br", [
+                    "mov     al, '*'",
+                    "mov     ah, 09h",
+                    "mov     bl, 0eh",
+                    "mov     cx, 1",
+                    "int     10h",
+                ], {align: "end"})}
+            </div>
+        `;
+    }
+
+    store.attach(ui, document.querySelector("#root"));
+
+
+</script>
