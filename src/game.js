@@ -33,7 +33,7 @@ function hex_to_rgb(hex) {
 const game = new Cervus.core.Game({
   width: window.innerWidth,
   height: window.innerHeight,
-  far: 200,
+  far: 1000,
   clear_color: CLEAR_COLOR,
 });
 
@@ -61,7 +61,7 @@ let neon_material = new Cervus.materials.BasicMaterial({
 
 neon_material.add_fog({
   color: hex_to_rgb(CLEAR_COLOR),
-  distance: new Float32Array([100, 200]),
+  distance: new Float32Array([100, 300]),
 });
 
 let building_material = new Cervus.materials.PhongMaterial({
@@ -73,7 +73,7 @@ let building_material = new Cervus.materials.PhongMaterial({
 
 building_material.add_fog({
   color: hex_to_rgb(CLEAR_COLOR),
-  distance: new Float32Array([5, 150]),
+  distance: new Float32Array([5, 300]),
 });
 
 const wireframe = new Cervus.materials.WireframeMaterial({
@@ -91,9 +91,9 @@ game.add(plane);
 
 create_building({
     position: [20, 0, 100],
-    scale: [30, 140, 15],
-    neon_position: [0, 60, -10],
-    neon_scale: [20, 10, 1],
+    scale: [50, 500, 40],
+    neon_position: [0, 240, -22],
+    neon_scale: [25, 10, 1],
     neon_color: NEON_COLORS[0],
 });
 
@@ -106,9 +106,9 @@ create_building({
 });
 
 create_building({
-    position: [-30, 0, 100],
-    scale: [20, 100, 40],
-    neon_position: [0, 40, -21],
+    position: [-30, 0, 120],
+    scale: [35, 300, 40],
+    neon_position: [0, 140, -22],
     neon_scale: [20, 10, 1],
     neon_color: NEON_COLORS[2],
 });
