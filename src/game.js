@@ -1,5 +1,9 @@
 /* global Cervus */
 
+const CLEAR_COLOR = "222";
+const BUILDING_COLOR = "000";
+const NEON_COLORS = ["28D7FE", "A9FFDC", "FED128"];
+
 class Group extends Cervus.core.Entity {
   constructor(options) {
     super(Object.assign({
@@ -29,8 +33,8 @@ function hex_to_rgb(hex) {
 const game = new Cervus.core.Game({
   width: window.innerWidth,
   height: window.innerHeight,
-  far: 1000,
-  clear_color: "222"
+  far: 200,
+  clear_color: CLEAR_COLOR,
 });
 
 game.canvas.addEventListener(
@@ -57,7 +61,7 @@ let neon_material = new Cervus.materials.BasicMaterial({
 });
 
 neon_material.add_fog({
-  color: hex_to_rgb("222"),
+  color: hex_to_rgb(CLEAR_COLOR),
   distance: new Float32Array([100, 200]),
 });
 
@@ -69,7 +73,7 @@ let building_material = new Cervus.materials.PhongMaterial({
 });
 
 building_material.add_fog({
-  color: hex_to_rgb("222"),
+  color: hex_to_rgb(CLEAR_COLOR),
   distance: new Float32Array([5, 150]),
 });
 
@@ -82,7 +86,7 @@ const wireframe = new Cervus.materials.WireframeMaterial({
 
 const plane = new Cervus.shapes.Box();
 plane.get_component(Cervus.components.Render).material = building_material;
-plane.get_component(Cervus.components.Render).color = "f00";
+plane.get_component(Cervus.components.Render).color = BUILDING_COLOR;
 plane.get_component(Cervus.components.Transform).scale = [1000, 1, 1000];
 game.add(plane);
 
@@ -93,13 +97,13 @@ game.add(plane);
 
   const box = new Cervus.shapes.Box();
   box.get_component(Cervus.components.Render).material = building_material;
-  box.get_component(Cervus.components.Render).color = "000";
+  box.get_component(Cervus.components.Render).color = BUILDING_COLOR;
   box.get_component(Cervus.components.Transform).scale = [30, 140, 15];
   building.add(box);
 
   const neon = new Cervus.shapes.Box();
   neon.get_component(Cervus.components.Render).material = neon_material;
-  neon.get_component(Cervus.components.Render).color = "#28D7FE";
+  neon.get_component(Cervus.components.Render).color = NEON_COLORS[0];
   neon.get_component(Cervus.components.Transform).position = [0, 60, -10];
   neon.get_component(Cervus.components.Transform).scale = [20, 10, 1];
   building.add(neon);
@@ -130,13 +134,13 @@ game.add(plane);
 
   const box = new Cervus.shapes.Box();
   box.get_component(Cervus.components.Render).material = building_material;
-  box.get_component(Cervus.components.Render).color = "000";
+  box.get_component(Cervus.components.Render).color = BUILDING_COLOR;
   box.get_component(Cervus.components.Transform).scale = [45, 40, 15];
   building.add(box);
 
   const neon = new Cervus.shapes.Box();
   neon.get_component(Cervus.components.Render).material = neon_material;
-  neon.get_component(Cervus.components.Render).color = "#A9FFDC";
+  neon.get_component(Cervus.components.Render).color = NEON_COLORS[1];
   neon.get_component(Cervus.components.Transform).position = [15, 15, -10];
   neon.get_component(Cervus.components.Transform).scale = [10, 5, 1];
   building.add(neon);
@@ -167,13 +171,13 @@ game.add(plane);
 
   const box = new Cervus.shapes.Box();
   box.get_component(Cervus.components.Render).material = building_material;
-  box.get_component(Cervus.components.Render).color = "000";
+  box.get_component(Cervus.components.Render).color = BUILDING_COLOR;
   box.get_component(Cervus.components.Transform).scale = [20, 100, 40];
   building.add(box);
 
   const neon = new Cervus.shapes.Box();
   neon.get_component(Cervus.components.Render).material = neon_material;
-  neon.get_component(Cervus.components.Render).color = "fed128";
+  neon.get_component(Cervus.components.Render).color = NEON_COLORS[2];
   neon.get_component(Cervus.components.Transform).position = [0, 40, -21];
   neon.get_component(Cervus.components.Transform).scale = [20, 10, 1];
   building.add(neon);
