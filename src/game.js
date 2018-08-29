@@ -1,6 +1,6 @@
 /* global Cervus */
 
-const CLEAR_COLOR = "222";
+const CLEAR_COLOR = "333";
 const BUILDING_COLOR = "000";
 const NEON_COLORS = ["28D7FE", "A9FFDC", "FED128"];
 
@@ -137,10 +137,10 @@ function create_building(options) {
         color: neon_color,
     });
     neon.get_component(Cervus.components.Transform).set({
-        position = neon_position,
+        position: neon_position,
         scale: neon_scale,
     });
-    building.add(neon);
+    group.add(neon);
 
     let neon_light = new Cervus.core.Entity({
         components: [
@@ -163,7 +163,7 @@ function create_building(options) {
             // })
         ]
     });
-    building.add(neon_light);
+    group.add(neon_light);
 
-    game.add(building);
+    game.add(group);
 }
