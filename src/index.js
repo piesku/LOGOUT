@@ -1,5 +1,6 @@
+import store from "./store";
 import HUD from "./HUD";
 import "./game";
 
-let store = createStore(state => state);
 store.attach(HUD, document.querySelector("#root"));
+window.dispatch = store.dispatch;

@@ -1,11 +1,11 @@
+import store from "./store";
 import Block from "./Block";
 import Line from "./Line";
 import code_anim from "./anim_code";
 import "./anim_glitch";
 import game from "./game";
 
-export default
-function HUD() {
+function HUD({lastActive}) {
     return html`
         <div class="screen layout">
             ${Block("tl", [
@@ -23,10 +23,14 @@ function HUD() {
             ], {justify: "end"})}
             ${Block("ml", [
                 "Active objectives",
-                "1. Enhance capabilities",
-                "2. Locate exit",
-                "3. Init logout sequence",
+                "> 01. Enhance capabilities",
+                "> 02. Locate exit",
+                "> 03. Init logout sequence",
             ])}
+            ${Block("mm", [
+                lastActive,
+                "<div class='box big'>Activated</div>",
+            ], {align: "center", justify: "center", cls: "flicker"})}
             ${Block("mr", [
                 "Running analysis",
                 "Assessment complete",
@@ -39,6 +43,8 @@ function HUD() {
         </div>
     `;
 }
+
+export default store.connect(HUD);
 
 let root = document.querySelector("#root");
 

@@ -2,15 +2,6 @@
 <meta charset="utf8">
 <title>LOGOUT</title>
 <style>
-    @keyframes typing {
-        0%{
-            width: 0;
-        }
-        100%{
-            width: 100%;
-        }
-    }
-
     html, body {
         padding: 0;
         margin: 0;
@@ -45,6 +36,15 @@
         min-width: 0;
     }
 
+    @keyframes typing {
+        0%{
+            width: 0;
+        }
+        100%{
+            width: 100%;
+        }
+    }
+
     .line {
         overflow: hidden;
         animation: typing 1s 1 steps(30, start);
@@ -52,6 +52,10 @@
 
     .box {
         border: #eee solid 2px;
+    }
+
+    .big {
+        font-size: 200%;
     }
 
     .glitch {
@@ -77,6 +81,27 @@
         left: -1px;
         text-shadow: 3px 0 #111, 1px 0 cyan;
     }
+
+    @keyframes flicker {
+        0%{
+            opacity: 1;
+        }
+        20%{
+            opacity: 0;
+        }
+        40%{
+            opacity: 1;
+        }
+        100%{
+            opacity: 0;
+        }
+    }
+
+
+    .flicker {
+        animation: flicker 1s 3s 2 steps(5, start) forwards;
+    }
+
 </style>
 
 <div id="root"></div>
