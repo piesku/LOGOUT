@@ -90,114 +90,80 @@ plane.get_component(Cervus.components.Render).color = BUILDING_COLOR;
 plane.get_component(Cervus.components.Transform).scale = [1000, 1, 1000];
 game.add(plane);
 
-{
-  const building = new Group();
-  building.get_component(Cervus.components.Transform).position = [20, 0, 100];
-  game.add(building);
+create_building({
+    position: [20, 0, 100],
+    scale: [30, 140, 15],
+    neon_position: [0, 60, -10],
+    neon_scale: [20, 10, 1],
+    neon_color: NEON_COLORS[0],
+});
 
-  const box = new Cervus.shapes.Box();
-  box.get_component(Cervus.components.Render).material = building_material;
-  box.get_component(Cervus.components.Render).color = BUILDING_COLOR;
-  box.get_component(Cervus.components.Transform).scale = [30, 140, 15];
-  building.add(box);
+create_building({
+    position: [-30, 0, 50],
+    scale: [45, 40, 15],
+    neon_position: [15, 15, -10],
+    neon_scale: [10, 5, 1],
+    neon_color: NEON_COLORS[1],
+});
 
-  const neon = new Cervus.shapes.Box();
-  neon.get_component(Cervus.components.Render).material = neon_material;
-  neon.get_component(Cervus.components.Render).color = NEON_COLORS[0];
-  neon.get_component(Cervus.components.Transform).position = [0, 60, -10];
-  neon.get_component(Cervus.components.Transform).scale = [20, 10, 1];
-  building.add(neon);
+create_building({
+    position: [-30, 0, 100],
+    scale: [20, 100, 40],
+    neon_position: [0, 40, -21],
+    neon_scale: [20, 10, 1],
+    neon_color: NEON_COLORS[2],
+});
 
-  building.add(new Cervus.core.Entity({
-    components: [
-      new Cervus.components.Transform({
-        position: [0, 60, -12]
-      }),
-      new Cervus.components.Light({
-        color: '#28D7FE',
-        intensity: 0.9
-      }),
-      // new Cervus.components.Render({
-      //   color: '#F00',
-      //   material: wireframe,
-      //   indices: cube_render.indices,
-      //   vertices: cube_render.vertices
-      // })
-    ]
-  }));
-}
+function create_building(options) {
+    let {position, scale} = options;
+    let group = new Cervus.core.Entity({
+        components: [
+            new Cervus.components.Transform({position})
+        ]
+    });
 
-{
-  const building = new Group();
-  building.get_component(Cervus.components.Transform).position = [-30, 0, 50];
-  game.add(building);
+    let building = new Cervus.shapes.Box();
+    building.get_component(Cervus.components.Render).set({
+        material: building_material,
+        color: BUILDING_COLOR,
+    });
+    building.get_component(Cervus.components.Transform).set({scale});
+    group.add(building);
 
-  const box = new Cervus.shapes.Box();
-  box.get_component(Cervus.components.Render).material = building_material;
-  box.get_component(Cervus.components.Render).color = BUILDING_COLOR;
-  box.get_component(Cervus.components.Transform).scale = [45, 40, 15];
-  building.add(box);
+    let {neon_position, neon_scale, neon_color} = options;
+    let neon = new Cervus.shapes.Box();
+    neon.get_component(Cervus.components.Render).set({
+        material: neon_material,
+        color: neon_color,
+    });
+    neon.get_component(Cervus.components.Transform).set({
+        position = neon_position,
+        scale: neon_scale,
+    });
+    building.add(neon);
 
-  const neon = new Cervus.shapes.Box();
-  neon.get_component(Cervus.components.Render).material = neon_material;
-  neon.get_component(Cervus.components.Render).color = NEON_COLORS[1];
-  neon.get_component(Cervus.components.Transform).position = [15, 15, -10];
-  neon.get_component(Cervus.components.Transform).scale = [10, 5, 1];
-  building.add(neon);
+    let neon_light = new Cervus.core.Entity({
+        components: [
+            new Cervus.components.Transform({
+                position: [
+                    neon_position[0],
+                    neon_position[1],
+                    neon_position[2] - 2,
+                ],
+            }),
+            new Cervus.components.Light({
+                color: neon_color,
+                intensity: 0.9
+            }),
+            // new Cervus.components.Render({
+            //   color: '#F00',
+            //   material: wireframe,
+            //   indices: cube_render.indices,
+            //   vertices: cube_render.vertices
+            // })
+        ]
+    });
+    building.add(neon_light);
 
-  building.add(new Cervus.core.Entity({
-    components: [
-      new Cervus.components.Transform({
-        position: [15, 15, -12]
-      }),
-      new Cervus.components.Light({
-        color: '#A9FFDC',
-        intensity: 0.9
-      }),
-      // new Cervus.components.Render({
-      //   color: '#F00',
-      //   material: wireframe,
-      //   indices: cube_render.indices,
-      //   vertices: cube_render.vertices
-      // })
-    ]
-  }));
-}
-
-{
-  const building = new Group();
-  building.get_component(Cervus.components.Transform).position = [-30, 0, 100];
-  game.add(building);
-
-  const box = new Cervus.shapes.Box();
-  box.get_component(Cervus.components.Render).material = building_material;
-  box.get_component(Cervus.components.Render).color = BUILDING_COLOR;
-  box.get_component(Cervus.components.Transform).scale = [20, 100, 40];
-  building.add(box);
-
-  const neon = new Cervus.shapes.Box();
-  neon.get_component(Cervus.components.Render).material = neon_material;
-  neon.get_component(Cervus.components.Render).color = NEON_COLORS[2];
-  neon.get_component(Cervus.components.Transform).position = [0, 40, -21];
-  neon.get_component(Cervus.components.Transform).scale = [20, 10, 1];
-  building.add(neon);
-
-  building.add(new Cervus.core.Entity({
-    components: [
-      new Cervus.components.Transform({
-        position: [0, 40, -22]
-      }),
-      new Cervus.components.Light({
-        color: '#FED128',
-        intensity: 0.9
-      }),
-      // new Cervus.components.Render({
-      //   color: '#F00',
-      //   material: wireframe,
-      //   indices: cube_render.indices,
-      //   vertices: cube_render.vertices
-      // })
-    ]
-  }));
-
+    game.add(building);
 }
