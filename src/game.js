@@ -37,14 +37,17 @@ const game = new Cervus.core.Game({
   clear_color: CLEAR_COLOR,
 });
 
-game.canvas.addEventListener(
-  'click', () => game.canvas.requestPointerLock()
-);
+window.game = game;
 
-game.camera.get_component(Cervus.components.Transform).position = [0, 20, 0];
-game.camera.get_component(Cervus.components.Move).keyboard_controlled = true;
-game.camera.get_component(Cervus.components.Move).mouse_controlled = true;
-game.camera.get_component(Cervus.components.Move).move_speed = 35;
+game.camera.get_component(Cervus.components.Transform).set({
+    position: [-90, 50, -33],
+    rotation: [-0.2755, 0.2256, 0.0667, 0.932],
+});
+
+game.camera.get_component(Cervus.components.Move).set({
+    keyboard_controlled: true,
+    move_speed: 35,
+});
 
 // Remove the default light.
 game.remove(game.light);
