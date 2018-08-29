@@ -6,9 +6,9 @@ function Line(text) {
     return html`
         <div class="line">
             <div class="glitch">
-                <div class="white glitch${glitchIndex}">${text}</div>
-                <div class="red glitch${glitchIndex}">${text}</div>
-                <div class="blue glitch${glitchIndex}">${text}</div>
+                <div class="glitch1 noise${glitchIndex}">${text}</div>
+                <div class="glitch2 noise${glitchIndex}">${text}</div>
+                <div class="glitch3 noise${glitchIndex}">${text}</div>
             </div>
         </div>
     `;
