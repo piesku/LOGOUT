@@ -46,9 +46,8 @@ game.camera.get_component(Cervus.components.Move).keyboard_controlled = true;
 game.camera.get_component(Cervus.components.Move).mouse_controlled = true;
 game.camera.get_component(Cervus.components.Move).move_speed = 35;
 
-game.light.get_component(Cervus.components.Transform).position = [0, 0, 0];
-game.light.get_component(Cervus.components.Light).intensity = 0.99;
-game.light.get_component(Cervus.components.Light).color = "#fff";
+// Remove the default light.
+game.remove(game.light);
 
 const cube = new Cervus.shapes.Box();
 const cube_render = cube.get_component(Cervus.components.Render);
@@ -140,30 +139,26 @@ function create_building(options) {
         position: neon_position,
         scale: neon_scale,
     });
-    group.add(neon);
 
     let neon_light = new Cervus.core.Entity({
         components: [
             new Cervus.components.Transform({
-                position: [
-                    neon_position[0],
-                    neon_position[1],
-                    neon_position[2] - 2,
-                ],
+                position: [0, 0, -2]
             }),
             new Cervus.components.Light({
                 color: neon_color,
-                intensity: 0.9
+                intensity: 0.6,
             }),
             // new Cervus.components.Render({
-            //   color: '#F00',
-            //   material: wireframe,
-            //   indices: cube_render.indices,
-            //   vertices: cube_render.vertices
-            // })
+            //     color: "fff",
+            //     material: wireframe,
+            //     indices: cube_render.indices,
+            //     vertices: cube_render.vertices
+            //})
         ]
     });
-    group.add(neon_light);
+    neon.add(neon_light);
+    group.add(neon);
 
     game.add(group);
 }
