@@ -2,6 +2,7 @@ import Block from "./Block";
 import Line from "./Line";
 import code_anim from "./anim_code";
 import "./anim_glitch";
+import game from "./game";
 
 export default
 function HUD() {
@@ -32,10 +33,7 @@ function HUD() {
                 "<div class=box>No threats found</div>",
             ])}
             ${Block("bl", [
-                "Tracking",
-                "0.02 13.27 1.03",
-                "2.98 91.34 12.81",
-                "0.18 63.06 22.84",
+                "Avatar entity matrix", "", "", "", ""
             ], {align: "end"})}
             ${Block("br", new Array(10).fill(""), {align: "end"})}
         </div>
@@ -64,4 +62,28 @@ root.addEventListener("afterrender", function() {
             child.textContent = (new Date()).toString();
         }
     }, 1000);
+});
+
+let nf = new Intl.NumberFormat("en", {minimumFractionDigits: 3, maximumFractionDigits: 3});
+
+game.on("afterrender", function() {
+    // Update local matrix display
+    let bl = root.querySelector(".bl");
+    let matrix = game.camera.get_component(Cervus.components.Transform).matrix;
+    let values = [
+        [matrix[0], matrix[4], matrix[8], matrix[12]],
+        [matrix[1], matrix[5], matrix[9], matrix[13]],
+        [matrix[2], matrix[6], matrix[10], matrix[14]],
+        [matrix[3], matrix[7], matrix[11], matrix[15]]
+    ];
+
+    // Skip the header.
+    let children = [...bl.children].slice(1);
+    for (let [i, line] of children.entries()) {
+        for (let child of line.querySelector(".glitch").children) {
+            child.textContent = values[i].map(n => nf.format(n)).join(" ");
+        }
+
+        i++;
+    }
 });

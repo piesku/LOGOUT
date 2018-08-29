@@ -37,6 +37,8 @@ const game = new Cervus.core.Game({
   clear_color: CLEAR_COLOR,
 });
 
+export {game as default};
+
 game.canvas.addEventListener(
   'click', () => game.canvas.requestPointerLock()
 );
