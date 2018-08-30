@@ -100,8 +100,10 @@ for (let i = 0; i < 20; i++) {
 /* global Cervus */
 
 const CLEAR_COLOR = "333";
-const BUILDING_COLOR = "000";
+const BUILDING_COLOR = "222";
 const NEON_COLORS = ["28D7FE", "A9FFDC", "FED128"];
+const NEON_LIGHT_MOUNT = [0, 0, -20];
+const NEON_INTENSITY = 100;
 
 function hex_to_rgb(hex) {
   if (hex.charAt(0) === '#') {
@@ -126,14 +128,21 @@ const game = new Cervus.core.Game({
   clear_color: CLEAR_COLOR,
 });
 
+window.game = game;
+
 game.canvas.addEventListener(
   'click', () => game.canvas.requestPointerLock()
 );
 
-game.camera.get_component(Cervus.components.Transform).position = [0, 20, 0];
-game.camera.get_component(Cervus.components.Move).keyboard_controlled = true;
-game.camera.get_component(Cervus.components.Move).mouse_controlled = true;
-game.camera.get_component(Cervus.components.Move).move_speed = 35;
+game.camera.get_component(Cervus.components.Transform).set({
+    position: [-117, 127, -79],
+    rotation: [-0.0602, 0.247, 0.015, 0.967],
+});
+game.camera.get_component(Cervus.components.Move).set({
+    keyboard_controlled: true,
+    mouse_controlled: true,
+    move_speed: 35,
+});
 
 // Remove the default light.
 game.remove(game.light);
@@ -178,6 +187,7 @@ plane.get_component(Cervus.components.Render).color = BUILDING_COLOR;
 plane.get_component(Cervus.components.Transform).scale = [1000, 1, 1000];
 game.add(plane);
 
+// Builing hight above ground is Y/2, because it also extends below the ground.
 create_building({
     position: [20, 0, 100],
     scale: [50, 500, 40],
@@ -188,9 +198,9 @@ create_building({
 
 create_building({
     position: [-30, 0, 50],
-    scale: [45, 40, 15],
-    neon_position: [15, 15, -10],
-    neon_scale: [10, 5, 1],
+    scale: [45, 200, 15],
+    neon_position: [0, 90, -10],
+    neon_scale: [30, 5, 1],
     neon_color: NEON_COLORS[1],
 });
 
@@ -232,11 +242,11 @@ function create_building(options) {
     let neon_light = new Cervus.core.Entity({
         components: [
             new Cervus.components.Transform({
-                position: [0, 0, -2]
+                position: NEON_LIGHT_MOUNT
             }),
             new Cervus.components.Light({
                 color: neon_color,
-                intensity: 0.6,
+                intensity: NEON_INTENSITY,
             }),
             // new Cervus.components.Render({
             //     color: "fff",

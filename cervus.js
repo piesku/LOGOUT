@@ -76,11 +76,6 @@ let ARRAY_TYPE = (typeof Float32Array !== 'undefined') ? Float32Array : Array;
  */
 
 
-/**
- * Convert Degree To Radian
- *
- * @param {Number} a Angle in Degrees
- */
 
 
 /**
@@ -93,16 +88,6 @@ let ARRAY_TYPE = (typeof Float32Array !== 'undefined') ? Float32Array : Array;
  * @returns {Boolean} True if the numbers are approximately equal, false otherwise.
  */
 
-/**
- * 3 Dimensional Vector
- * @module vec3
- */
-
-/**
- * Creates a new, empty vec3
- *
- * @returns {vec3} a new 3D vector
- */
 function create() {
   let out = new ARRAY_TYPE(3);
   if(ARRAY_TYPE != Float32Array) {
@@ -656,16 +641,6 @@ var vec3 = Object.freeze({
 	lerp: lerp
 });
 
-/**
- * 4x4 Matrix<br>Format: column-major, when typed out it looks like row-major<br>The matrices are being post multiplied.
- * @module mat4
- */
-
-/**
- * Creates a new identity mat4
- *
- * @returns {mat4} a new 4x4 matrix
- */
 function create$1() {
   let out = new ARRAY_TYPE(16);
   if(ARRAY_TYPE != Float32Array) {
@@ -1524,16 +1499,6 @@ var mat4 = Object.freeze({
 	look_at: lookAt
 });
 
-/**
- * 3x3 Matrix
- * @module mat3
- */
-
-/**
- * Creates a new identity mat3
- *
- * @returns {mat3} a new 3x3 matrix
- */
 function create$3() {
   let out = new ARRAY_TYPE(9);
   if(ARRAY_TYPE != Float32Array) {
@@ -1858,16 +1823,6 @@ function create$3() {
  * @function
  */
 
-/**
- * 4 Dimensional Vector
- * @module vec4
- */
-
-/**
- * Creates a new, empty vec4
- *
- * @returns {vec4} a new 4D vector
- */
 function create$4() {
   let out = new ARRAY_TYPE(4);
   if(ARRAY_TYPE != Float32Array) {
@@ -2260,16 +2215,6 @@ const forEach$1 = (function() {
   };
 })();
 
-/**
- * Quaternion
- * @module quat
- */
-
-/**
- * Creates a new identity quat
- *
- * @returns {quat} a new quaternion
- */
 function create$2() {
   let out = new ARRAY_TYPE(4);
   if(ARRAY_TYPE != Float32Array) {
@@ -2772,10 +2717,6 @@ const setAxes = (function() {
   };
 })();
 
-// XXX gl-matrix has a bug in quat.setAxes:
-// https://github.com/toji/gl-matrix/issues/234
-// The following implementation changes the order of axes to match our
-// interpretation.
 function set_axes(out, left, up, forward) {
   const matrix = Float32Array.of(...left, ...up, ...forward);
   return normalize$1(out, fromMat3(out, matrix));
@@ -3125,7 +3066,6 @@ class Render extends Component {
   }
 }
 
-// When using arrow keys for rotation simulate the mouse delta of this value.
 const KEY_ROTATION_DELTA = 3;
 
 const default_options$5 = {
@@ -3800,8 +3740,8 @@ class Tween {
 // vec4 c; // color
 // vec3 fp; // vertex position
 // vec3[MAX_LIGHTS] lp; // light position
-// vec2[MAX_LIGHTS] li; // light intensity
 // vec3[MAX_LIGHTS] lc; // light color
+// float[MAX_LIGHTS] li; // light intensity
 // int al; // active lights
 // vec3 fn; // vertex normals
 // vec2 v_t; // texture coordinates
@@ -3825,8 +3765,8 @@ function fragment(defines) {
       #define MAX_LIGHTS 100
 
       uniform vec3[MAX_LIGHTS] lp;
-      uniform vec2[MAX_LIGHTS] li;
       uniform vec3[MAX_LIGHTS] lc;
+      uniform float[MAX_LIGHTS] li;
       uniform int al;
 
       in vec3 fn;
@@ -3884,7 +3824,14 @@ function fragment(defines) {
 
         vec4 light = vec4(0.0, 0.0, 0.0, 1.0);
         for (int i = 0; i < al; i++) {
-          light += vec4(p_c.rgb * li[i].x + li[i].y * max(dot(n, normalize(lp[i] - fp)) * lc[i], 0.0), p_c.a);
+          vec3 light_dir = lp[i] - fp;
+          vec3 L = normalize(light_dir);
+          float light_dist = length(light_dir);
+
+          float diffuse_factor = max(dot(n, L), 0.0);
+
+          vec3 rgb = p_c.rgb * diffuse_factor * lc[i] * li[i] / light_dist;
+          light += vec4(rgb, p_c.a);
         }
 
         #ifdef FOG
@@ -4382,27 +4329,22 @@ class PhongMaterial extends Material {
     const lights = game.get_entities_by_component(Light);
     const lights_count = lights.length;
     let light_position = new Float32Array(lights_count * 3);
-    let light_intensity = new Float32Array(lights_count * 2);
     let light_color = new Float32Array(lights_count * 3);
+    let light_intensity = new Float32Array(lights_count);
 
     for (let i = 0; i < lights_count; i++) {
       let light_transform = lights[i].get_component(Transform);
       let world_position = light_transform.world_matrix.slice(12, 15);
       light_position.set(world_position, i * 3);
-      light_intensity.set([
-        lights[i].get_component(Light).intensity,
-        1 - lights[i].get_component(Light).intensity
-      ], i * 2);
       light_color.set(lights[i].get_component(Light).color_vec, i * 3);
+      light_intensity[i] = lights[i].get_component(Light).intensity;
     }
 
     gl.uniform1i(this.uniforms.al, lights_count);
 
     gl.uniform3fv(this.uniforms.lp, light_position);
-    gl.uniform2fv(this.uniforms.li, light_intensity);
     gl.uniform3fv(this.uniforms.lc, light_color);
-
-
+    gl.uniform1fv(this.uniforms.li, light_intensity);
   }
 }
 
