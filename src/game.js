@@ -6,6 +6,10 @@ const NEON_COLORS = ["28D7FE", "A9FFDC", "FED128"];
 const NEON_LIGHT_MOUNT = [0, 0, -20];
 const NEON_INTENSITY = 100;
 
+import map from './map.json';
+const MAX_BUILDING_HEIGHT = 500;
+const MIN_BUILDING_HEIGHT = 100;
+
 class Group extends Cervus.core.Entity {
   constructor(options) {
     super(Object.assign({
@@ -47,7 +51,7 @@ game.canvas.addEventListener(
 );
 
 game.camera.get_component(Cervus.components.Transform).set({
-    position: [-117, 127, -79],
+    position: [map.starting_point.x, 1.75, map.starting_point.y],
     rotation: [-0.0602, 0.247, 0.015, 0.967],
 });
 game.camera.get_component(Cervus.components.Move).set({
@@ -172,4 +176,26 @@ function create_building(options) {
     group.add(neon);
 
     game.add(group);
+}
+
+for (let building of map.buildings) {
+    break;
+    let {x1, y1, x2, y2} = building;
+    let xsize = Math.abs(x2 - x1);
+    let zsize = Math.abs(y2 - y1);
+    console.log({xsize, zsize});
+
+    let center_x = x1 + (xsize/2);
+    let center_z = y1 + (zsize/2);
+
+    let height = Cervus.core.integer(
+        MIN_BUILDING_HEIGHT, MAX_BUILDING_HEIGHT);
+
+    create_building({
+        position: [center_x, 0, center_z],
+        scale: [xsize, height, zsize],
+        neon_position: [0, 140, - (zsize/2) - 2],
+        neon_scale: [20, 10, 1],
+        neon_color: Cervus.core.element_of(NEON_COLORS),
+    });
 }

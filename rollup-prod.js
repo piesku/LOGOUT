@@ -1,5 +1,6 @@
 import resolve from 'rollup-plugin-node-resolve';
 import minify from 'rollup-plugin-babel-minify';
+import json from 'rollup-plugin-json';
 
 export default {
   input: './src/index.js',
@@ -10,5 +11,6 @@ export default {
   plugins: [
     resolve(),
     minify({ comments: false }),
+    json(),
   ],
 };
