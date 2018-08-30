@@ -1,4 +1,3 @@
-document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>');
 var Cervus = (function (exports) {
 'use strict';
 
@@ -77,6 +76,11 @@ let ARRAY_TYPE = (typeof Float32Array !== 'undefined') ? Float32Array : Array;
  */
 
 
+/**
+ * Convert Degree To Radian
+ *
+ * @param {Number} a Angle in Degrees
+ */
 
 
 /**
@@ -89,6 +93,16 @@ let ARRAY_TYPE = (typeof Float32Array !== 'undefined') ? Float32Array : Array;
  * @returns {Boolean} True if the numbers are approximately equal, false otherwise.
  */
 
+/**
+ * 3 Dimensional Vector
+ * @module vec3
+ */
+
+/**
+ * Creates a new, empty vec3
+ *
+ * @returns {vec3} a new 3D vector
+ */
 function create() {
   let out = new ARRAY_TYPE(3);
   if(ARRAY_TYPE != Float32Array) {
@@ -642,6 +656,16 @@ var vec3 = Object.freeze({
 	lerp: lerp
 });
 
+/**
+ * 4x4 Matrix<br>Format: column-major, when typed out it looks like row-major<br>The matrices are being post multiplied.
+ * @module mat4
+ */
+
+/**
+ * Creates a new identity mat4
+ *
+ * @returns {mat4} a new 4x4 matrix
+ */
 function create$1() {
   let out = new ARRAY_TYPE(16);
   if(ARRAY_TYPE != Float32Array) {
@@ -1500,6 +1524,16 @@ var mat4 = Object.freeze({
 	look_at: lookAt
 });
 
+/**
+ * 3x3 Matrix
+ * @module mat3
+ */
+
+/**
+ * Creates a new identity mat3
+ *
+ * @returns {mat3} a new 3x3 matrix
+ */
 function create$3() {
   let out = new ARRAY_TYPE(9);
   if(ARRAY_TYPE != Float32Array) {
@@ -1824,6 +1858,16 @@ function create$3() {
  * @function
  */
 
+/**
+ * 4 Dimensional Vector
+ * @module vec4
+ */
+
+/**
+ * Creates a new, empty vec4
+ *
+ * @returns {vec4} a new 4D vector
+ */
 function create$4() {
   let out = new ARRAY_TYPE(4);
   if(ARRAY_TYPE != Float32Array) {
@@ -2216,6 +2260,16 @@ const forEach$1 = (function() {
   };
 })();
 
+/**
+ * Quaternion
+ * @module quat
+ */
+
+/**
+ * Creates a new identity quat
+ *
+ * @returns {quat} a new quaternion
+ */
 function create$2() {
   let out = new ARRAY_TYPE(4);
   if(ARRAY_TYPE != Float32Array) {
@@ -2718,6 +2772,10 @@ const setAxes = (function() {
   };
 })();
 
+// XXX gl-matrix has a bug in quat.setAxes:
+// https://github.com/toji/gl-matrix/issues/234
+// The following implementation changes the order of axes to match our
+// interpretation.
 function set_axes(out, left, up, forward) {
   const matrix = Float32Array.of(...left, ...up, ...forward);
   return normalize$1(out, fromMat3(out, matrix));
@@ -2827,9 +2885,8 @@ class Entity {
     this.entities.add(entity);
 
     if (this.game) {
-      // If this entity already exists, make sure its children's components are
-      // accounted for.
-      this.game.add_to_components_sets(entity);
+      // Track the child if the current entity already exists in the scene.
+      this.game.track_entity(entity);
     }
   }
 
@@ -3068,6 +3125,7 @@ class Render extends Component {
   }
 }
 
+// When using arrow keys for rotation simulate the mouse delta of this value.
 const KEY_ROTATION_DELTA = 3;
 
 const default_options$5 = {
@@ -3592,7 +3650,9 @@ class Game {
     this.emit('afterrender');
   }
 
-  add_to_components_sets(entity) {
+  track_entity(entity) {
+    entity.game = this;
+
     for (let component of entity.components.values()) {
       if (!this.entities_by_component.has(component.constructor)) {
         this.entities_by_component.set(component.constructor, new Set());
@@ -3600,18 +3660,20 @@ class Game {
       this.entities_by_component.get(component.constructor).add(entity);
     }
 
-    // Recursively add children's components, too.
+    // Recursively track children.
     for (let child of entity.entities) {
-      this.add_to_components_sets(child);
+      this.track_entity(child);
     }
   }
 
-  remove_from_components_sets(entity) {
+  untrack_entity(entity) {
+    entity.game = null;
+
     for (let component of entity.components.values()) {
       this.entities_by_component.get(component.constructor).delete(entity);
     }
 
-    // Recursively remove children's components, too.
+    // Recursively untrack children.
     for (let child of entity.entities) {
       this.remove_from_components_sets(child);
     }
@@ -3622,14 +3684,13 @@ class Game {
   }
 
   add(entity) {
-    entity.game = this;
     this.entities.add(entity);
-    this.add_to_components_sets(entity);
+    this.track_entity(entity);
   }
 
   remove(entity) {
-    this.remove_from_components_sets(entity);
     this.entities.delete(entity);
+    this.untrack_entity(entity);
   }
 }
 
