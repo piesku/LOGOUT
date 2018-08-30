@@ -5,15 +5,16 @@ import code_anim from "./anim_code";
 import "./anim_glitch";
 import game from "./game";
 
-function HUD({lastActive}) {
+function HUD({lastActive, systems}) {
+    let systems_status = [];
+    for (let [sys, stat] of Object.entries(systems)) {
+        systems_status.push(`${sys} = ${stat}`);
+    }
     return html`
         <div class="screen layout">
             ${Block("tl", [
                 "System status",
-                "Grid Movement: Online",
-                "Camera: Online",
-                "Freelook: Offline",
-                "Chromatic Vision: Offline",
+                ...systems_status
             ])}
             ${Block("tm", [
                 "N ----- NE ----- E",
