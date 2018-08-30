@@ -51,8 +51,8 @@ game.canvas.addEventListener(
 );
 
 game.camera.get_component(Cervus.components.Transform).set({
-    position: [map.starting_point.x, 1.75, map.starting_point.y],
-    rotation: [-0.0602, 0.247, 0.015, 0.967],
+    position: [map.starting_point.x, 20, map.starting_point.y],
+    rotation: [-0.297, 0.018, 0.006, 0.955],
 });
 game.camera.get_component(Cervus.components.Move).set({
     keyboard_controlled: true,
@@ -100,33 +100,8 @@ const wireframe = new Cervus.materials.WireframeMaterial({
 const plane = new Cervus.shapes.Box();
 plane.get_component(Cervus.components.Render).material = building_material;
 plane.get_component(Cervus.components.Render).color = BUILDING_COLOR;
-plane.get_component(Cervus.components.Transform).scale = [1000, 1, 1000];
+plane.get_component(Cervus.components.Transform).scale = [map.size.x * 10, 1, map.size.y * 10];
 game.add(plane);
-
-// Builing hight above ground is Y/2, because it also extends below the ground.
-create_building({
-    position: [20, 0, 100],
-    scale: [50, 500, 40],
-    neon_position: [0, 240, -22],
-    neon_scale: [25, 10, 1],
-    neon_color: NEON_COLORS[0],
-});
-
-create_building({
-    position: [-30, 0, 50],
-    scale: [45, 200, 15],
-    neon_position: [0, 90, -10],
-    neon_scale: [30, 5, 1],
-    neon_color: NEON_COLORS[1],
-});
-
-create_building({
-    position: [-30, 0, 120],
-    scale: [35, 300, 40],
-    neon_position: [0, 140, -22],
-    neon_scale: [20, 10, 1],
-    neon_color: NEON_COLORS[2],
-});
 
 function create_building(options) {
     let {position, scale} = options;
@@ -179,11 +154,9 @@ function create_building(options) {
 }
 
 for (let building of map.buildings) {
-    break;
     let {x1, y1, x2, y2} = building;
     let xsize = Math.abs(x2 - x1);
     let zsize = Math.abs(y2 - y1);
-    console.log({xsize, zsize});
 
     let center_x = x1 + (xsize/2);
     let center_z = y1 + (zsize/2);
