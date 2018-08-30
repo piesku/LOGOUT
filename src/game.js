@@ -63,7 +63,7 @@ let neon_material = new Cervus.materials.BasicMaterial({
 
 neon_material.add_fog({
   color: hex_to_rgb(CLEAR_COLOR),
-  distance: new Float32Array([100, 300]),
+  distance: new Float32Array([100, 500]),
 });
 
 let building_material = new Cervus.materials.PhongMaterial({
