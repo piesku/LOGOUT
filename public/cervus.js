@@ -3738,8 +3738,8 @@ class Tween {
 // vec4 c; // color
 // vec3 fp; // vertex position
 // vec3[MAX_LIGHTS] lp; // light position
-// vec2[MAX_LIGHTS] li; // light intensity
 // vec3[MAX_LIGHTS] lc; // light color
+// float[MAX_LIGHTS] li; // light intensity
 // int al; // active lights
 // vec3 fn; // vertex normals
 // vec2 v_t; // texture coordinates
@@ -3763,8 +3763,8 @@ function fragment(defines) {
       #define MAX_LIGHTS 100
 
       uniform vec3[MAX_LIGHTS] lp;
-      uniform vec2[MAX_LIGHTS] li;
       uniform vec3[MAX_LIGHTS] lc;
+      uniform float[MAX_LIGHTS] li;
       uniform int al;
 
       in vec3 fn;
@@ -3822,7 +3822,14 @@ function fragment(defines) {
 
         vec4 light = vec4(0.0, 0.0, 0.0, 1.0);
         for (int i = 0; i < al; i++) {
-          light += vec4(p_c.rgb * li[i].x + li[i].y * max(dot(n, normalize(lp[i] - fp)) * lc[i], 0.0), p_c.a);
+          vec3 light_dir = lp[i] - fp;
+          vec3 L = normalize(light_dir);
+          float light_dist = length(light_dir);
+
+          float diffuse_factor = max(dot(n, L), 0.0);
+
+          vec3 rgb = p_c.rgb * diffuse_factor * lc[i] * li[i] / light_dist;
+          light += vec4(rgb, p_c.a);
         }
 
         #ifdef FOG
@@ -4320,27 +4327,22 @@ class PhongMaterial extends Material {
     const lights = game.get_entities_by_component(Light);
     const lights_count = lights.length;
     let light_position = new Float32Array(lights_count * 3);
-    let light_intensity = new Float32Array(lights_count * 2);
     let light_color = new Float32Array(lights_count * 3);
+    let light_intensity = new Float32Array(lights_count);
 
     for (let i = 0; i < lights_count; i++) {
       let light_transform = lights[i].get_component(Transform);
       let world_position = light_transform.world_matrix.slice(12, 15);
       light_position.set(world_position, i * 3);
-      light_intensity.set([
-        lights[i].get_component(Light).intensity,
-        1 - lights[i].get_component(Light).intensity
-      ], i * 2);
       light_color.set(lights[i].get_component(Light).color_vec, i * 3);
+      light_intensity[i] = lights[i].get_component(Light).intensity;
     }
 
     gl.uniform1i(this.uniforms.al, lights_count);
 
     gl.uniform3fv(this.uniforms.lp, light_position);
-    gl.uniform2fv(this.uniforms.li, light_intensity);
     gl.uniform3fv(this.uniforms.lc, light_color);
-
-
+    gl.uniform1fv(this.uniforms.li, light_intensity);
   }
 }
 
