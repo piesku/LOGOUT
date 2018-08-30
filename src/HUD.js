@@ -38,7 +38,9 @@ function HUD({lastActive, systems}) {
                 "<div class=box>No threats found</div>",
             ])}
             ${Block("bl", [
-                "Avatar entity matrix", "", "", "", ""
+                // Use empty lines of differnt length to use different
+                // glitch animations.
+                "Avatar entity matrix", "", " ", "  ", "   "
             ], {align: "end"})}
             ${Block("br", new Array(10).fill(""), {align: "end"})}
         </div>
