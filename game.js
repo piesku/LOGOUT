@@ -132,7 +132,7 @@ game.canvas.addEventListener(
 
 game.camera.get_component(Cervus.components.Transform).position = [0, 20, 0];
 game.camera.get_component(Cervus.components.Move).keyboard_controlled = true;
-//game.camera.get_component(Cervus.components.Move).mouse_controlled = true;
+game.camera.get_component(Cervus.components.Move).mouse_controlled = true;
 game.camera.get_component(Cervus.components.Move).move_speed = 35;
 
 // Remove the default light.
@@ -150,7 +150,7 @@ let neon_material = new Cervus.materials.BasicMaterial({
 
 neon_material.add_fog({
   color: hex_to_rgb(CLEAR_COLOR),
-  distance: new Float32Array([100, 500]),
+  distance: new Float32Array([100, 300]),
 });
 
 let building_material = new Cervus.materials.PhongMaterial({
