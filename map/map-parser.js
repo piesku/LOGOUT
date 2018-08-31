@@ -3,7 +3,7 @@ const parser = new vox.Parser();
 const palette = require('./palette');
 const fs = require('fs');
 
-const UNIT = 20;
+const UNIT = 10;
 
 const output_map = {
     size: {},
@@ -59,8 +59,8 @@ parser.parse('./map.vox').then((result) => {
                 output_map.buildings.push({
                     x1: x * UNIT,
                     y1: y * UNIT,
-                    x2: end_point.x * UNIT,
-                    y2: end_point.y * UNIT,
+                    x2: (end_point.x + 1) * UNIT,
+                    y2: (end_point.y + 1) * UNIT,
                 });
             }
         });
