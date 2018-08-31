@@ -4,11 +4,11 @@ const CLEAR_COLOR = "333";
 const BUILDING_COLOR = "222";
 const NEON_COLORS = ["28D7FE", "A9FFDC", "FED128"];
 const NEON_LIGHT_MOUNT = [0, 0, -20];
-const NEON_INTENSITY = 100;
+const NEON_INTENSITY = 15;
 
 import map from './map.json';
-const MAX_BUILDING_HEIGHT = 100;
-const MIN_BUILDING_HEIGHT = 10;
+const MAX_BUILDING_HEIGHT = 32;
+const MIN_BUILDING_HEIGHT = 8;
 
 class Group extends Cervus.core.Entity {
   constructor(options) {
@@ -56,7 +56,7 @@ game.camera.get_component(Cervus.components.Transform).set({
 game.camera.get_component(Cervus.components.Move).set({
     keyboard_controlled: true,
     mouse_controlled: true,
-    move_speed: 3.5,
+    move_speed: 5,
 });
 
 // Remove the default light.
@@ -74,7 +74,7 @@ let neon_material = new Cervus.materials.BasicMaterial({
 
 neon_material.add_fog({
   color: hex_to_rgb(CLEAR_COLOR),
-  distance: new Float32Array([100, 500]),
+  distance: new Float32Array([10, 100]),
 });
 
 let building_material = new Cervus.materials.PhongMaterial({
@@ -86,7 +86,7 @@ let building_material = new Cervus.materials.PhongMaterial({
 
 building_material.add_fog({
   color: hex_to_rgb(CLEAR_COLOR),
-  distance: new Float32Array([5, 300]),
+  distance: new Float32Array([0, 30]),
 });
 
 const wireframe = new Cervus.materials.WireframeMaterial({
@@ -99,7 +99,10 @@ const wireframe = new Cervus.materials.WireframeMaterial({
 const plane = new Cervus.shapes.Box();
 plane.get_component(Cervus.components.Render).material = building_material;
 plane.get_component(Cervus.components.Render).color = BUILDING_COLOR;
-plane.get_component(Cervus.components.Transform).scale = [map.size.x * 10, 1, map.size.y * 10];
+plane.get_component(Cervus.components.Transform).set({
+    position: [0, -0.5, 0],
+    scale: [map.size.x * 10, 1, map.size.y * 10],
+});
 game.add(plane);
 
 function create_building(options) {
@@ -164,10 +167,10 @@ for (let building of map.buildings) {
         MIN_BUILDING_HEIGHT, MAX_BUILDING_HEIGHT);
 
     create_building({
-        position: [center_x, 0, center_z],
+        position: [center_x, height / 2, center_z],
         scale: [xsize, height, zsize],
-        neon_position: [0, 140, - (zsize/2) - 2],
-        neon_scale: [20, 10, 1],
+        neon_position: [0, 1, - (zsize/2) - 0.2],
+        neon_scale: [4, 2, 0.1],
         neon_color: Cervus.core.element_of(NEON_COLORS),
     });
 }
