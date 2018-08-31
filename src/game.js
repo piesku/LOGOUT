@@ -7,8 +7,8 @@ const NEON_LIGHT_MOUNT = [0, 0, -20];
 const NEON_INTENSITY = 100;
 
 import map from './map.json';
-const MAX_BUILDING_HEIGHT = 500;
-const MIN_BUILDING_HEIGHT = 100;
+const MAX_BUILDING_HEIGHT = 100;
+const MIN_BUILDING_HEIGHT = 10;
 
 class Group extends Cervus.core.Entity {
   constructor(options) {
@@ -51,13 +51,12 @@ game.canvas.addEventListener(
 );
 
 game.camera.get_component(Cervus.components.Transform).set({
-    position: [map.starting_point.x, 20, map.starting_point.y],
-    rotation: [-0.297, 0.018, 0.006, 0.955],
+    position: [map.starting_point.x, 1.75, map.starting_point.y],
 });
 game.camera.get_component(Cervus.components.Move).set({
     keyboard_controlled: true,
     mouse_controlled: true,
-    move_speed: 35,
+    move_speed: 3.5,
 });
 
 // Remove the default light.

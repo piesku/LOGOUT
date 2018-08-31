@@ -3,7 +3,7 @@ const parser = new vox.Parser();
 const palette = require('./palette');
 const fs = require('fs');
 
-const UNIT = 10;
+const UNIT = 4;
 
 const output_map = {
     size: {},
