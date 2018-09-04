@@ -1,3 +1,4 @@
+import {html} from "./innerself";
 import store from "./store";
 import Block from "./Block";
 import Line from "./Line";

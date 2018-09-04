@@ -1,4 +1,4 @@
-function html([first, ...strings], ...values) {
+export function html([first, ...strings], ...values) {
     // Weave the literal strings and the interpolations.
     // We don't have to explicitly handle array-typed values
     // because concat will spread them flat for us.
@@ -11,7 +11,7 @@ function html([first, ...strings], ...values) {
         .join("");
 }
 
-function createStore(reducer) {
+export function createStore(reducer) {
     let state = reducer();
     const roots = new Map();
     const prevs = new Map();

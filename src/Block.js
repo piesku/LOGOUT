@@ -1,3 +1,4 @@
+import {html} from "./innerself";
 import Line from "./Line";
 
 export default

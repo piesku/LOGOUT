@@ -1,3 +1,5 @@
+import {html} from "./innerself";
+
 export default
 function Line(text) {
     // A deterministic digest function provides variety and ensures
