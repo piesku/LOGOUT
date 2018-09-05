@@ -4,7 +4,7 @@ export class Component {
     after() {}
 }
 
-export function createStore(reducer) {
+export default function(reducer) {
     let state = reducer();
     let roots = new Map();
     let prevs = new Map();
