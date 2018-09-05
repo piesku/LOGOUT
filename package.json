@@ -8,7 +8,7 @@
   "scripts": {
     "test": "node tests/logout-tests.js",
     "build": "rollup -c",
-    "dev": "rollup -c -w"
+    "dev": "rollup -c rollup-dev.js -w"
   },
   "devDependencies": {
     "babel-eslint": "^8.0.0",
