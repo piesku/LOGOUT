@@ -1,4 +1,4 @@
-import {html} from "./innerself";
+import {html} from "./store";
 import Line from "./Line";
 
 export default

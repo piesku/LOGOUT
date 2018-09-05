@@ -1,5 +1,5 @@
-import {html} from "./innerself";
-import store from "./store";
+import {Component} from "./innerself";
+import {connect, html} from "./store";
 import Block from "./Block";
 import Line from "./Line";
 import code_anim from "./anim_code";
@@ -7,48 +7,52 @@ import "./anim_glitch";
 import game from "./game";
 
 function HUD({lastActive, systems}) {
-    let systems_status = [];
-    for (let [sys, stat] of Object.entries(systems)) {
-        systems_status.push(`${sys} = ${stat}`);
+    return new class extends Component {
+        render() {
+            let systems_status = [];
+            for (let [sys, stat] of Object.entries(systems)) {
+                systems_status.push(`${sys} = ${stat}`);
+            }
+            return html`
+                <div class="screen layout">
+                    ${Block("tl", [
+                        "System status",
+                        ...systems_status
+                    ])}
+                    ${Block("tm", [
+                        "N ----- NE ----- E",
+                    ], {justify: "center"})}
+                    ${Block("tr", [
+                        (new Date()).toString()
+                    ], {justify: "end"})}
+                    ${Block("ml", [
+                        "Active objectives",
+                        "> 01. Enhance capabilities",
+                        "> 02. Locate exit",
+                        "> 03. Init logout sequence",
+                    ])}
+                    ${Block("mm", [
+                        lastActive,
+                        "<div class='box big'>Activated</div>",
+                    ], {align: "center", justify: "center", cls: "flicker"})}
+                    ${Block("mr", [
+                        "Running analysis",
+                        "Assessment complete",
+                        "<div class=box>No threats found</div>",
+                    ])}
+                    ${Block("bl", [
+                        // Use empty lines of differnt length to use different
+                        // glitch animations.
+                        "Avatar entity matrix", "", " ", "  ", "   "
+                    ], {align: "end"})}
+                    ${Block("br", new Array(10).fill(""), {align: "end"})}
+                </div>
+            `;
+        }
     }
-    return html`
-        <div class="screen layout">
-            ${Block("tl", [
-                "System status",
-                ...systems_status
-            ])}
-            ${Block("tm", [
-                "N ----- NE ----- E",
-            ], {justify: "center"})}
-            ${Block("tr", [
-                (new Date()).toString()
-            ], {justify: "end"})}
-            ${Block("ml", [
-                "Active objectives",
-                "> 01. Enhance capabilities",
-                "> 02. Locate exit",
-                "> 03. Init logout sequence",
-            ])}
-            ${Block("mm", [
-                lastActive,
-                "<div class='box big'>Activated</div>",
-            ], {align: "center", justify: "center", cls: "flicker"})}
-            ${Block("mr", [
-                "Running analysis",
-                "Assessment complete",
-                "<div class=box>No threats found</div>",
-            ])}
-            ${Block("bl", [
-                // Use empty lines of differnt length to use different
-                // glitch animations.
-                "Avatar entity matrix", "", " ", "  ", "   "
-            ], {align: "end"})}
-            ${Block("br", new Array(10).fill(""), {align: "end"})}
-        </div>
-    `;
 }
 
-export default store.connect(HUD);
+export default connect(HUD);
 
 let root = document.querySelector("#root");
 

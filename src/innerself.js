@@ -1,9 +1,33 @@
-export function html([first, ...strings], ...values) {
+function render(phase, component) {
+    if (component instanceof Component) {
+        let output = component.render();
+
+        switch (phase) {
+            case "BEFORE":
+                return component.before();
+            case "AFTER":
+                return component.after();
+            default:
+                return output;
+        }
+    }
+
+    // All other types are handled in html.
+    return component;
+}
+
+export class Component {
+    before() {}
+    render() {}
+    after() {}
+}
+
+function html(phase, [first, ...strings], ...values) {
     // Weave the literal strings and the interpolations.
     // We don't have to explicitly handle array-typed values
     // because concat will spread them flat for us.
     return values.reduce(
-        (acc, cur) => acc.concat(cur, strings.shift()),
+        (acc, cur) => acc.concat(render(phase, cur), strings.shift()),
         [first])
 
         // Filter out interpolations which are bools, null or undefined.
@@ -13,30 +37,24 @@ export function html([first, ...strings], ...values) {
 
 export function createStore(reducer) {
     let state = reducer();
+    let phase = "RENDER";
     const roots = new Map();
     const prevs = new Map();
 
-    function render() {
+    function renderRoots() {
         for (const [root, component] of roots) {
-            const output = component();
+            const output = render(phase = "RENDER", component());
 
             // Compare the new output with the last output for this root.
             // Don't trust the current value of root.innerHTML as it may have
             // been changed by other scripts or extensions.
             if (output !== prevs.get(root)) {
-                // Clean up listeners before the DOM is destroyed.
-                root.dispatchEvent(
-                    new CustomEvent("beforerender", {detail: state}));
+                render(phase = "BEFORE", component());
 
                 // Render the output of the component to DOM and cache it.
                 prevs.set(root, root.innerHTML = output);
 
-                // Dispatch an event on the root to give developers a chance to
-                // do some housekeeping after the whole DOM is replaced under
-                // the root. You can re-focus elements in the listener to this
-                // event. See example03.
-                root.dispatchEvent(
-                    new CustomEvent("afterrender", {detail: state}));
+                render(phase = "AFTER", component());
             }
         }
     };
@@ -44,7 +62,7 @@ export function createStore(reducer) {
     return {
         attach(component, root) {
             roots.set(root, component);
-            render();
+            renderRoots();
             return root;
         },
         connect(component) {
@@ -53,7 +71,10 @@ export function createStore(reducer) {
         },
         dispatch(action, ...args) {
             state = reducer(state, action, args);
-            render();
+            renderRoots();
+        },
+        html(...args) {
+            return html(phase, ...args);
         },
     };
 }
