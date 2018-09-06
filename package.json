@@ -30,5 +30,8 @@
     "rollup-plugin-livereload": "^0.6.0",
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-serve": "^0.4.2"
+  },
+  "dependencies": {
+    "gl-matrix": "^2.8.1"
   }
 }
