@@ -1,6 +1,6 @@
 import {attach, dispatch} from "./store";
-import HUD from "./HUD";
+import App from "./App";
 import "./game";
 
-attach(HUD, document.querySelector("#root"));
+attach(App, document.querySelector("#root"));
 window.dispatch = dispatch;

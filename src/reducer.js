@@ -1,4 +1,5 @@
 const init = {
+    view: "playing",
     lastActive: "Power Fallback",
     systems: {
         "Power Fallback": "Online",
