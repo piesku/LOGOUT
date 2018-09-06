@@ -2,6 +2,7 @@ import { Component } from "./innerself";
 import { connect, html } from "./store";
 import Block from "./Block";
 import Line from "./Line";
+import Glitch from "./Glitch";
 import code_anim from "./anim_code";
 import "./anim_glitch";
 import game from "./game";
@@ -38,10 +39,8 @@ function HUD({ lastActive, systems }) {
                 br.appendChild(div.firstElementChild);
 
                 // Update datetime
-                let tr = root.querySelector(".tr .glitch");
-                for (let child of tr.children) {
-                    child.textContent = (new Date()).toString();
-                }
+                let tr = root.querySelector(".tr .line");
+                tr.innerHTML = Glitch((new Date()).toString());
             }, 1000);
 
             game.on("afterrender", () => {
@@ -56,15 +55,13 @@ function HUD({ lastActive, systems }) {
                 ];
 
                 // Skip the header.
-                let children = [...bl.children].slice(1);
-                for (let [i, line] of children.entries()) {
-                    for (let child of line.querySelector(".glitch").children) {
-                        child.textContent = values[i].map(
+                let rows = [...bl.querySelectorAll(".line")].slice(1);
+                for (let [i, line] of rows.entries()) {
+                    for (let glitchPart of line.querySelectorAll(".glitch > div")) {
+                        glitchPart.textContent = values[i].map(
                             n => this.nf.format(n)
                         ).join(" ");
                     }
-
-                    i++;
                 }
 
                 let tm = root.querySelector(".tm");
