@@ -30,11 +30,13 @@ export default function(reducer) {
     }
 
 
-    function renderRoots() {
+    function renderRoots(nextState) {
+        let prevState = state;
         for (let [_root, component] of roots) {
             root = _root;
 
             phase = "RENDER";
+            state = nextState;
             let output = renderComponent(component());
 
             // Compare the new output with the last output for this root.
@@ -42,6 +44,7 @@ export default function(reducer) {
             // been changed by other scripts or extensions.
             if (output !== prevs.get(root)) {
                 phase = "BEFORE";
+                state = prevState;
                 renderComponent(component());
 
                 // Render the output of the component to DOM and cache it.
@@ -49,6 +52,7 @@ export default function(reducer) {
                 prevs.set(root, output);
 
                 phase = "AFTER";
+                state = nextState;
                 renderComponent(component());
             }
         }
@@ -57,15 +61,15 @@ export default function(reducer) {
     return {
         attach(component, root) {
             roots.set(root, component);
-            renderRoots();
+            renderRoots(state);
         },
         connect(component) {
             // Return a decorated component function.
             return (...args) => component(state, ...args);
         },
         dispatch(action, ...args) {
-            state = reducer(state, action, args);
-            renderRoots();
+            let nextState = reducer(state, action, args);
+            renderRoots(nextState);
         },
         html([first, ...strings], ...values) {
             // Weave the literal strings and the interpolations.
