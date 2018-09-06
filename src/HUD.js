@@ -2,7 +2,7 @@ import { Component } from "./innerself";
 import { connect, html } from "./store";
 import Block from "./Block";
 import Line from "./Line";
-import Glitch from "./Glitch";
+import Glitch, {set_glitch} from "./Glitch";
 import code_anim from "./anim_code";
 import "./anim_glitch";
 import game from "./game";
@@ -57,11 +57,9 @@ function HUD({ lastActive, systems }) {
                 // Skip the header.
                 let rows = [...bl.querySelectorAll(".line")].slice(1);
                 for (let [i, line] of rows.entries()) {
-                    for (let glitchPart of line.querySelectorAll(".glitch > div")) {
-                        glitchPart.textContent = values[i].map(
-                            n => this.nf.format(n)
-                        ).join(" ");
-                    }
+                    set_glitch(
+                        line,
+                        values[i].map(n => this.nf.format(n)).join(" "));
                 }
 
                 let tm = root.querySelector(".tm");
@@ -69,7 +67,7 @@ function HUD({ lastActive, systems }) {
                 let sign = forward[0] > 0 ? -1 : 1;
                 let start = Math.round(angle([0, 0, 1], forward) / step) * sign;
                 let section = (compass + compass + compass).slice(compass_length + start, compass_length + start + visible_characters);
-                tm.textContent = section;
+                set_glitch(tm, section);
             });
         }
 

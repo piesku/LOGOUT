@@ -13,3 +13,9 @@ function Glitch(text) {
         </div>
     `;
 }
+
+export function set_glitch(line, text) {
+    for (let glitchPart of line.querySelectorAll(".glitch > div")) {
+        glitchPart.textContent = text;
+    }
+}
