@@ -1,12 +1,19 @@
-import {Component} from "./innerself";
-import {connect, html} from "./store";
+import { Component } from "./innerself";
+import { connect, html } from "./store";
 import Block from "./Block";
 import Line from "./Line";
 import code_anim from "./anim_code";
 import "./anim_glitch";
 import game from "./game";
+import { angle } from 'gl-matrix/src/gl-matrix/vec3';
 
-function HUD({lastActive, systems}) {
+let compass = "NW ---- N ---- NE ---- E ---- SE ---- S ---- SW ---- W ---- ";
+let compass_length = compass.length;
+compass = compass + compass + compass;
+let step = (Math.PI * 2) / compass_length;
+let visible_characters = 18;
+
+function HUD({ lastActive, systems }) {
     return new class extends Component {
         constructor() {
             super();
@@ -59,6 +66,13 @@ function HUD({lastActive, systems}) {
 
                     i++;
                 }
+
+                let tm = root.querySelector(".tm");
+                let forward = game.camera.get_component(Cervus.components.Transform).forward;
+                let sign = forward[0] > 0 ? -1 : 1;
+                let start = Math.round(angle([0, 0, 1], forward) / step) * sign;
+                let section = (compass + compass + compass).slice(compass_length + start, compass_length + start + visible_characters);
+                tm.textContent = section;
             });
         }
 
@@ -70,36 +84,36 @@ function HUD({lastActive, systems}) {
             return html`
                 <div class="screen layout">
                     ${Block("tl", [
-                        "System status",
-                        ...systems_status
-                    ])}
+                    "System status",
+                    ...systems_status
+                ])}
                     ${Block("tm", [
-                        "N ----- NE ----- E",
-                    ], {justify: "center"})}
+                    "N ----- NE ----- E",
+                ], { justify: "center" })}
                     ${Block("tr", [
-                        (new Date()).toString()
-                    ], {justify: "end"})}
+                    (new Date()).toString()
+                ], { justify: "end" })}
                     ${Block("ml", [
-                        "Active objectives",
-                        "> 01. Enhance capabilities",
-                        "> 02. Locate exit",
-                        "> 03. Init logout sequence",
-                    ])}
+                    "Active objectives",
+                    "> 01. Enhance capabilities",
+                    "> 02. Locate exit",
+                    "> 03. Init logout sequence",
+                ])}
                     ${Block("mm", [
-                        lastActive,
-                        "<div class='box big'>Activated</div>",
-                    ], {align: "center", justify: "center", cls: "flicker"})}
+                    lastActive,
+                    "<div class='box big'>Activated</div>",
+                ], { align: "center", justify: "center", cls: "flicker" })}
                     ${Block("mr", [
-                        "Running analysis",
-                        "Assessment complete",
-                        "<div class=box>No threats found</div>",
-                    ])}
+                    "Running analysis",
+                    "Assessment complete",
+                    "<div class=box>No threats found</div>",
+                ])}
                     ${Block("bl", [
-                        // Use empty lines of differnt length to use different
-                        // glitch animations.
-                        "Avatar entity matrix", "", " ", "  ", "   "
-                    ], {align: "end"})}
-                    ${Block("br", new Array(10).fill(""), {align: "end"})}
+                    // Use empty lines of differnt length to use different
+                    // glitch animations.
+                    "Avatar entity matrix", "", " ", "  ", "   "
+                ], { align: "end" })}
+                    ${Block("br", new Array(10).fill(""), { align: "end" })}
                 </div>
             `;
         }
