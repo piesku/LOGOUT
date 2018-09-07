@@ -5,3 +5,4 @@ public/*.js
 dist
 
 .DS_Store
+*.swp
