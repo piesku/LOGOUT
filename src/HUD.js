@@ -5,7 +5,6 @@ import Line from "./Line";
 import Glitch, {set_glitch} from "./Glitch";
 import code_anim from "./anim_code";
 import "./anim_glitch";
-import game from "./game";
 import { angle } from 'gl-matrix/src/gl-matrix/vec3';
 
 let compass = "NW ---- N ---- NE ---- E ---- SE ---- S ---- SW ---- W ---- ";
@@ -14,7 +13,7 @@ compass = compass + compass + compass;
 let step = (Math.PI * 2) / compass_length;
 let visible_characters = 18;
 
-function HUD({ lastActive, systems }) {
+function HUD({game, lastActive, systems}) {
     return new class extends Component {
         constructor() {
             super();

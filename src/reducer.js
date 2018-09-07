@@ -1,5 +1,8 @@
+import create_game from "./game";
+
 const init = {
-    view: "playing",
+    view: "intro",
+    game: null,
     lastActive: "Power Fallback",
     systems: {
         "Power Fallback": "Online",
@@ -13,6 +16,12 @@ const init = {
 export default
 function reducer(state = init, action, args) {
     switch (action) {
+        case "START": {
+            return Object.assign({}, state, {
+                view: "playing",
+                game: create_game(),
+            });
+        }
         case "ACTIVATE": {
             let [lastActive] = args;
             return Object.assign({}, state, {
