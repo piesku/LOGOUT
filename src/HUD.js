@@ -76,7 +76,7 @@ function HUD({game, lastActive, systems}) {
                 systems_status.push(`${sys} = ${stat}`);
             }
             return html`
-                <div class="screen layout">
+                <div class="screen hud">
                     ${Block("tl", [
                     "System status",
                     ...systems_status
