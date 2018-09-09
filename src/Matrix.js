@@ -42,9 +42,7 @@ export default function Matrix(cls, styles) {
 
         render() {
             return Block(cls, [
-                // Use empty lines of differnt length to use different
-                // glitch animations.
-                "Avatar entity matrix", "", " ", "  ", "   "
+                "Avatar entity matrix", "1", "2", "3", "4"
             ], styles);
         }
     }
