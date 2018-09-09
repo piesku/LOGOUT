@@ -26,6 +26,7 @@ function HUD({game, lastActive, systems}) {
 
         before(root) {
             clearInterval(this.interval);
+            game.off("afterrender", this.update_from_game);
         }
 
         after(root) {
@@ -46,7 +47,7 @@ function HUD({game, lastActive, systems}) {
                 tr.innerHTML = Glitch((new Date()).toString());
             }, 1000);
 
-            game.on("afterrender", () => {
+            this.update_from_game = () => {
                 // Update local matrix display
                 let matrix = game.camera.get_component(Cervus.components.Transform).matrix;
                 let values = [
@@ -69,7 +70,9 @@ function HUD({game, lastActive, systems}) {
                 let start = Math.round(angle([0, 0, 1], forward) / step) * sign;
                 let section = (compass + compass + compass).slice(compass_length + start, compass_length + start + visible_characters);
                 set_glitch(tm, section);
-            });
+            };
+
+            game.on("afterrender", this.update_from_game);
 
             if (!systems[sys.HUD]) {
                 setTimeout(() => dispatch("ACTIVATE", sys.HUD), 5000);
