@@ -6,6 +6,7 @@ import Glitch, {set_glitch} from "./Glitch";
 import code_anim from "./anim_code";
 import "./anim_glitch";
 import { angle } from 'gl-matrix/src/gl-matrix/vec3';
+import * as sys from "./systems";
 
 let compass = "NW ---- N ---- NE ---- E ---- SE ---- S ---- SW ---- W ---- ";
 let compass_length = compass.length;
@@ -69,6 +70,10 @@ function HUD({game, lastActive, systems}) {
                 let section = (compass + compass + compass).slice(compass_length + start, compass_length + start + visible_characters);
                 set_glitch(tm, section);
             });
+
+            if (!systems[sys.HUD]) {
+                setTimeout(() => dispatch("ACTIVATE", sys.HUD), 5000);
+            }
         }
 
         render() {
@@ -81,17 +86,17 @@ function HUD({game, lastActive, systems}) {
             }
             return html`
                 <div class="screen hud">
-                    ${Block("tl", [
+                    ${systems[sys.HUD] && Block("tl", [
                         "Running analysis",
                         ...systems_status,
                         "<div class=box>Assessment complete</div>",
                     ])}
 
-                    ${Block("tm", [
+                    ${systems[sys.HUD] && Block("tm", [
                         "N ----- NE ----- E",
                     ], { justify: "center" })}
 
-                    ${Block("tr", [
+                    ${systems[sys.HUD] && Block("tr", [
                         (new Date()).toString()
                     ], { justify: "end" })}
 
@@ -100,20 +105,21 @@ function HUD({game, lastActive, systems}) {
                         "<div class='box big'>Activated</div>",
                     ], { align: "center", justify: "center", cls: "flicker" })}
 
-                    ${Block("mr", [
+                    ${systems[sys.HUD] && Block("mr", [
                         "Active objectives",
                         "> 01. Enhance capabilities",
                         "> 02. Locate exit",
                         "> 03. Init logout sequence",
                     ])}
 
-                    ${Block("bl", [
+                    ${systems[sys.HUD] && Block("bl", [
                         // Use empty lines of differnt length to use different
                         // glitch animations.
                         "Avatar entity matrix", "", " ", "  ", "   "
                     ], { align: "end" })}
 
-                    ${Block("br", new Array(10).fill(""), { align: "end" })}
+                    ${systems[sys.HUD]
+                        && Block("br", new Array(10).fill(""), { align: "end" })}
                 </div>
             `;
         }

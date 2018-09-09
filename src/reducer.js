@@ -1,17 +1,17 @@
-import * as systems from "./systems";
+import * as sys from "./systems";
 import create_game from "./game";
 
 const init = {
     view: "intro",
     game: null,
-    lastActive: systems.PERSPECTIVE,
+    lastActive: sys.PERSPECTIVE,
     systems: {
-        [systems.PERSPECTIVE]: true,
-        [systems.GRID]: true,
-        [systems.HUD]: false,
-        [systems.MOUSELOOK]: false,
-        [systems.COLORS]: false,
-        [systems.COMPASS]: false,
+        [sys.PERSPECTIVE]: true,
+        [sys.GRID]: true,
+        [sys.HUD]: false,
+        [sys.MOUSELOOK]: false,
+        [sys.COLORS]: false,
+        [sys.COMPASS]: false,
     },
 };
 
