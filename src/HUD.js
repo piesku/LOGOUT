@@ -1,107 +1,37 @@
 import { Component } from "./innerself";
 import { connect, html } from "./store";
+import Code from "./Code";
+import Time from "./Time";
+import Compass from "./Compass";
+import Matrix from "./Matrix";
+import Status from "./Status";
 import Block from "./Block";
 import Line from "./Line";
 import Glitch, {set_glitch} from "./Glitch";
 import code_anim from "./anim_code";
 import "./anim_glitch";
-import { angle } from 'gl-matrix/src/gl-matrix/vec3';
 import * as sys from "./systems";
-
-let compass = "NW ---- N ---- NE ---- E ---- SE ---- S ---- SW ---- W ---- ";
-let compass_length = compass.length;
-compass = compass + compass + compass;
-let step = (Math.PI * 2) / compass_length;
-let visible_characters = 18;
 
 function HUD({game, lastActive, systems}) {
     return new class extends Component {
-        constructor() {
-            super();
-            this.nf = new Intl.NumberFormat("en", {
-                minimumFractionDigits: 3,
-                maximumFractionDigits: 3
-            });
-        }
-
-        before(root) {
-            clearInterval(this.interval);
-            game.off("afterrender", this.update_from_game);
-        }
-
         after(root) {
-            let div = document.createElement("div");
-
-            let tm = root.querySelector(".tm");
-            let tr = root.querySelector(".tr .line");
-            let bl = root.querySelector(".bl");
-            let br = root.querySelector(".br");
-
-            this.interval = setInterval(() => {
-                // Animate code display
-                br.removeChild(br.firstElementChild);
-                div.innerHTML = Line(code_anim.next().value);
-                br.appendChild(div.firstElementChild);
-
-                // Update datetime
-                tr.innerHTML = Glitch((new Date()).toString());
-            }, 1000);
-
-            this.update_from_game = () => {
-                // Update local matrix display
-                let matrix = game.camera.get_component(Cervus.components.Transform).matrix;
-                let values = [
-                    [matrix[0], matrix[4], matrix[8], matrix[12]],
-                    [matrix[1], matrix[5], matrix[9], matrix[13]],
-                    [matrix[2], matrix[6], matrix[10], matrix[14]],
-                    [matrix[3], matrix[7], matrix[11], matrix[15]]
-                ];
-
-                // Skip the header.
-                let rows = [...bl.querySelectorAll(".line")].slice(1);
-                for (let [i, line] of rows.entries()) {
-                    set_glitch(
-                        line,
-                        values[i].map(n => this.nf.format(n)).join(" "));
-                }
-
-                let forward = game.camera.get_component(Cervus.components.Transform).forward;
-                let sign = forward[0] > 0 ? -1 : 1;
-                let start = Math.round(angle([0, 0, 1], forward) / step) * sign;
-                let section = (compass + compass + compass).slice(compass_length + start, compass_length + start + visible_characters);
-                set_glitch(tm, section);
-            };
-
-            game.on("afterrender", this.update_from_game);
-
             if (!systems[sys.HUD]) {
                 setTimeout(() => dispatch("ACTIVATE", sys.HUD), 5000);
             }
         }
 
         render() {
-            let systems_status = [];
-            for (let [sys, on] of Object.entries(systems)) {
-                let status = on
-                    ? "Online"
-                    : "Offline";
-                systems_status.push(`${sys} = ${status}`);
-            }
             return html`
                 <div class="screen hud">
-                    ${systems[sys.HUD] && Block("tl", [
-                        "Running analysis",
-                        ...systems_status,
-                        "<div class=box>Assessment complete</div>",
-                    ])}
+                    ${systems[sys.HUD] && Status("tl", {}, systems)}
 
-                    ${systems[sys.HUD] && Block("tm", [
-                        "N ----- NE ----- E",
-                    ], { justify: "center" })}
+                    ${systems[sys.HUD] && Compass("tm", {
+                        justify: "center"
+                    })}
 
-                    ${systems[sys.HUD] && Block("tr", [
-                        (new Date()).toString()
-                    ], { justify: "end" })}
+                    ${systems[sys.HUD] && Time("tr", {
+                        justify: "end"
+                    })}
 
                     ${Block("mm", [
                         lastActive,
@@ -115,14 +45,13 @@ function HUD({game, lastActive, systems}) {
                         "> 03. Init logout sequence",
                     ])}
 
-                    ${systems[sys.HUD] && Block("bl", [
-                        // Use empty lines of differnt length to use different
-                        // glitch animations.
-                        "Avatar entity matrix", "", " ", "  ", "   "
-                    ], { align: "end" })}
+                    ${systems[sys.HUD] && Matrix("bl", {
+                        align: "end"
+                    })}
 
-                    ${systems[sys.HUD]
-                        && Block("br", new Array(10).fill(""), { align: "end" })}
+                    ${systems[sys.HUD] && Code("br", {
+                        align: "end"
+                    })}
                 </div>
             `;
         }
