@@ -72,41 +72,46 @@ function HUD({game, lastActive, systems}) {
 
         render() {
             let systems_status = [];
-            for (let [sys, stat] of Object.entries(systems)) {
-                systems_status.push(`${sys} = ${stat}`);
+            for (let [sys, on] of Object.entries(systems)) {
+                let status = on
+                    ? "Online"
+                    : "Offline";
+                systems_status.push(`${sys} = ${status}`);
             }
             return html`
                 <div class="screen hud">
                     ${Block("tl", [
-                    "System status",
-                    ...systems_status
-                ])}
+                        "Running analysis",
+                        ...systems_status,
+                        "<div class=box>Assessment complete</div>",
+                    ])}
+
                     ${Block("tm", [
-                    "N ----- NE ----- E",
-                ], { justify: "center" })}
+                        "N ----- NE ----- E",
+                    ], { justify: "center" })}
+
                     ${Block("tr", [
-                    (new Date()).toString()
-                ], { justify: "end" })}
-                    ${Block("ml", [
-                    "Active objectives",
-                    "> 01. Enhance capabilities",
-                    "> 02. Locate exit",
-                    "> 03. Init logout sequence",
-                ])}
+                        (new Date()).toString()
+                    ], { justify: "end" })}
+
                     ${Block("mm", [
-                    lastActive,
-                    "<div class='box big'>Activated</div>",
-                ], { align: "center", justify: "center", cls: "flicker" })}
+                        lastActive,
+                        "<div class='box big'>Activated</div>",
+                    ], { align: "center", justify: "center", cls: "flicker" })}
+
                     ${Block("mr", [
-                    "Running analysis",
-                    "Assessment complete",
-                    "<div class=box>No threats found</div>",
-                ])}
+                        "Active objectives",
+                        "> 01. Enhance capabilities",
+                        "> 02. Locate exit",
+                        "> 03. Init logout sequence",
+                    ])}
+
                     ${Block("bl", [
-                    // Use empty lines of differnt length to use different
-                    // glitch animations.
-                    "Avatar entity matrix", "", " ", "  ", "   "
-                ], { align: "end" })}
+                        // Use empty lines of differnt length to use different
+                        // glitch animations.
+                        "Avatar entity matrix", "", " ", "  ", "   "
+                    ], { align: "end" })}
+
                     ${Block("br", new Array(10).fill(""), { align: "end" })}
                 </div>
             `;

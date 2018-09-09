@@ -1,15 +1,17 @@
+import * as systems from "./systems";
 import create_game from "./game";
 
 const init = {
     view: "intro",
     game: null,
-    lastActive: "Power Fallback",
+    lastActive: systems.PERSPECTIVE,
     systems: {
-        "Power Fallback": "Online",
-        "Grid Movement": "Online",
-        "Perspective": "Offline",
-        "Enhanced DoF": "Offline",
-        "Chromatic Vision": "Offline",
+        [systems.PERSPECTIVE]: true,
+        [systems.GRID]: true,
+        [systems.HUD]: false,
+        [systems.MOUSELOOK]: false,
+        [systems.COLORS]: false,
+        [systems.COMPASS]: false,
     },
 };
 
@@ -27,7 +29,7 @@ function reducer(state = init, action, args) {
             return Object.assign({}, state, {
                 lastActive,
                 systems: Object.assign({}, state.systems, {
-                    [lastActive]: "Online"
+                    [lastActive]: true
                 })
             });
         }
