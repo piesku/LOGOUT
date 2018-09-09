@@ -48,6 +48,7 @@ function Intro({lastActive, systems}) {
                     text.appendChild(div.firstElementChild);
                 }
             }, 1000);
+            // }, 1);
         }
 
         render() {

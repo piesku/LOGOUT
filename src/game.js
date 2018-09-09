@@ -1,4 +1,8 @@
-/* global Cervus */
+
+import { Entity, Game, integer as random_integer, element_of as random_element_of } from './cervus/core';
+import { Transform, Move, Render, Light } from './cervus/components';
+import { BasicMaterial, PhongMaterial, WireframeMaterial } from './cervus/materials';
+import { Box } from './cervus/shapes';
 
 const CLEAR_COLOR = "333";
 const BUILDING_COLOR = "222";
@@ -10,11 +14,11 @@ import map from './map.json';
 const MAX_BUILDING_HEIGHT = 32;
 const MIN_BUILDING_HEIGHT = 8;
 
-class Group extends Cervus.core.Entity {
+class Group extends Entity {
   constructor(options) {
     super(Object.assign({
       components: [
-          new Cervus.components.Transform()
+          new Transform()
       ]
     }, options));
   }
@@ -38,7 +42,7 @@ function hex_to_rgb(hex) {
 
 export default
 function create_game() {
-    const game = new Cervus.core.Game({
+    const game = new Game({
       width: window.innerWidth,
       height: window.innerHeight,
       far: 1000,
@@ -49,10 +53,11 @@ function create_game() {
       'click', () => game.canvas.requestPointerLock()
     );
 
-    game.camera.get_component(Cervus.components.Transform).set({
+    game.camera.get_component(Transform).set({
         position: [map.starting_point.x, 1.75, map.starting_point.y],
     });
-    game.camera.get_component(Cervus.components.Move).set({
+
+    game.camera.get_component(Move).set({
         keyboard_controlled: true,
         mouse_controlled: true,
         move_speed: 5,
@@ -61,13 +66,13 @@ function create_game() {
     // Remove the default light.
     game.remove(game.light);
 
-    const cube = new Cervus.shapes.Box();
-    const cube_render = cube.get_component(Cervus.components.Render);
+    const cube = new Box();
+    const cube_render = cube.get_component(Render);
 
-    let neon_material = new Cervus.materials.BasicMaterial({
+    let neon_material = new BasicMaterial({
       requires: [
-        Cervus.components.Render,
-        Cervus.components.Transform
+        Render,
+        Transform
       ]
     });
 
@@ -76,10 +81,10 @@ function create_game() {
       distance: new Float32Array([10, 100]),
     });
 
-    let building_material = new Cervus.materials.PhongMaterial({
+    let building_material = new PhongMaterial({
       requires: [
-        Cervus.components.Render,
-        Cervus.components.Transform
+        Render,
+        Transform
       ]
     });
 
@@ -88,17 +93,17 @@ function create_game() {
       distance: new Float32Array([0, 30]),
     });
 
-    const wireframe = new Cervus.materials.WireframeMaterial({
+    const wireframe = new WireframeMaterial({
       requires: [
-        Cervus.components.Render,
-        Cervus.components.Transform
+        Render,
+        Transform
       ]
     });
 
-    const plane = new Cervus.shapes.Box();
-    plane.get_component(Cervus.components.Render).material = building_material;
-    plane.get_component(Cervus.components.Render).color = BUILDING_COLOR;
-    plane.get_component(Cervus.components.Transform).set({
+    const plane = new Box();
+    plane.get_component(Render).material = building_material;
+    plane.get_component(Render).color = BUILDING_COLOR;
+    plane.get_component(Transform).set({
         position: [0, -0.5, 0],
         scale: [map.size.x * 10, 1, map.size.y * 10],
     });
@@ -106,41 +111,41 @@ function create_game() {
 
     function create_building(options) {
         let {position, scale} = options;
-        let group = new Cervus.core.Entity({
+        let group = new Entity({
             components: [
-                new Cervus.components.Transform({position})
+                new Transform({position})
             ]
         });
 
-        let building = new Cervus.shapes.Box();
-        building.get_component(Cervus.components.Render).set({
+        let building = new Box();
+        building.get_component(Render).set({
             material: building_material,
             color: BUILDING_COLOR,
         });
-        building.get_component(Cervus.components.Transform).set({scale});
+        building.get_component(Transform).set({scale});
         group.add(building);
 
         let {neon_position, neon_scale, neon_color} = options;
-        let neon = new Cervus.shapes.Box();
-        neon.get_component(Cervus.components.Render).set({
+        let neon = new Box();
+        neon.get_component(Render).set({
             material: neon_material,
             color: neon_color,
         });
-        neon.get_component(Cervus.components.Transform).set({
+        neon.get_component(Transform).set({
             position: neon_position,
             scale: neon_scale,
         });
 
-        let neon_light = new Cervus.core.Entity({
+        let neon_light = new Entity({
             components: [
-                new Cervus.components.Transform({
+                new Transform({
                     position: NEON_LIGHT_MOUNT
                 }),
-                new Cervus.components.Light({
+                new Light({
                     color: neon_color,
                     intensity: NEON_INTENSITY,
                 }),
-                // new Cervus.components.Render({
+                // new Render({
                 //     color: "fff",
                 //     material: wireframe,
                 //     indices: cube_render.indices,
@@ -162,15 +167,16 @@ function create_game() {
         let center_x = x1 + (xsize/2);
         let center_z = y1 + (zsize/2);
 
-        let height = Cervus.core.integer(
-            MIN_BUILDING_HEIGHT, MAX_BUILDING_HEIGHT);
+        let height = random_integer(
+          MIN_BUILDING_HEIGHT, MAX_BUILDING_HEIGHT
+        );
 
         create_building({
             position: [center_x, height / 2, center_z],
             scale: [xsize, height, zsize],
             neon_position: [0, 1, - (zsize/2) - 0.2],
             neon_scale: [4, 2, 0.1],
-            neon_color: Cervus.core.element_of(NEON_COLORS),
+            neon_color: random_element_of(NEON_COLORS),
         });
     }
 

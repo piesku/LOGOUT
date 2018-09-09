@@ -1,6 +1,8 @@
+import { fragment as fragment_shader } from './cervus/shaders';
+
 // Generate animated code display
 function *generateCode() {
-    let lines = Cervus.shaders.fragment.toString()
+    let lines = fragment_shader.toString()
         .split("\n").slice(7, -2)
         .map(line => line.trim())
         .filter(Boolean);

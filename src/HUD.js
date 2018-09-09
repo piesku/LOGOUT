@@ -7,6 +7,8 @@ import code_anim from "./anim_code";
 import "./anim_glitch";
 import { angle } from 'gl-matrix/src/gl-matrix/vec3';
 
+import { Transform } from './cervus/components';
+
 let compass = "NW ---- N ---- NE ---- E ---- SE ---- S ---- SW ---- W ---- ";
 let compass_length = compass.length;
 compass = compass + compass + compass;
@@ -45,7 +47,7 @@ function HUD({game, lastActive, systems}) {
             game.on("afterrender", () => {
                 // Update local matrix display
                 let bl = root.querySelector(".bl");
-                let matrix = game.camera.get_component(Cervus.components.Transform).matrix;
+                let matrix = game.camera.get_component(Transform).matrix;
                 let values = [
                     [matrix[0], matrix[4], matrix[8], matrix[12]],
                     [matrix[1], matrix[5], matrix[9], matrix[13]],
@@ -62,7 +64,7 @@ function HUD({game, lastActive, systems}) {
                 }
 
                 let tm = root.querySelector(".tm");
-                let forward = game.camera.get_component(Cervus.components.Transform).forward;
+                let forward = game.camera.get_component(Transform).forward;
                 let sign = forward[0] > 0 ? -1 : 1;
                 let start = Math.round(angle([0, 0, 1], forward) / step) * sign;
                 let section = (compass + compass + compass).slice(compass_length + start, compass_length + start + visible_characters);
