@@ -37,15 +37,16 @@ function Intro({lastActive, systems}) {
         after(root) {
             let div = document.createElement("div");
             let lines = text.split("\n")[Symbol.iterator]();
+            let container = root.querySelector(".text");
+
             this.interval = setInterval(() => {
                 // Animate text display
-                let text = root.querySelector(".text");
                 let next = lines.next();
                 if (next.done) {
                     clearInterval(this.interval);
                 } else {
                     div.innerHTML = Line(next.value);
-                    text.appendChild(div.firstElementChild);
+                    container.appendChild(div.firstElementChild);
                 }
             }, 1000);
         }

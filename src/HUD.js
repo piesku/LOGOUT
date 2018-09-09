@@ -28,23 +28,25 @@ function HUD({game, lastActive, systems}) {
         }
 
         after(root) {
-            this.interval = setInterval(() => {
-                let div = document.createElement("div");
+            let div = document.createElement("div");
 
+            let tm = root.querySelector(".tm");
+            let tr = root.querySelector(".tr .line");
+            let bl = root.querySelector(".bl");
+            let br = root.querySelector(".br");
+
+            this.interval = setInterval(() => {
                 // Animate code display
-                let br = root.querySelector(".br");
                 br.removeChild(br.firstElementChild);
                 div.innerHTML = Line(code_anim.next().value);
                 br.appendChild(div.firstElementChild);
 
                 // Update datetime
-                let tr = root.querySelector(".tr .line");
                 tr.innerHTML = Glitch((new Date()).toString());
             }, 1000);
 
             game.on("afterrender", () => {
                 // Update local matrix display
-                let bl = root.querySelector(".bl");
                 let matrix = game.camera.get_component(Cervus.components.Transform).matrix;
                 let values = [
                     [matrix[0], matrix[4], matrix[8], matrix[12]],
@@ -61,7 +63,6 @@ function HUD({game, lastActive, systems}) {
                         values[i].map(n => this.nf.format(n)).join(" "));
                 }
 
-                let tm = root.querySelector(".tm");
                 let forward = game.camera.get_component(Cervus.components.Transform).forward;
                 let sign = forward[0] > 0 ? -1 : 1;
                 let start = Math.round(angle([0, 0, 1], forward) / step) * sign;
