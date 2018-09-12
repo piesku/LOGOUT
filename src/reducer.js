@@ -4,7 +4,7 @@ import create_game from "./game";
 const init = {
     view: "intro",
     game: null,
-    lastActive: sys.CAMERA,
+    last_active: sys.CAMERA,
     systems: {
         [sys.CAMERA]: true,
         [sys.HUD]: false,
@@ -25,11 +25,11 @@ function reducer(state = init, action, args) {
             });
         }
         case "ACTIVATE": {
-            let [lastActive] = args;
+            let [last_active] = args;
             return Object.assign({}, state, {
-                lastActive,
+                last_active,
                 systems: Object.assign({}, state.systems, {
-                    [lastActive]: true
+                    [last_active]: true
                 })
             });
         }

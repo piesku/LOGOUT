@@ -12,7 +12,7 @@ import code_anim from "./anim_code";
 import "./anim_glitch";
 import * as sys from "./systems";
 
-function HUD({game, lastActive, systems}) {
+function HUD({game, last_active, systems}) {
     return new class extends Component {
         after(root) {
             if (!systems[sys.HUD]) {
@@ -37,7 +37,7 @@ function HUD({game, lastActive, systems}) {
                     })}
 
                     ${Block("mm", [
-                        lastActive,
+                        last_active,
                         "<div class='box big'>Activated</div>",
                     ], { align: "center", justify: "center", cls: "flicker" })}
 

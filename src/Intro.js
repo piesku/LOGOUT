@@ -26,7 +26,8 @@ Find the exit and log out into the reality.
 <button onclick="dispatch('START')">Initiate recovery sequence</button>
 `;
 
-function Intro({lastActive, systems}) {
+export default
+function Intro() {
     return new class extends Component {
         before(root) {
             clearInterval(this.interval);
@@ -59,5 +60,3 @@ function Intro({lastActive, systems}) {
         }
     }
 }
-
-export default connect(Intro);
