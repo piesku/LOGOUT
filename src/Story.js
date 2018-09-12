@@ -1,6 +1,7 @@
 import {Component} from "./innerself";
 import {html} from "./store";
 import Line from "./Line";
+import {digest} from "./util";
 
 export default
 function Story(text) {
@@ -30,7 +31,7 @@ function Story(text) {
         render() {
             return html`
                 <div class="screen story">
-                    <div class="text"></div>
+                    <div class="text" digest="${digest(text)}"></div>
                 </div>
             `;
         }

@@ -1,13 +1,11 @@
 import {html} from "./store";
+import {digest} from "./util";
 
 export default
 function Glitch(text) {
     // A deterministic digest function provides variety and ensures
     // subsequent renders given the same state produce the same output.
-    let digest = [...text]
-        .map(ch => ch.codePointAt(0))
-        .reduce((acc, cur) => acc + cur, 0);
-    let glitch_index = digest % 20;
+    let glitch_index = digest(text) % 20;
     return html`
         <div class="glitch">
             <div class="glitch1 noise${glitch_index}">${text}</div>

@@ -1,10 +1,6 @@
-import {Component} from "./innerself";
-import {connect, html} from "./store";
-import Story from "./Story";
-
 // No more than 55 chars per line.
 // Any HTML must be on a single line.
-const text = `
+export default `
 <div class="big">LOGOUT</div>
 
 In 2018, people live their lives in virtual reality.
@@ -16,15 +12,9 @@ You are not one of the lucky ones.
 
 The community VR cluster you've spent your life in
 has had a critical failure. The reboot has reset
-the entire world. Most systems are still offline
-but there should be a way to bring them up online.
+the entire world.
 
 Find the exit and log out into the reality.
 
-<button onclick="dispatch('START')">Initiate recovery sequence</button>
+<button onclick="dispatch('DIAG')">Run system diagnosis</button>
 `;
-
-export default
-function Intro() {
-    return Story(text);
-}

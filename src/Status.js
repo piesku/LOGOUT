@@ -1,18 +1,22 @@
 import Block from "./Block";
 import * as sys from "./systems";
 
-export default
-function Status(cls, styles, systems) {
-    let systems_status = [];
+export function get_system_status(systems) {
+    let system_status = [];
     for (let [sys, on] of Object.entries(systems)) {
         let status = on
             ? "Online"
             : "Offline";
-        systems_status.push(`${sys} = ${status}`);
+        system_status.push(`${sys} = ${status}`);
     }
+    return system_status;
+}
+
+export default
+function Status(cls, styles, systems) {
     return Block(cls, [
         "Running analysis",
-        ...systems_status,
+        ...get_system_status(systems),
         "<div class=box>Assessment complete</div>",
     ], styles);
 }

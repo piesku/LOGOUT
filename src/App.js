@@ -1,11 +1,20 @@
 import {connect, html} from "./store";
-import Intro from "./Intro";
+import Story from "./Story";
+import intro from "./Intro";
+import {get_system_status} from "./Status";
 import HUD from "./HUD";
 
-function App({view}) {
+function App({view, systems}) {
     switch (view) {
         case "intro":
-            return Intro();
+            return Story(intro);
+        case "diag":
+            let status = [
+                "Running analysis...\n",
+                ...get_system_status(systems),
+                "\n<button onclick=\"dispatch('START')\">Initiate recovery sequence</button>"
+            ].join("\n");
+            return Story(status);
         case "playing":
             return HUD();
     }
