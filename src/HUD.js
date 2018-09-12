@@ -9,7 +9,6 @@ import Block from "./Block";
 import Line from "./Line";
 import Glitch, {set_glitch} from "./Glitch";
 import code_anim from "./anim_code";
-import "./anim_glitch";
 import * as sys from "./systems";
 
 function HUD({game, last_active, systems}) {

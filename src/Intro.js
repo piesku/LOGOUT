@@ -1,8 +1,6 @@
 import {Component} from "./innerself";
 import {connect, html} from "./store";
-import Block from "./Block";
-import Line from "./Line";
-import "./anim_glitch";
+import Story from "./Story";
 
 // No more than 55 chars per line.
 // Any HTML must be on a single line.
@@ -28,35 +26,5 @@ Find the exit and log out into the reality.
 
 export default
 function Intro() {
-    return new class extends Component {
-        before(root) {
-            clearInterval(this.interval);
-        }
-
-        after(root) {
-            let div = document.createElement("div");
-            let lines = text.split("\n")[Symbol.iterator]();
-            let container = root.querySelector(".text");
-
-            this.interval = setInterval(() => {
-                // Animate text display
-                let next = lines.next();
-                if (next.done) {
-                    clearInterval(this.interval);
-                } else {
-                    div.innerHTML = Line(next.value);
-                    container.appendChild(div.firstElementChild);
-                }
-            }, 1000);
-            // }, 1);
-        }
-
-        render() {
-            return html`
-                <div class="screen story">
-                    <div class="text"></div>
-                </div>
-            `;
-        }
-    }
+    return Story(text);
 }
