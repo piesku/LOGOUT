@@ -4,11 +4,11 @@ import create_game from "./game";
 const init = {
     view: "intro",
     game: null,
-    lastActive: sys.PERSPECTIVE,
+    lastActive: sys.CAMERA,
     systems: {
-        [sys.PERSPECTIVE]: true,
-        [sys.GRID]: true,
+        [sys.CAMERA]: true,
         [sys.HUD]: false,
+        [sys.GRID]: true,
         [sys.MOUSELOOK]: false,
         [sys.COLORS]: false,
         [sys.COMPASS]: false,

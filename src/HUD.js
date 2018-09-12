@@ -16,7 +16,10 @@ function HUD({game, lastActive, systems}) {
     return new class extends Component {
         after(root) {
             if (!systems[sys.HUD]) {
-                setTimeout(() => dispatch("ACTIVATE", sys.HUD), 5000);
+                setTimeout(() => {
+                    game.setup_perspective_camera();
+                    dispatch("ACTIVATE", sys.HUD);
+                }, 5000);
             }
         }
 
