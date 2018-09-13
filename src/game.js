@@ -30,8 +30,9 @@ function create_game() {
       'click', () => game.canvas.requestPointerLock()
     );
 
+
     game.camera.get_component(Transform).set({
-        position: [map.starting_point.x, 1.75, map.starting_point.y],
+      position: [map.size.x / 2, 1.75, map.size.y / 2],
     });
 
     game.camera.get_component(Move).set({
