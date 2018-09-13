@@ -18,7 +18,9 @@ export default function Matrix(cls, styles) {
         }
 
         after(root) {
-            let container = root.querySelector(`.${cls}`);
+            let rows = Array.from(
+                root.querySelectorAll(`.${cls} .line`)
+            ).slice(1);
             this.update_from_game = () => {
                 // Update local matrix display
                 let matrix = game.camera.get_component(Transform).matrix;
@@ -30,7 +32,6 @@ export default function Matrix(cls, styles) {
                 ];
 
                 // Skip the header.
-                let rows = [...container.querySelectorAll(".line")].slice(1);
                 for (let [i, line] of rows.entries()) {
                     set_glitch(
                         line,
