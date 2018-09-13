@@ -9,20 +9,12 @@ const BUILDING_COLOR = "222";
 const NEON_COLORS = ["28D7FE", "A9FFDC", "FED128"];
 const NEON_LIGHT_MOUNT = [0, 0, -20];
 const NEON_INTENSITY = 15;
+const POWERUP_COLOR = "fff";
+const POWERUP_INTENSITY = 15;
 
 import map from './map.json';
 const MAX_BUILDING_HEIGHT = 32;
 const MIN_BUILDING_HEIGHT = 8;
-
-class Group extends Entity {
-  constructor(options) {
-    super(Object.assign({
-      components: [
-          new Transform()
-      ]
-    }, options));
-  }
-}
 
 function hex_to_rgb(hex) {
   if (hex.charAt(0) === '#') {
@@ -95,6 +87,18 @@ function create_game() {
     building_material.add_fog({
       color: hex_to_rgb(CLEAR_COLOR),
       distance: new Float32Array([0, 30]),
+    });
+
+    let powerup_material = new BasicMaterial({
+      requires: [
+        Render,
+        Transform
+      ]
+    });
+
+    powerup_material.add_fog({
+      color: hex_to_rgb(CLEAR_COLOR),
+      distance: new Float32Array([10, 100]),
     });
 
     const wireframe = new WireframeMaterial({
@@ -214,6 +218,31 @@ function create_game() {
         position: [map.starting_point.x, 10, map.starting_point.y + 20],
     });
     game.add(exit);
+
+    function create_powerup({position}) {
+        let cube = new Box();
+        cube.get_component(Render).set({
+            material: powerup_material,
+            color: POWERUP_COLOR,
+        });
+        cube.get_component(Transform).set({position});
+
+        let light = new Entity({
+            components: [
+                new Transform(),
+                new Light({
+                    color: POWERUP_COLOR,
+                    intensity: POWERUP_INTENSITY,
+                }),
+            ]
+        });
+        cube.add(light);
+        game.add(cube);
+    }
+
+    create_powerup({
+        position: [map.starting_point.x - 2, 1.75, map.starting_point.y + 25],
+    });
 
     window.game = game;
     return game;
