@@ -11,10 +11,10 @@ export default function Code(cls, styles) {
 
         after(root) {
             let div = document.createElement("div");
+            let container = root.querySelector(`.${cls}`);
 
             this.interval = setInterval(() => {
                 // Animate code display
-                let container = root.querySelector(`.${cls}`);
                 container.removeChild(container.firstElementChild);
                 div.innerHTML = Line(code_anim.next().value);
                 container.appendChild(div.firstElementChild);

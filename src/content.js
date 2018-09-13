@@ -2,7 +2,7 @@ import {DIAGNOSTIC} from "./actions";
 
 // No more than 55 chars per line.
 // Any HTML must be on a single line.
-export default `
+export const intro = `
 <div class="big">LOGOUT</div>
 
 In 2018, people live their lives in virtual reality.
@@ -19,4 +19,18 @@ the entire world.
 Find the exit and log out into the reality.
 
 <button onclick="dispatch(${DIAGNOSTIC})">Run system diagnostic</button>
+`;
+
+// No more than 55 chars per line.
+// Any HTML must be on a single line.
+export const outro = `\
+Initiating logout sequence...
+
+Reticulating splines
+Stopping services
+Clearing caches
+
+Logout complete
+
+<a href="https://js13kgames.com">Enter the real world</a>
 `;

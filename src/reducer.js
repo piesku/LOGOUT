@@ -26,7 +26,7 @@ function reducer(state = init, action, args) {
             });
         case act.START:
             return Object.assign({}, state, {
-                view: "playing",
+                view: "play",
                 game: create_game(),
                 last_active: sys.CAMERA,
                 systems: Object.assign({}, state.systems, {
@@ -42,6 +42,12 @@ function reducer(state = init, action, args) {
                 })
             });
         }
+        case act.EXIT:
+            state.game.stop();
+            state.game.canvas.remove();
+            return Object.assign({}, state, {
+                view: "outro",
+            });
         default:
             return state;
     }

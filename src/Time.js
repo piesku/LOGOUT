@@ -25,9 +25,9 @@ export default function Time(cls, styles) {
         }
 
         after(root) {
+            let lines = root.querySelectorAll(`.${cls} .line`);
             this.interval = setInterval(() => {
                 // Update datetime
-                let lines = root.querySelectorAll(`.${cls} .line`);
                 let now = new Date();
                 for (let [i, line] of lines.entries()) {
                     line.innerHTML = Glitch(formatters[i].format(now));
