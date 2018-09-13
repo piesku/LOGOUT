@@ -1,4 +1,5 @@
 import * as sys from "./systems";
+import * as act from "./actions";
 import create_game from "./game";
 
 const init = {
@@ -19,11 +20,11 @@ const init = {
 export default
 function reducer(state = init, action, args) {
     switch (action) {
-        case "DIAG":
+        case act.DIAGNOSTIC:
             return Object.assign({}, state, {
                 view: "diag",
             });
-        case "START":
+        case act.START:
             return Object.assign({}, state, {
                 view: "playing",
                 game: create_game(),
@@ -32,7 +33,7 @@ function reducer(state = init, action, args) {
                     [sys.CAMERA]: true
                 })
             });
-        case "ACTIVATE": {
+        case act.ACTIVATE: {
             let [last_active] = args;
             return Object.assign({}, state, {
                 last_active,

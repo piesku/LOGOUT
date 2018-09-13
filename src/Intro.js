@@ -1,3 +1,5 @@
+import {DIAGNOSTIC} from "./actions";
+
 // No more than 55 chars per line.
 // Any HTML must be on a single line.
 export default `
@@ -16,5 +18,5 @@ the entire world.
 
 Find the exit and log out into the reality.
 
-<button onclick="dispatch('DIAG')">Run system diagnosis</button>
+<button onclick="dispatch(${DIAGNOSTIC})">Run system diagnostic</button>
 `;

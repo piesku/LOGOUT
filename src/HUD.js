@@ -10,6 +10,7 @@ import Line from "./Line";
 import Glitch, {set_glitch} from "./Glitch";
 import code_anim from "./anim_code";
 import * as sys from "./systems";
+import {ACTIVATE} from "./actions";
 
 function HUD({game, last_active, systems}) {
     return new class extends Component {
@@ -17,8 +18,8 @@ function HUD({game, last_active, systems}) {
             if (!systems[sys.PERSPECTIVE]) {
                 setTimeout(() => {
                     game.setup_perspective_camera();
-                    dispatch("ACTIVATE", sys.PERSPECTIVE);
-                    dispatch("ACTIVATE", sys.HUD);
+                    dispatch(ACTIVATE, sys.PERSPECTIVE);
+                    dispatch(ACTIVATE, sys.HUD);
                 }, 5000);
             }
         }
