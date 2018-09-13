@@ -7,11 +7,12 @@ const init = {
     last_active: null,
     systems: {
         [sys.CAMERA]: false,
+        [sys.PERSPECTIVE]: false,
         [sys.HUD]: false,
-        [sys.GRID]: true,
-        [sys.MOUSELOOK]: false,
         [sys.COLORS]: false,
         [sys.COMPASS]: false,
+        [sys.MOUSELOOK]: false,
+        [sys.GRID]: true,
     },
 };
 

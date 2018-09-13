@@ -14,9 +14,10 @@ import * as sys from "./systems";
 function HUD({game, last_active, systems}) {
     return new class extends Component {
         after(root) {
-            if (!systems[sys.HUD]) {
+            if (!systems[sys.PERSPECTIVE]) {
                 setTimeout(() => {
                     game.setup_perspective_camera();
+                    dispatch("ACTIVATE", sys.PERSPECTIVE);
                     dispatch("ACTIVATE", sys.HUD);
                 }, 5000);
             }
@@ -42,7 +43,7 @@ function HUD({game, last_active, systems}) {
 
                     ${systems[sys.HUD] && Block("mr", [
                         "Active objectives",
-                        "> 01. Enhance capabilities",
+                        "> 01. Bring Systems Online",
                         "> 02. Locate exit",
                         "> 03. Init logout sequence",
                     ])}

@@ -1,7 +1,7 @@
-export const CAMERA = "Orthographic Vision";
-export const PERSPECTIVE = "Perspective Vision";
+export const CAMERA = "Ortho Projection";
+export const PERSPECTIVE = "Perspective";
 export const HUD = "Heads-Up Display";
-export const GRID = "WASD Movement";
-export const MOUSELOOK = "4 Degrees of Freedom";
+export const MOUSELOOK = "Mouselook";
 export const COLORS = "Chromatic Vision";
 export const COMPASS = "Compass";
+export const GRID = "WASD/Arrows Movement";
