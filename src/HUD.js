@@ -29,7 +29,7 @@ function HUD({game, last_active, systems}) {
                 <div class="screen hud">
                     ${systems[sys.HUD] && Status("tl", {}, systems)}
 
-                    ${systems[sys.HUD] && Compass("tm", {
+                    ${systems[sys.COMPASS] && Compass("tm", {
                         justify: "center"
                     })}
 
