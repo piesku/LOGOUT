@@ -45,10 +45,13 @@ function create_game() {
     const game = new Game({
       width: window.innerWidth,
       height: window.innerHeight,
-      projection: "ortho",
+      // projection: "ortho",
       far: 1000,
       clear_color: CLEAR_COLOR,
     });
+
+    game.perspe_matrix = JSON.parse(JSON.stringify(game.projMatrix));
+    game.setup_ortho_camera();
 
     game.canvas.addEventListener(
       'click', () => game.canvas.requestPointerLock()
