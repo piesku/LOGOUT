@@ -3,6 +3,7 @@ import { Entity, Game, integer as random_integer, element_of as random_element_o
 import { Transform, Move, Render, Light } from './cervus/components';
 import { BasicMaterial, PhongMaterial, WireframeMaterial } from './cervus/materials';
 import { Box } from './cervus/shapes';
+import Rotator from './rotator';
 
 const CLEAR_COLOR = "333";
 const BUILDING_COLOR = "222";
@@ -226,6 +227,7 @@ function create_game() {
             color: POWERUP_COLOR,
         });
         cube.get_component(Transform).set({position});
+        cube.add_component(new Rotator());
 
         let light = new Entity({
             components: [
