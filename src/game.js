@@ -90,18 +90,6 @@ function create_game() {
       distance: new Float32Array([0, 30]),
     });
 
-    let powerup_material = new BasicMaterial({
-      requires: [
-        Render,
-        Transform
-      ]
-    });
-
-    powerup_material.add_fog({
-      color: hex_to_rgb(CLEAR_COLOR),
-      distance: new Float32Array([10, 100]),
-    });
-
     const wireframe = new WireframeMaterial({
       requires: [
         Render,
@@ -223,7 +211,7 @@ function create_game() {
     function create_powerup({position}) {
         let cube = new Box();
         cube.get_component(Render).set({
-            material: powerup_material,
+            material: neon_material,
             color: POWERUP_COLOR,
         });
         cube.get_component(Transform).set({position});
