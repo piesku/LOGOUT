@@ -80,7 +80,7 @@ function create_game() {
     let exit = create_exit({
         position: [map.starting_point.x, 10, map.starting_point.y + 20],
     });
-    game.add(exit);
+    // game.add(exit);
 
     let powerup = create_powerup({
         position: [map.starting_point.x - 2, 1.75, map.starting_point.y + 25],
