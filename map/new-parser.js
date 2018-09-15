@@ -21,6 +21,11 @@ const checked = [];
 function find_end(height, i, j, input) {
     // console.log(height, i, j, input[0][0]);
     const output = {};
+    // console.log(input[0]);
+    // if (!input[0])  {
+    //     return;
+    // }
+
     const x = input.length;
     const y = input[0].length;
 
@@ -28,12 +33,12 @@ function find_end(height, i, j, input) {
     let flag_row = 0;
 
     for (var m = i; m < y; m++) {
-        if (input[m][j] && input[m][j] !== height) {
+        if (input[m][j] !== height) {
             flag_row = 1;
             break;
         }
 
-        // if (checked[m] && checked[m][j] === 5) {
+        // if (input[m][j] === 'X') {
         //     continue;
         // }
 
@@ -43,8 +48,7 @@ function find_end(height, i, j, input) {
                 break;
             }
 
-            checked[m] = checked[m] || [];
-            checked[m][n] = 5;
+            input[m][n] = 0;
         }
     }
 
@@ -63,19 +67,25 @@ function find_end(height, i, j, input) {
     return output;
 }
 
-parser.parse('./3dmap.vox').then((result) => {
+parser.parse('./test.vox').then((result) => {
     output_map.size = {
         x: result.size.x,
         y: result.size.y
     };
 
-    const map = result.voxels.reduce((memo, curr) => {
-            memo[curr.y] = memo[curr.y] || [];
-            memo[curr.y][curr.x] = Math.max(memo[curr.y][curr.x] || 0, curr.z);
-            return memo;
-        }, []);
+    let map = new Array(result.size.x).fill([]);
+    map = map.map((row) => {
+        return new Array(result.size.x).fill(0);
+    });
 
-    console.log(map);
+    map = result.voxels.reduce((memo, curr) => {
+        memo[curr.y] = memo[curr.y] || [];
+        memo[curr.y][curr.x] = Math.max(memo[curr.y][curr.x] || 0, curr.z);
+        return memo;
+    }, map);
+
+
+    // console.log(JSON.stringify(map));
     map.forEach((row, y) => {
         row.forEach((cell, x) => {
             // if (heights.includes(height)) {
@@ -85,12 +95,16 @@ parser.parse('./3dmap.vox').then((result) => {
             // heights.push(height);
             if (cell) {
                 const end_point = find_end(cell, y, x, map);
+                // console.log({
+                //     x, y, x2: end_point.x, y2: end_point.y,
+                // });
+                // process.exit();
                 output_map.buildings.push({
                     height: cell,
-                    x1: x * UNIT,
-                    y1: y * UNIT,
-                    x2: (end_point.x + 1) * UNIT,
-                    y2: (end_point.y + 1) * UNIT,
+                    x1: x,
+                    y1: y,
+                    x2: (end_point.x + 1),
+                    y2: (end_point.y + 1),
                 });
             }
         });
