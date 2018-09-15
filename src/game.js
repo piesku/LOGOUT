@@ -113,31 +113,15 @@ function create_game() {
     });
     game.add(plane);
 
-    function create_building(options) {
-        let {position, scale} = options;
-        let group = new Entity({
-            components: [
-                new Transform({position})
-            ]
-        });
-
-        let building = new Box();
-        building.get_component(Render).set({
-            material: building_material,
-            color: BUILDING_COLOR,
-        });
-        building.get_component(Transform).set({scale});
-        group.add(building);
-
-        let {neon_position, neon_scale, neon_color} = options;
+    function create_neon({position, scale, color}) {
         let neon = new Box();
         neon.get_component(Render).set({
             material: neon_material,
-            color: neon_color,
+            color
         });
         neon.get_component(Transform).set({
-            position: neon_position,
-            scale: neon_scale,
+            position,
+            scale
         });
 
         let neon_light = new Entity({
@@ -146,7 +130,7 @@ function create_game() {
                     position: NEON_LIGHT_MOUNT
                 }),
                 new Light({
-                    color: neon_color,
+                    color,
                     intensity: NEON_INTENSITY,
                 }),
                 // new Render({
@@ -158,13 +142,41 @@ function create_game() {
             ]
         });
         neon.add(neon_light);
-        group.add(neon);
-
-        game.add(group);
+        return neon;
     }
 
-    for (let building of map.buildings) {
-        let {x1, y1, x2, y2} = building;
+    function create_building(options) {
+        let {
+            position,
+            scale,
+            material = building_material,
+            color = BUILDING_COLOR,
+            neons = [],
+        } = options;
+
+        let group = new Entity({
+            components: [
+                new Transform({position})
+            ]
+        });
+
+        let building = new Box();
+        building.get_component(Render).set({
+            material,
+            color
+        });
+        building.get_component(Transform).set({scale});
+        group.add(building);
+
+        for (let neon_opts of neons) {
+            let neon = create_neon(neon_opts);
+            group.add(neon);
+        }
+
+        return group;
+    }
+
+    for (let {x1, y1, x2, y2} of map.buildings) {
         let xsize = Math.abs(x2 - x1);
         let zsize = Math.abs(y2 - y1);
 
@@ -175,14 +187,33 @@ function create_game() {
           MIN_BUILDING_HEIGHT, MAX_BUILDING_HEIGHT
         );
 
-        create_building({
+        let building = create_building({
             position: [center_x, height / 2, center_z],
             scale: [xsize, height, zsize],
-            neon_position: [0, 1, - (zsize/2) - 0.2],
-            neon_scale: [4, 2, 0.1],
-            neon_color: random_element_of(NEON_COLORS),
+            neons: [
+                {
+                    position: [0, 1, - (zsize/2) - 0.2],
+                    scale: [4, 2, 0.1],
+                    color: random_element_of(NEON_COLORS),
+                }
+            ],
+        });
+        game.add(building);
+    }
+
+    function create_exit({position}) {
+        return create_building({
+            position,
+            scale: [5, 10, 5],
+            material: neon_material,
+            color: "fff",
         });
     }
+
+    let exit = create_exit({
+        position: [map.starting_point.x, 10, map.starting_point.y + 20],
+    });
+    game.add(exit);
 
     window.game = game;
     return game;
