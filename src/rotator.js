@@ -9,8 +9,9 @@ class Rotator extends Component {
     }
 
     update(delta) {
-        this.transform.rotate_along(vec3.left, 0.0001 * delta);
-        this.transform.rotate_along(vec3.up, 0.0002 * delta);
-        this.transform.rotate_along(vec3.forward, 0.0003 * delta);
+        let [x, y, z] = this.speed;
+        this.transform.rotate_along(vec3.left, x * delta);
+        this.transform.rotate_along(vec3.up, y * delta);
+        this.transform.rotate_along(vec3.forward, z * delta);
     }
 }

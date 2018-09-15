@@ -92,12 +92,16 @@ export function create_building(options) {
 }
 
 export function create_exit({position}) {
-    return create_building({
+    let exit = create_building({
         position,
         scale: [5, 10, 5],
         material: neon_material,
         color: "fff",
     });
+    exit.add_component(new Rotator({
+        speed: [0, 0.0001, 0],
+    }));
+    return exit;
 }
 
 export function create_powerup({position}) {
@@ -107,7 +111,9 @@ export function create_powerup({position}) {
         color: CONFIG.POWERUP_COLOR,
     });
     cube.get_component(Transform).set({position});
-    cube.add_component(new Rotator());
+    cube.add_component(new Rotator({
+        speed: [0.0001, 0.0002, 0.0003],
+    }));
 
     let light = new Entity({
         components: [
