@@ -11,7 +11,7 @@ import {
     create_exit,
     create_powerup} from "./creators";
 
-import map from "./map.json";
+import map from "./new-map.json";
 
 export default
 function create_game() {
@@ -77,12 +77,12 @@ function create_game() {
     }
 
     let exit = create_exit({
-        position: [map.starting_point.x, 10, map.starting_point.y + 20],
+      position: [map.size.x / 2 + 10, 1.75, map.size.y / 2 -10],
     });
     // game.add(exit);
 
     let powerup = create_powerup({
-        position: [map.starting_point.x - 2, 1.75, map.starting_point.y + 25],
+      position: [map.size.x / 2 - 2, 1.75, map.size.y / 2 + 25],
     });
     game.add(powerup);
 
