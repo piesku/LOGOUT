@@ -1,5 +1,5 @@
-import {Component} from './cervus/core';
-import {Transform} from './cervus/components';
+import {Component} from "./cervus/core";
+import {Transform} from "./cervus/components";
 import {vec3} from "./cervus/math";
 
 export default

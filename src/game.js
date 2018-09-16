@@ -1,5 +1,6 @@
 import {Game, integer as random_integer} from "./cervus/core";
 import {Transform, Move} from "./cervus/components";
+import Collider from "./collider";
 import {
     CLEAR_COLOR,
     MIN_BUILDING_HEIGHT,
@@ -11,6 +12,7 @@ import {
     create_exit,
     create_powerup} from "./creators";
 
+import * as sys from "./systems";
 import map from "./map.json";
 
 export default
@@ -41,6 +43,8 @@ function create_game() {
         move_speed: 5,
         rotate_speed: 0,
     });
+
+    game.camera.add_component(new Collider());
 
     // Remove the default light.
     game.remove(game.light);
@@ -79,12 +83,26 @@ function create_game() {
     let exit = create_exit({
         position: [map.starting_point.x + 10, 1.75, map.starting_point.y - 10],
     });
-    // game.add(exit);
+    //game.add(exit);
 
-    let powerup = create_powerup({
-        position: [map.starting_point.x - 2, 1.75, map.starting_point.y + 25],
-    });
-    game.add(powerup);
+    // POWER UPS
+
+    game.add(create_powerup({
+        system: sys.COLOR,
+        position: [338, 1.75, 96]}));
+    game.add(create_powerup({
+        system: sys.MOUSELOOK,
+        position: [334, 1.75, 108]}));
+    game.add(create_powerup({
+        system: sys.SOLID,
+        position: [341, 1.75, 110]}));
+
+    game.add(create_powerup({
+        system: sys.CLOCK,
+        position: [352, 1.75, 118]}));
+    game.add(create_powerup({
+        system: sys.COMPASS,
+        position: [339, 1.75, 135]}));
 
     window.game = game;
     return game;

@@ -1,7 +1,9 @@
 import {Entity} from "./cervus/core";
 import {Transform, Render, Light} from "./cervus/components";
 import {Box} from "./cervus/shapes";
+import PowerUp from "./powerup";
 import Rotator from "./rotator";
+import Bounds from "./bounds";
 import {
     BUILDING_TAG,
     NEON_TAG,
@@ -121,7 +123,7 @@ export function create_exit({position}) {
     return exit;
 }
 
-export function create_powerup({position}) {
+export function create_powerup({system, position}) {
     let cube = new Box();
     cube.get_component(Render).set({
         material: wireframe_material,
@@ -129,6 +131,8 @@ export function create_powerup({position}) {
         tag: INTERACTABLE_TAG,
     });
     cube.get_component(Transform).set({position});
+    cube.add_component(new PowerUp({system}));
+    cube.add_component(new Bounds());
     cube.add_component(new Rotator({
         speed: [0.0001, 0.0002, 0.0003],
     }));
