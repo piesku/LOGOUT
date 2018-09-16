@@ -1,3 +1,4 @@
+import {element_of} from "./cervus/core";
 import {Render} from "./cervus/components";
 import * as sys from "./systems";
 import {
@@ -6,12 +7,15 @@ import {
     INTERACTABLE_TAG,
     building_material,
     neon_material} from "./materials";
-import {BUILDING_COLOR} from "./config";
+import {
+    BUILDING_COLOR,
+    NEON_COLORS,
+    POWERUP_COLOR} from "./config";
 
 export default
 function activate(game, system) {
     switch (system) {
-        case sys.SOLID: {
+        case sys.SOLID:
             for (let entity of game.get_entities_by_component(Render)) {
                 let render = entity.get_component(Render);
                 switch (render.tag) {
@@ -26,8 +30,25 @@ function activate(game, system) {
                         continue;
                 }
             }
-        }
+            break;
+        case sys.COLOR:
+            for (let entity of game.get_entities_by_component(Render)) {
+                let render = entity.get_component(Render);
+                switch (render.tag) {
+                    case BUILDING_TAG:
+                        render.color = BUILDING_COLOR;
+                        continue;
+                    case NEON_TAG:
+                        render.color = element_of(NEON_COLORS);
+                        continue;
+                    case INTERACTABLE_TAG:
+                        render.color = POWERUP_COLOR;
+                    default:
+                        continue;
+                }
+            }
+            break;
         default:
-            return;
+            break;
     }
 }

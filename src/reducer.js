@@ -11,7 +11,7 @@ const init = {
         [sys.HUD]: false,
         [sys.PERSPECTIVE]: false,
         [sys.SOLID]: false,
-        [sys.COLORS]: false,
+        [sys.COLOR]: false,
         [sys.CLOCK]: false,
         [sys.COMPASS]: false,
         [sys.MOUSELOOK]: false,
