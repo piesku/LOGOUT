@@ -26,8 +26,6 @@ function activate(game, system) {
                     case NEON_TAG:
                     case INTERACTABLE_TAG:
                         render.material = neon_material;
-                    default:
-                        continue;
                 }
             }
             break;
@@ -43,8 +41,6 @@ function activate(game, system) {
                         continue;
                     case INTERACTABLE_TAG:
                         render.color = POWERUP_COLOR;
-                    default:
-                        continue;
                 }
             }
             break;
