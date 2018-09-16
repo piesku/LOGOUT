@@ -7,10 +7,10 @@ const init = {
     game: null,
     last_active: null,
     systems: {
-        [sys.CAMERA]: false,
-        [sys.PERSPECTIVE]: false,
         [sys.HUD]: false,
+        [sys.PERSPECTIVE]: false,
         [sys.COLORS]: false,
+        [sys.CLOCK]: false,
         [sys.COMPASS]: false,
         [sys.MOUSELOOK]: false,
         [sys.GRID]: true,
@@ -28,9 +28,9 @@ function reducer(state = init, action, args) {
             return Object.assign({}, state, {
                 view: "play",
                 game: create_game(),
-                last_active: sys.CAMERA,
+                last_active: sys.HUD,
                 systems: Object.assign({}, state.systems, {
-                    [sys.CAMERA]: true
+                    [sys.HUD]: true
                 })
             });
         case act.ACTIVATE: {

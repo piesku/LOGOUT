@@ -17,20 +17,18 @@ function HUD({game, last_active, systems}) {
     return new class extends Component {
         after(root) {
             if (!systems[sys.PERSPECTIVE]) {
-                setTimeout(() => {
-                    const camera_tween = new MatrixTween({
+                setTimeout(() =>
+                    (new MatrixTween({
                         object: game.projMatrix,
                         to: game.perspe_matrix,
-                        time: 2000,
+                        time: 3000,
                         game: game
-                    });
+                    })).start(),
+                    5000);
 
-                    camera_tween.start().then(() => {
-
-                    });
-                    dispatch(ACTIVATE, sys.PERSPECTIVE);
-                    dispatch(ACTIVATE, sys.HUD);
-                }, 5000);
+                setTimeout(() =>
+                    dispatch(ACTIVATE, sys.PERSPECTIVE),
+                    7000);
             }
         }
 
@@ -43,7 +41,7 @@ function HUD({game, last_active, systems}) {
                         justify: "center"
                     })}
 
-                    ${systems[sys.HUD] && Time("tr", {
+                    ${systems[sys.CLOCK] && Time("tr", {
                         justify: "end"
                     })}
 
@@ -59,11 +57,11 @@ function HUD({game, last_active, systems}) {
                         "> 03. Init logout sequence",
                     ])}
 
-                    ${systems[sys.HUD] && Matrix("bl", {
+                    ${systems[sys.PERSPECTIVE] && Matrix("bl", {
                         align: "end"
                     })}
 
-                    ${systems[sys.HUD] && Code("br", {
+                    ${systems[sys.PERSPECTIVE] && Code("br", {
                         align: "end"
                     })}
                 </div>
