@@ -1,6 +1,7 @@
 import * as sys from "./systems";
 import * as act from "./actions";
 import create_game from "./game";
+import activate from "./activators";
 
 const init = {
     view: "intro",
@@ -9,6 +10,7 @@ const init = {
     systems: {
         [sys.HUD]: false,
         [sys.PERSPECTIVE]: false,
+        [sys.SOLID]: false,
         [sys.COLORS]: false,
         [sys.CLOCK]: false,
         [sys.COMPASS]: false,
@@ -35,6 +37,7 @@ function reducer(state = init, action, args) {
             });
         case act.ACTIVATE: {
             let [last_active] = args;
+            activate(game, last_active);
             return Object.assign({}, state, {
                 last_active,
                 systems: Object.assign({}, state.systems, {

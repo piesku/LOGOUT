@@ -1,18 +1,15 @@
-import {Game, integer as random_integer, element_of as random_element_of} from "./cervus/core";
+import {Game, integer as random_integer} from "./cervus/core";
 import {Transform, Move} from "./cervus/components";
 import {
     CLEAR_COLOR,
     MIN_BUILDING_HEIGHT,
     MAX_BUILDING_HEIGHT,
-    NEON_COLORS
-} from "./config";
-
+    WIREFRAME_COLOR} from "./config";
 import {
     create_floor,
     create_building,
     create_exit,
-    create_powerup
-} from "./creators";
+    create_powerup} from "./creators";
 
 import map from "./map.json";
 
@@ -70,7 +67,7 @@ function create_game() {
                 {
                     position: [0, 1, - (zsize/2) - 0.2],
                     scale: [4, 2, 0.1],
-                    color: random_element_of(NEON_COLORS),
+                    color: WIREFRAME_COLOR,
                 }
             ],
         });

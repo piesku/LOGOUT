@@ -61,7 +61,7 @@ function HUD({game, last_active, systems}) {
                         align: "end"
                     })}
 
-                    ${systems[sys.PERSPECTIVE] && Code("br", {
+                    ${systems[sys.SOLID] && Code("br", {
                         align: "end"
                     })}
                 </div>

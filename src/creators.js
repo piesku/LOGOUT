@@ -2,8 +2,16 @@ import {Entity} from "./cervus/core";
 import {Transform, Render, Light} from "./cervus/components";
 import {Box} from "./cervus/shapes";
 import Rotator from "./rotator";
-import {building_material, neon_material} from "./materials";
-import * as CONFIG from "./config";
+import {
+    BUILDING_TAG,
+    NEON_TAG,
+    INTERACTABLE_TAG,
+    wireframe_material} from "./materials";
+import {
+    WIREFRAME_COLOR,
+    POWERUP_INTENSITY,
+    NEON_INTENSITY,
+    NEON_LIGHT_MOUNT} from "./config";
 
 let cube_render = (new Box()).get_component(Render);
 
@@ -18,8 +26,9 @@ function create_group() {
 export function create_floor({position, scale}) {
     let plane = new Box();
     plane.get_component(Render).set({
-        material: building_material,
-        config: CONFIG.BUILDING_COLOR
+        material: wireframe_material,
+        color: WIREFRAME_COLOR,
+        tag: BUILDING_TAG,
     });
     plane.get_component(Transform).set({
         position,
@@ -31,8 +40,9 @@ export function create_floor({position, scale}) {
 export function create_neon({position, scale, color}) {
     let neon = new Box();
     neon.get_component(Render).set({
-        material: neon_material,
-        color
+        material: wireframe_material,
+        color,
+        tag: NEON_TAG,
     });
     neon.get_component(Transform).set({
         position,
@@ -42,11 +52,11 @@ export function create_neon({position, scale, color}) {
     let neon_light = new Entity({
         components: [
             new Transform({
-                position: CONFIG.NEON_LIGHT_MOUNT
+                position: NEON_LIGHT_MOUNT
             }),
             new Light({
                 color,
-                intensity: CONFIG.NEON_INTENSITY,
+                intensity: NEON_INTENSITY,
             }),
             // new Render({
             //     color: "fff",
@@ -64,8 +74,9 @@ export function create_building(options) {
     let {
         position,
         scale,
-        material = building_material,
-        color = CONFIG.BUILDING_COLOR,
+        tag = BUILDING_TAG,
+        material = wireframe_material,
+        color = WIREFRAME_COLOR,
         neons = [],
     } = options;
 
@@ -78,7 +89,8 @@ export function create_building(options) {
     let building = new Box();
     building.get_component(Render).set({
         material,
-        color
+        color,
+        tag,
     });
     building.get_component(Transform).set({scale});
     group.add(building);
@@ -95,8 +107,9 @@ export function create_exit({position}) {
     let exit = create_building({
         position,
         scale: [5, 10, 5],
-        material: neon_material,
+        material: wireframe_material,
         color: "fff",
+        tag: INTERACTABLE_TAG,
     });
     exit.add_component(new Rotator({
         speed: [0, 0.0001, 0],
@@ -107,8 +120,9 @@ export function create_exit({position}) {
 export function create_powerup({position}) {
     let cube = new Box();
     cube.get_component(Render).set({
-        material: neon_material,
-        color: CONFIG.POWERUP_COLOR,
+        material: wireframe_material,
+        color: WIREFRAME_COLOR,
+        tag: INTERACTABLE_TAG,
     });
     cube.get_component(Transform).set({position});
     cube.add_component(new Rotator({
@@ -119,8 +133,8 @@ export function create_powerup({position}) {
         components: [
             new Transform(),
             new Light({
-                color: CONFIG.POWERUP_COLOR,
-                intensity: CONFIG.POWERUP_INTENSITY,
+                color: WIREFRAME_COLOR,
+                intensity: POWERUP_INTENSITY,
             }),
         ]
     });

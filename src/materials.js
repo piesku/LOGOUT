@@ -2,6 +2,10 @@ import {BasicMaterial, PhongMaterial, WireframeMaterial} from "./cervus/material
 import {Render, Transform} from "./cervus/components";
 import {CLEAR_COLOR} from "./config";
 
+export const BUILDING_TAG = 1;
+export const NEON_TAG = 2;
+export const INTERACTABLE_TAG = 3;
+
 function hex_to_rgb(hex) {
   if (hex.charAt(0) === '#') {
     hex = hex.substr(1);
@@ -42,7 +46,7 @@ building_material.add_fog({
     distance: new Float32Array([0, 30]),
 });
 
-export let wireframe = new WireframeMaterial({
+export let wireframe_material = new WireframeMaterial({
     requires: [
         Render,
         Transform
