@@ -67,7 +67,7 @@ function find_end(height, i, j, input) {
     return output;
 }
 
-parser.parse('./test.vox').then((result) => {
+parser.parse('./3dmap.vox').then((result) => {
     output_map.size = {
         x: result.size.x,
         y: result.size.y
@@ -100,7 +100,7 @@ parser.parse('./test.vox').then((result) => {
                 // });
                 // process.exit();
                 output_map.buildings.push({
-                    height: cell,
+                    h: cell,
                     x1: x,
                     y1: y,
                     x2: (end_point.x + 1),
