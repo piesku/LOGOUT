@@ -9,6 +9,7 @@ import {
     wireframe_material} from "./materials";
 import {
     WIREFRAME_COLOR,
+    POWERUP_COLOR,
     POWERUP_INTENSITY,
     NEON_INTENSITY,
     NEON_LIGHT_MOUNT} from "./config";
@@ -121,7 +122,7 @@ export function create_powerup({position}) {
     let cube = new Box();
     cube.get_component(Render).set({
         material: wireframe_material,
-        color: WIREFRAME_COLOR,
+        color: POWERUP_COLOR,
         tag: INTERACTABLE_TAG,
     });
     cube.get_component(Transform).set({position});
