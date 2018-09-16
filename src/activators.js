@@ -1,5 +1,5 @@
 import {element_of} from "./cervus/core";
-import {Render} from "./cervus/components";
+import {Move, Render} from "./cervus/components";
 import * as sys from "./systems";
 import {
     BUILDING_TAG,
@@ -47,6 +47,12 @@ function activate(game, system) {
                         continue;
                 }
             }
+            break;
+        case sys.MOUSELOOK:
+            game.camera.get_component(Move).set({
+                mouse_controlled: true,
+                rotate_speed: .5,
+            });
             break;
         default:
             break;

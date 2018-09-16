@@ -36,8 +36,9 @@ function create_game() {
 
     game.camera.get_component(Move).set({
         keyboard_controlled: true,
-        mouse_controlled: true,
+        mouse_controlled: false,
         move_speed: 5,
+        rotate_speed: 0,
     });
 
     // Remove the default light.
