@@ -1,6 +1,6 @@
 export const CLEAR_COLOR = "333";
 
-export const WIREFRAME_COLOR = "fff";
+export const WIREFRAME_COLOR = "888";
 
 export const BUILDING_COLOR = "222";
 export const NEON_COLORS = ["28D7FE", "A9FFDC", "FED128"];
