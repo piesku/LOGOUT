@@ -1,8 +1,8 @@
 export const HUD = "Heads-Up Display";
 export const PERSPECTIVE = "Perspective";
-export const MOUSELOOK = "Mouselook";
-export const SOLID = "Full Draw Mode";
-export const COLOR = "Chromatic Vision";
+export const SOLID = "Light Sensor";
+export const COLOR = "Chromatic Sampling";
 export const CLOCK = "Low-Res Timer";
 export const COMPASS = "Compass";
-export const GRID = "WASD/Arrows Movement";
+export const MOUSELOOK = "Gimbal Mount";
+export const GRID = "WASD Movement";
