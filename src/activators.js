@@ -34,7 +34,8 @@ function activate(game, system) {
                 let render = entity.get_component(Render);
                 switch (render.tag) {
                     case BUILDING_TAG:
-                        render.color = BUILDING_COLOR;
+                        // Keep the current building color. It's either
+                        // wireframe or set in SOLID; both of which look OK.
                         continue;
                     case NEON_TAG: {
                         let color = element_of(NEON_COLORS);
