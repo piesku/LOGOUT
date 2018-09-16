@@ -15,7 +15,7 @@ class Collider extends Component {
         for (let entity of collidables) {
             let bounds = entity.get_component(Bounds);
             if (bounds.contains(this.transform.position)) {
-                entity.get_component(PowerUp).activate();
+                entity.get_component(PowerUp).trigger();
             }
         }
     }

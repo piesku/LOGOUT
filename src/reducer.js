@@ -1,6 +1,7 @@
 import * as sys from "./systems";
 import * as act from "./actions";
 import create_game from "./game";
+import {create_exit} from "./creators";
 import activate from "./activators";
 
 const init = {
@@ -38,6 +39,18 @@ function reducer(state = init, action, args) {
         case act.ACTIVATE: {
             let [last_active] = args;
             activate(game, last_active);
+
+            let all_systems_active =
+                [...Object.values(state.systems)].every(active => active);
+            if (all_systems_active) {
+                game.add(create_exit({
+                    position: [
+                        map.starting_point.x,
+                        10,
+                        map.starting_point.y + 20],
+                }));
+            }
+
             return Object.assign({}, state, {
                 last_active,
                 systems: Object.assign({}, state.systems, {

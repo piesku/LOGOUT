@@ -3,7 +3,7 @@ import {ACTIVATE} from "./actions";
 
 export default
 class PowerUp extends Component {
-    activate() {
+    trigger() {
         this.entity.game.remove(this.entity);
         dispatch(ACTIVATE, this.system);
     }

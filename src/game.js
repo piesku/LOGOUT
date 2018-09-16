@@ -9,7 +9,6 @@ import {
 import {
     create_floor,
     create_building,
-    create_exit,
     create_powerup} from "./creators";
 
 import * as sys from "./systems";
@@ -79,11 +78,6 @@ function create_game() {
         });
         game.add(building);
     }
-
-    let exit = create_exit({
-        position: [map.starting_point.x + 10, 1.75, map.starting_point.y - 10],
-    });
-    //game.add(exit);
 
     // POWER UPS
 

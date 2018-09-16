@@ -8,6 +8,7 @@ import {
     BUILDING_TAG,
     NEON_TAG,
     INTERACTABLE_TAG,
+    neon_material,
     wireframe_material} from "./materials";
 import {
     WIREFRAME_COLOR,
@@ -112,11 +113,13 @@ export function create_building(options) {
 export function create_exit({position}) {
     let exit = create_building({
         position,
-        scale: [5, 10, 5],
-        material: wireframe_material,
+        scale: [5, 5, 5],
+        material: neon_material,
         color: "fff",
-        tag: INTERACTABLE_TAG,
+        tag: null,
     });
+    cube.add_component(new Exit({system}));
+    cube.add_component(new Bounds());
     exit.add_component(new Rotator({
         speed: [0, 0.0001, 0],
     }));
