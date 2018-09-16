@@ -1,5 +1,5 @@
 import {element_of} from "./cervus/core";
-import {Move, Render} from "./cervus/components";
+import {Light, Move, Render} from "./cervus/components";
 import * as sys from "./systems";
 import {
     BUILDING_TAG,
@@ -36,11 +36,21 @@ function activate(game, system) {
                     case BUILDING_TAG:
                         render.color = BUILDING_COLOR;
                         continue;
-                    case NEON_TAG:
-                        render.color = element_of(NEON_COLORS);
+                    case NEON_TAG: {
+                        let color = element_of(NEON_COLORS);
+                        render.set({color});
+                        for (let child of entity.entities) {
+                            child.get_component(Light).set({color});
+                        }
                         continue;
-                    case INTERACTABLE_TAG:
-                        render.color = POWERUP_COLOR;
+                    }
+                    case INTERACTABLE_TAG: {
+                        let color = POWERUP_COLOR;
+                        render.set({color});
+                        for (let child of entity.entities) {
+                            child.get_component(Light).set({color});
+                        }
+                    }
                 }
             }
             break;

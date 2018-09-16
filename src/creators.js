@@ -38,6 +38,21 @@ export function create_floor({position, scale}) {
     return plane;
 }
 
+function create_light({position, color, intensity}) {
+    return new Entity({
+        components: [
+            new Transform({position}),
+            new Light({color, intensity}),
+            // new Render({
+            //     color: "fff",
+            //     material: wireframe,
+            //     indices: cube_render.indices,
+            //     vertices: cube_render.vertices
+            //})
+        ]
+    });
+}
+
 export function create_neon({position, scale, color}) {
     let neon = new Box();
     neon.get_component(Render).set({
@@ -50,22 +65,10 @@ export function create_neon({position, scale, color}) {
         scale
     });
 
-    let neon_light = new Entity({
-        components: [
-            new Transform({
-                position: NEON_LIGHT_MOUNT
-            }),
-            new Light({
-                color,
-                intensity: NEON_INTENSITY,
-            }),
-            // new Render({
-            //     color: "fff",
-            //     material: wireframe,
-            //     indices: cube_render.indices,
-            //     vertices: cube_render.vertices
-            //})
-        ]
+    let neon_light = create_light({
+        position: NEON_LIGHT_MOUNT,
+        color,
+        intensity: NEON_INTENSITY,
     });
     neon.add(neon_light);
     return neon;
