@@ -1,6 +1,6 @@
 import {Game, integer as random_integer} from "./cervus/core";
 import {Transform, Move} from "./cervus/components";
-import Collider from "./collider";
+import Actor from "./actor";
 import {
     CLEAR_COLOR,
     MIN_BUILDING_HEIGHT,
@@ -43,7 +43,7 @@ function create_game() {
         rotate_speed: 0,
     });
 
-    game.camera.add_component(new Collider());
+    game.camera.add_component(new Actor());
 
     // Remove the default light.
     game.remove(game.light);

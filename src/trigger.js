@@ -3,7 +3,7 @@ import {Transform} from "./cervus/components";
 import {vec3} from "./cervus/math";
 
 export default
-class Bounds extends Component {
+class Trigger extends Component {
     mount() {
         this.transform = this.entity.get_component(Transform);
     }
@@ -14,7 +14,7 @@ class Bounds extends Component {
         vec3.transform_mat4(
             point, world_point, this.transform.world_to_self);
         // XXX How to parametrize each shape?
-        return point.map(Math.abs).every(n => n <= 0.5);
+        return point.map(Math.abs).every(n => n <= this.radius);
     }
 
     trigger() {

@@ -2,7 +2,7 @@ import {Entity} from "./cervus/core";
 import {Transform, Render, Light} from "./cervus/components";
 import {Box} from "./cervus/shapes";
 import Rotator from "./rotator";
-import Bounds from "./bounds";
+import Trigger from "./trigger";
 import {
     BUILDING_TAG,
     NEON_TAG,
@@ -102,7 +102,8 @@ export function create_exit(options) {
         color: POWERUP_COLOR,
     });
     exit.get_component(Transform).set(options);
-    exit.add_component(new Bounds({
+    exit.add_component(new Trigger({
+        radius: 0.6,
         action: [EXIT]
     }));
     exit.add_component(new Rotator({
@@ -119,7 +120,8 @@ export function create_powerup({system, position}) {
         tag: INTERACTABLE_TAG,
     });
     cube.get_component(Transform).set({position});
-    cube.add_component(new Bounds({
+    cube.add_component(new Trigger({
+        radius: 1,
         action: [ACTIVATE, system]
     }));
     cube.add_component(new Rotator({
