@@ -42,10 +42,10 @@ function create_light({position, color, intensity}) {
             new Light({color, intensity}),
             // new Render({
             //     color: "fff",
-            //     material: wireframe,
+            //     material: wireframe_material,
             //     indices: cube_render.indices,
             //     vertices: cube_render.vertices
-            //})
+            // })
         ]
     });
 }

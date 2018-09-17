@@ -13,7 +13,7 @@ import {
     create_powerup} from "./creators";
 
 import * as sys from "./systems";
-import map from "./map.json";
+import map from "./new-map.json";
 
 export function create_game() {
     const game = new Game({
@@ -81,20 +81,20 @@ export function create_game() {
 
     game.add(create_powerup({
         system: sys.MOUSELOOK,
-        position: [338, 1.75, 96]}));
+        position: [63, 1.75, 70]}));
     game.add(create_powerup({
         system: sys.COLOR,
-        position: [334, 1.75, 108]}));
+        position: [63, 1.75, 80]}));
     game.add(create_powerup({
         system: sys.SOLID,
-        position: [341, 1.75, 110]}));
+        position: [63, 1.75, 90]}));
 
     game.add(create_powerup({
         system: sys.CLOCK,
-        position: [352, 1.75, 118]}));
+        position: [63, 1.75, 100]}));
     game.add(create_powerup({
         system: sys.COMPASS,
-        position: [339, 1.75, 135]}));
+        position: [63, 1.75, 110]}));
 
     window.game = game;
     return game;
