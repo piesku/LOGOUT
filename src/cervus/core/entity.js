@@ -27,6 +27,10 @@ export class Entity {
     return this.components.get(component);
   }
 
+  remove_component(component) {
+    return this.components.delete(component);
+  }
+
   get_components(...components) {
     return components.map(component => this.get_component(component));
   }
