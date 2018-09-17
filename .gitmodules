@@ -1,3 +1,0 @@
-[submodule "src/cervus"]
-	path = src/cervus
-	url = git@github.com:michalbe/cervus.git
