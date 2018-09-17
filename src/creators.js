@@ -2,6 +2,7 @@ import {Entity} from "./cervus/core";
 import {Transform, Render, Light} from "./cervus/components";
 import {Box} from "./cervus/shapes";
 import PowerUp from "./powerup";
+import Exit from "./exit";
 import Rotator from "./rotator";
 import Bounds from "./bounds";
 import {
@@ -18,14 +19,6 @@ import {
     NEON_LIGHT_MOUNT} from "./config";
 
 let cube_render = (new Box()).get_component(Render);
-
-function create_group() {
-    return new Entity({
-        components: [
-            new Transform({position})
-        ]
-    });
-}
 
 export function create_floor({position, scale}) {
     let plane = new Box();
@@ -77,16 +70,7 @@ export function create_neon({position, scale, color}) {
     return neon;
 }
 
-export function create_building(options) {
-    let {
-        position,
-        scale,
-        tag = BUILDING_TAG,
-        material = wireframe_material,
-        color = WIREFRAME_COLOR,
-        neons = [],
-    } = options;
-
+export function create_building({position, scale, neons}) {
     let group = new Entity({
         components: [
             new Transform({position})
@@ -95,9 +79,9 @@ export function create_building(options) {
 
     let building = new Box();
     building.get_component(Render).set({
-        material,
-        color,
-        tag,
+        material: wireframe_material,
+        color: WIREFRAME_COLOR,
+        tag: BUILDING_TAG,
     });
     building.get_component(Transform).set({scale});
     group.add(building);
@@ -110,16 +94,15 @@ export function create_building(options) {
     return group;
 }
 
-export function create_exit({position}) {
-    let exit = create_building({
-        position,
-        scale: [5, 5, 5],
+export function create_exit(options) {
+    let exit = new Box();
+    exit.get_component(Render).set({
         material: neon_material,
-        color: "fff",
-        tag: null,
+        color: POWERUP_COLOR,
     });
-    cube.add_component(new Exit({system}));
-    cube.add_component(new Bounds());
+    exit.get_component(Transform).set(options);
+    exit.add_component(new Exit());
+    exit.add_component(new Bounds());
     exit.add_component(new Rotator({
         speed: [0, 0.0001, 0],
     }));

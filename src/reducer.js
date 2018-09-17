@@ -3,6 +3,7 @@ import * as act from "./actions";
 import create_game from "./game";
 import {create_exit} from "./creators";
 import activate from "./activators";
+import map from "./map.json";
 
 const init = {
     view: "intro",
@@ -40,14 +41,16 @@ function reducer(state = init, action, args) {
             let [last_active] = args;
             activate(game, last_active);
 
-            let all_systems_active =
-                [...Object.values(state.systems)].every(active => active);
-            if (all_systems_active) {
+            let systems_all = [...Object.values(state.systems)];
+            let systems_active = systems_all.filter(x => x);
+            // If this is the last system, reveal the exit.
+            if (systems_all.length - systems_active.length === 1) {
                 game.add(create_exit({
                     position: [
                         map.starting_point.x,
-                        10,
-                        map.starting_point.y + 20],
+                        63,
+                        map.starting_point.y],
+                    scale: [12, 126, 12],
                 }));
             }
 
@@ -60,6 +63,7 @@ function reducer(state = init, action, args) {
         }
         case act.EXIT:
             state.game.stop();
+            state.game.destroy();
             state.game.canvas.remove();
             return Object.assign({}, state, {
                 view: "outro",
