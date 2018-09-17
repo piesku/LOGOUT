@@ -31,9 +31,9 @@ export function create_game() {
 
     game.camera.get_component(Transform).set({
         position: [
-            map.starting_point.x * SCALE,
+            map.start[0] * SCALE,
             1.75,
-            map.starting_point.y * SCALE],
+            map.start[1] * SCALE],
     });
 
     game.camera.get_component(Move).set({
@@ -50,7 +50,7 @@ export function create_game() {
 
     let floor = create_floor({
         position: [0, -0.5, 0],
-        scale: [map.size.x * SCALE * 10, 1, map.size.y * SCALE * 10],
+        scale: [map.size[0] * SCALE * 10, 1, map.size[1] * SCALE * 10],
     });
     game.add(floor);
 
@@ -104,9 +104,9 @@ export function reveal_exit(game) {
     let height = 50 * SCALE;
     game.add(create_exit({
         position: [
-            map.starting_point.x * SCALE,
+            map.start[0] * SCALE,
             height / 2,
-            map.starting_point.y * SCALE],
+            map.start[1] * SCALE],
         scale: [5 * SCALE, 200, 5 * SCALE],
     }));
 }

@@ -3,8 +3,9 @@ const parser = new vox.Parser();
 const fs = require('fs');
 
 const output_map = {
-    size: {},
+    size: [],
     buildings: [],
+    start: [],
     items: []
 };
 
@@ -67,15 +68,15 @@ function find_end(height, i, j, input) {
 }
 
 parser.parse('./city.vox').then((result) => {
-    output_map.size = {
-        x: result.size.x,
-        y: result.size.y
-    };
+    output_map.size = [
+        result.size.x,
+        result.size.y,
+    ];
 
-    output_map.starting_point = {
-        x: result.size.x / 2,
-        y: result.size.y / 2,
-    };
+    output_map.start = [
+        result.size.x / 2,
+        result.size.y / 2,
+    ];
 
     let map = new Array(result.size.x).fill([]);
     map = map.map((row) => {
