@@ -18,8 +18,7 @@ export function create_game() {
     const game = new Game({
       width: window.innerWidth,
       height: window.innerHeight,
-      // projection: "ortho",
-      far: 1000,
+      far: 126,
       clear_color: CLEAR_COLOR,
     });
 

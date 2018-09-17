@@ -31,7 +31,7 @@ export let neon_material = new BasicMaterial({
 
 neon_material.add_fog({
     color: hex_to_rgb(CLEAR_COLOR),
-    distance: new Float32Array([10, 100]),
+    distance: new Float32Array([25, 100]),
 });
 
 export let building_material = new PhongMaterial({
