@@ -11,7 +11,7 @@ import {
     create_exit,
     create_powerup} from "./creators";
 
-import map from "./new-map.json";
+import map from "./map.json";
 
 export default
 function create_game() {
