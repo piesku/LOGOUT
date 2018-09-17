@@ -11,7 +11,7 @@ function App({view, systems}) {
             return Story(intro);
         case "diag":
             let status = [
-                "Running analysis...\n",
+                "Running analysis…\n",
                 ...get_system_status(systems),
                 `\n<button onclick="dispatch(${START})">Initiate recovery sequence</button>`
             ].join("\n");
