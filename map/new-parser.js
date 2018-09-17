@@ -103,13 +103,13 @@ parser.parse('./city.vox').then((result) => {
                 //     x, y, x2: end_point.x, y2: end_point.y,
                 // });
                 // process.exit();
-                output_map.buildings.push({
-                    h: cell,
-                    x1: x,
-                    y1: y,
-                    x2: (end_point.x + 1),
-                    y2: (end_point.y + 1),
-                });
+                output_map.buildings.push([
+                    x,
+                    y,
+                    (end_point.x + 1),
+                    (end_point.y + 1),
+                    cell,
+                ]);
             }
         });
     });

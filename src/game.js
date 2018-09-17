@@ -54,7 +54,7 @@ export function create_game() {
     });
     game.add(floor);
 
-    for (let {x1, y1, x2, y2, h} of map.buildings) {
+    for (let [x1, y1, x2, y2, h] of map.buildings) {
         let xsize = Math.abs(x2 - x1) * SCALE;
         let zsize = Math.abs(y2 - y1) * SCALE;
 
