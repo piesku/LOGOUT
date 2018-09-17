@@ -32,7 +32,7 @@ function create_game() {
 
 
     game.camera.get_component(Transform).set({
-      position: [map.size.x / 2, 1.75, map.size.y / 2],
+        position: [map.starting_point.x, 1.75, map.starting_point.y],
     });
 
     game.camera.get_component(Move).set({
@@ -77,12 +77,12 @@ function create_game() {
     }
 
     let exit = create_exit({
-      position: [map.size.x / 2 + 10, 1.75, map.size.y / 2 -10],
+        position: [map.starting_point.x + 10, 1.75, map.starting_point.y - 10],
     });
     // game.add(exit);
 
     let powerup = create_powerup({
-      position: [map.size.x / 2 - 2, 1.75, map.size.y / 2 + 25],
+        position: [map.starting_point.x - 2, 1.75, map.starting_point.y + 25],
     });
     game.add(powerup);
 
