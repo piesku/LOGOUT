@@ -14,8 +14,7 @@ import {
 import * as sys from "./systems";
 import map from "./map.json";
 
-export default
-function create_game() {
+export function create_game() {
     const game = new Game({
       width: window.innerWidth,
       height: window.innerHeight,
@@ -28,9 +27,7 @@ function create_game() {
     game.setup_ortho_camera();
 
     game.canvas.addEventListener(
-      'click', () => game.canvas.requestPointerLock()
-    );
-
+        "click", () => document.body.requestPointerLock());
 
     game.camera.get_component(Transform).set({
         position: [map.starting_point.x, 1.75, map.starting_point.y],
@@ -82,10 +79,10 @@ function create_game() {
     // POWER UPS
 
     game.add(create_powerup({
-        system: sys.COLOR,
+        system: sys.MOUSELOOK,
         position: [338, 1.75, 96]}));
     game.add(create_powerup({
-        system: sys.MOUSELOOK,
+        system: sys.COLOR,
         position: [334, 1.75, 108]}));
     game.add(create_powerup({
         system: sys.SOLID,
@@ -100,4 +97,10 @@ function create_game() {
 
     window.game = game;
     return game;
+}
+
+export function destroy_game(game) {
+    game.stop();
+    game.destroy();
+    game.canvas.remove();
 }

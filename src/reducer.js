@@ -1,6 +1,6 @@
 import * as sys from "./systems";
 import * as act from "./actions";
-import create_game from "./game";
+import {create_game, destroy_game} from "./game";
 import {create_exit} from "./creators";
 import activate from "./activators";
 import map from "./map.json";
@@ -29,6 +29,7 @@ function reducer(state = init, action, args) {
                 view: "diag",
             });
         case act.START:
+            document.body.requestPointerLock()
             return Object.assign({}, state, {
                 view: "play",
                 game: create_game(),
@@ -62,9 +63,8 @@ function reducer(state = init, action, args) {
             });
         }
         case act.EXIT:
-            state.game.stop();
-            state.game.destroy();
-            state.game.canvas.remove();
+            document.exitPointerLock();
+            destroy_game(state.game);
             return Object.assign({}, state, {
                 view: "outro",
             });
