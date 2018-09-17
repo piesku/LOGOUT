@@ -1,10 +1,8 @@
-import {Game, integer as random_integer} from "./cervus/core";
+import {Game} from "./cervus/core";
 import {Transform, Move} from "./cervus/components";
 import Actor from "./actor";
 import {
     CLEAR_COLOR,
-    MIN_BUILDING_HEIGHT,
-    MAX_BUILDING_HEIGHT,
     WIREFRAME_COLOR} from "./config";
 import {
     create_exit,
@@ -52,20 +50,16 @@ export function create_game() {
     });
     game.add(floor);
 
-    for (let {x1, y1, x2, y2} of map.buildings) {
+    for (let {x1, y1, x2, y2, h} of map.buildings) {
         let xsize = Math.abs(x2 - x1);
         let zsize = Math.abs(y2 - y1);
 
         let center_x = x1 + (xsize/2);
         let center_z = y1 + (zsize/2);
 
-        let height = random_integer(
-          MIN_BUILDING_HEIGHT, MAX_BUILDING_HEIGHT
-        );
-
         let building = create_building({
-            position: [center_x, height / 2, center_z],
-            scale: [xsize, height, zsize],
+            position: [center_x, h / 2, center_z],
+            scale: [xsize, h, zsize],
             neons: [
                 {
                     position: [0, 1, - (zsize/2) - 0.2],
