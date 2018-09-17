@@ -1,5 +1,6 @@
 import {element_of} from "./cervus/core";
-import {Light, Move, Render} from "./cervus/components";
+import {Light, Render} from "./cervus/components";
+import GridMove from "./grid-move";
 import * as sys from "./systems";
 import {
     BUILDING_TAG,
@@ -54,7 +55,7 @@ function activate(game, system) {
             }
             break;
         case sys.MOUSELOOK:
-            game.camera.get_component(Move).set({
+            game.camera.get_component(GridMove).set({
                 mouse_controlled: true,
                 rotate_speed: .5,
             });

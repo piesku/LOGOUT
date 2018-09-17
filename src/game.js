@@ -1,5 +1,7 @@
 import {Game} from "./cervus/core";
 import {Transform, Move} from "./cervus/components";
+import GridMove from "./grid-move";
+
 import Actor from "./actor";
 import {
     SCALE,
@@ -22,6 +24,8 @@ export function create_game() {
       clear_color: CLEAR_COLOR,
     });
 
+    game.buildings = [];
+
     game.perspe_matrix = JSON.parse(JSON.stringify(game.projMatrix));
     game.setup_ortho_camera();
 
@@ -35,7 +39,12 @@ export function create_game() {
             map.start[1] * SCALE],
     });
 
-    game.camera.get_component(Move).set({
+    game.camera.remove_component(Move);
+
+    const grid_move = new GridMove();
+    game.camera.add_component(grid_move);
+
+    grid_move.set({
         keyboard_controlled: true,
         mouse_controlled: false,
         move_speed: 5,
@@ -74,6 +83,7 @@ export function create_game() {
             ],
         });
         game.add(building);
+      game.buildings.push([center_x - xsize / 2, center_x + xsize / 2, center_z - zsize / 2, center_z + zsize/2]);
     }
 
     // POWER UPS
