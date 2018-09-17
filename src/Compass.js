@@ -32,7 +32,7 @@ export default function Compass(cls, styles) {
         render() {
             return Block(
                 cls,
-                ["-----"],
+                ["----"],
                 styles
             );
         }

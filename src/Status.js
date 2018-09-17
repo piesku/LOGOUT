@@ -17,6 +17,6 @@ function Status(cls, styles, systems) {
     return Block(cls, [
         "Running analysis",
         ...get_system_status(systems),
-        "<div class=box>Assessment complete</div>",
+        "<div class=e>Assessment complete</div>",
     ], styles);
 }

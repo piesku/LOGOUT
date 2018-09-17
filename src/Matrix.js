@@ -19,7 +19,7 @@ export default function Matrix(cls, styles) {
 
         after(root) {
             let rows = Array.from(
-                root.querySelectorAll(`.${cls} .line`)
+                root.querySelectorAll(`.${cls} .l`)
             ).slice(1);
             this.update_from_game = () => {
                 // Update local matrix display

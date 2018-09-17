@@ -34,7 +34,7 @@ function HUD({game, last_active, systems}) {
 
         render() {
             return html`
-                <div class="screen hud">
+                <div class="m u">
                     ${systems[sys.HUD] && Status("tl", {}, systems)}
 
                     ${systems[sys.COMPASS] && Compass("tm", {
@@ -47,8 +47,8 @@ function HUD({game, last_active, systems}) {
 
                     ${Block("mm", [
                         last_active,
-                        "<div class='box big'>Activated</div>",
-                    ], { align: "center", justify: "center", cls: "flicker" })}
+                        "<div class='h e'>Activated</div>",
+                    ], { align: "center", justify: "center", cls: "f" })}
 
                     ${systems[sys.HUD] && Block("mr", [
                         "Active objectives",

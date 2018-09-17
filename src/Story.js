@@ -13,7 +13,7 @@ function Story(text) {
         after(root) {
             let div = document.createElement("div");
             let lines = text.split("\n")[Symbol.iterator]();
-            let container = root.querySelector(".text");
+            let container = root.querySelector(".t");
 
             this.interval = setInterval(() => {
                 // Animate text display
@@ -30,8 +30,8 @@ function Story(text) {
 
         render() {
             return html`
-                <div class="screen story">
-                    <div class="text" digest="${digest(text)}"></div>
+                <div class="m s">
+                    <div class="t" digest="${digest(text)}"></div>
                 </div>
             `;
         }

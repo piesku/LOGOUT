@@ -25,7 +25,7 @@ export default function Time(cls, styles) {
         }
 
         after(root) {
-            let lines = root.querySelectorAll(`.${cls} .line`);
+            let lines = root.querySelectorAll(`.${cls} .l`);
             this.interval = setInterval(() => {
                 // Update datetime
                 let now = new Date();
