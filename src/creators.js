@@ -1,8 +1,6 @@
 import {Entity} from "./cervus/core";
 import {Transform, Render, Light} from "./cervus/components";
 import {Box} from "./cervus/shapes";
-import PowerUp from "./powerup";
-import Exit from "./exit";
 import Rotator from "./rotator";
 import Bounds from "./bounds";
 import {
@@ -17,6 +15,9 @@ import {
     POWERUP_INTENSITY,
     NEON_INTENSITY,
     NEON_LIGHT_MOUNT} from "./config";
+import {
+    ACTIVATE,
+    EXIT} from "./actions";
 
 let cube_render = (new Box()).get_component(Render);
 
@@ -101,8 +102,9 @@ export function create_exit(options) {
         color: POWERUP_COLOR,
     });
     exit.get_component(Transform).set(options);
-    exit.add_component(new Exit());
-    exit.add_component(new Bounds());
+    exit.add_component(new Bounds({
+        action: [EXIT]
+    }));
     exit.add_component(new Rotator({
         speed: [0, 0.0001, 0],
     }));
@@ -117,8 +119,9 @@ export function create_powerup({system, position}) {
         tag: INTERACTABLE_TAG,
     });
     cube.get_component(Transform).set({position});
-    cube.add_component(new PowerUp({system}));
-    cube.add_component(new Bounds());
+    cube.add_component(new Bounds({
+        action: [ACTIVATE, system]
+    }));
     cube.add_component(new Rotator({
         speed: [0.0001, 0.0002, 0.0003],
     }));

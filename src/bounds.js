@@ -16,4 +16,9 @@ class Bounds extends Component {
         // XXX How to parametrize each shape?
         return point.map(Math.abs).every(n => n <= 0.5);
     }
+
+    trigger() {
+        this.entity.game.remove(this.entity);
+        dispatch(...this.action);
+    }
 }
