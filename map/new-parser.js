@@ -85,10 +85,9 @@ parser.parse('./city.vox').then((result) => {
 
     map = result.voxels.reduce((memo, curr) => {
         memo[curr.y] = memo[curr.y] || [];
-        memo[curr.y][curr.x] = Math.max(memo[curr.y][curr.x] || 0, curr.z);
+        memo[curr.y][curr.x] = Math.max(memo[curr.y][curr.x] || 1, curr.z + 1);
         return memo;
     }, map);
-
 
     // console.log(JSON.stringify(map));
     map.forEach((row, y) => {
