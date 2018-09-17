@@ -2,6 +2,7 @@ import {Game} from "./cervus/core";
 import {Transform, Move} from "./cervus/components";
 import Actor from "./actor";
 import {
+    SCALE,
     CLEAR_COLOR,
     WIREFRAME_COLOR} from "./config";
 import {
@@ -29,7 +30,10 @@ export function create_game() {
         "click", () => document.body.requestPointerLock());
 
     game.camera.get_component(Transform).set({
-        position: [map.starting_point.x, 1.75, map.starting_point.y],
+        position: [
+            map.starting_point.x * SCALE,
+            1.75,
+            map.starting_point.y * SCALE],
     });
 
     game.camera.get_component(Move).set({
@@ -46,20 +50,22 @@ export function create_game() {
 
     let floor = create_floor({
         position: [0, -0.5, 0],
-        scale: [map.size.x * 10, 1, map.size.y * 10],
+        scale: [map.size.x * SCALE * 10, 1, map.size.y * SCALE * 10],
     });
     game.add(floor);
 
     for (let {x1, y1, x2, y2, h} of map.buildings) {
-        let xsize = Math.abs(x2 - x1);
-        let zsize = Math.abs(y2 - y1);
+        let xsize = Math.abs(x2 - x1) * SCALE;
+        let zsize = Math.abs(y2 - y1) * SCALE;
 
-        let center_x = x1 + (xsize/2);
-        let center_z = y1 + (zsize/2);
+        let center_x = x1 * SCALE + (xsize/2);
+        let center_z = y1 * SCALE + (zsize/2);
+
+        let height = h * SCALE;
 
         let building = create_building({
-            position: [center_x, h / 2, center_z],
-            scale: [xsize, h, zsize],
+            position: [center_x, height / 2, center_z],
+            scale: [xsize, height, zsize],
             neons: [
                 {
                     position: [0, 1, - (zsize/2) - 0.2],
@@ -75,32 +81,33 @@ export function create_game() {
 
     game.add(create_powerup({
         system: sys.MOUSELOOK,
-        position: [63, 1.75, 70]}));
+        position: [31.5 * SCALE, 1.75, 35 * SCALE]}));
     game.add(create_powerup({
         system: sys.COLOR,
-        position: [63, 1.75, 80]}));
+        position: [31.5 * SCALE, 1.75, 38 * SCALE]}));
     game.add(create_powerup({
         system: sys.SOLID,
-        position: [63, 1.75, 90]}));
+        position: [31.5 * SCALE, 1.75, 41 * SCALE]}));
 
     game.add(create_powerup({
         system: sys.CLOCK,
-        position: [63, 1.75, 100]}));
+        position: [31.5 * SCALE, 1.75, 44 * SCALE]}));
     game.add(create_powerup({
         system: sys.COMPASS,
-        position: [63, 1.75, 110]}));
+        position: [31.5 * SCALE, 1.75, 47 * SCALE]}));
 
     window.game = game;
     return game;
 }
 
 export function reveal_exit(game) {
+    let height = 50 * SCALE;
     game.add(create_exit({
         position: [
-            map.starting_point.x,
-            63,
-            map.starting_point.y],
-        scale: [12, 126, 12],
+            map.starting_point.x * SCALE,
+            height / 2,
+            map.starting_point.y * SCALE],
+        scale: [5 * SCALE, 200, 5 * SCALE],
     }));
 }
 

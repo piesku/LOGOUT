@@ -1,3 +1,5 @@
+// 1 vox = this many units/meters
+export const SCALE = 4;
 export const CLEAR_COLOR = "333";
 
 export const WIREFRAME_COLOR = "888";

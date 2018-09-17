@@ -1,7 +1,6 @@
 const vox = require('./vox-parser');
 const parser = new vox.Parser();
 const fs = require('fs');
-const UNIT = 1;
 
 const output_map = {
     size: {},
