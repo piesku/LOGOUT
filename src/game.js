@@ -69,7 +69,7 @@ export function create_game() {
             neons: [
                 {
                     position: [0, 1, - (zsize/2) - 0.2],
-                    scale: [4, 2, 0.1],
+                    scale: [4, 2, 0.1].map(x => x * SCALE),
                     color: WIREFRAME_COLOR,
                 }
             ],
