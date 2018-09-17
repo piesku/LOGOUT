@@ -67,10 +67,15 @@ function find_end(height, i, j, input) {
     return output;
 }
 
-parser.parse('./3dmap.vox').then((result) => {
+parser.parse('./city.vox').then((result) => {
     output_map.size = {
         x: result.size.x,
         y: result.size.y
+    };
+
+    output_map.starting_point = {
+        x: result.size.x / 2,
+        y: result.size.y / 2,
     };
 
     let map = new Array(result.size.x).fill([]);
