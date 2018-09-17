@@ -1,3 +1,4 @@
+// #define MAX_LIGHTS 100
 //
 // Variables used by fragment shader
 //
@@ -12,12 +13,8 @@
 // sampler2D u_t; //texture
 // sampler2D n_m; // normal map
 
-export function fragment(defines) {
+export function fragment() {
   return `#version 300 es
-
-    ${defines.map(def => `
-      #define ${def}
-    `).join('')}
 
     precision mediump float;
 
@@ -25,66 +22,26 @@ export function fragment(defines) {
 
     in vec3 fp;
 
-    #ifdef LIGHTS
-      #define MAX_LIGHTS 100
-
-      uniform vec3[MAX_LIGHTS] lp;
-      uniform vec3[MAX_LIGHTS] lc;
-      uniform float[MAX_LIGHTS] li;
+      uniform vec3[100] lp;
+      uniform vec3[100] lc;
+      uniform float[100] li;
       uniform int al;
 
       in vec3 fn;
-    #endif
 
-    #if defined(TEXTURE) || defined(NORMAL_MAP)
-      in vec2 v_t;
-    #endif
-
-    #ifdef TEXTURE
-      uniform sampler2D u_t;
-    #endif
-
-    #ifdef NORMAL_MAP
-      uniform sampler2D n_m;
-    #endif
-
-    #ifdef FOG
       uniform vec3 fog_color;
       uniform vec2 fog_distance;
       in float f_distance;
-    #endif
 
     out vec4 frag_color;
 
     void main()
     {
-      #ifdef FOG
         float fog_factor = clamp((fog_distance.y - f_distance) / (fog_distance.y - fog_distance.x), 0.0, 1.0);
-      #endif
 
-      #ifdef LIGHTS
-        #ifdef TEXTURE
-          vec4 p_c = texture(u_t, v_t);
-        #else
           vec4 p_c = c;
-        #endif
 
-        #ifdef NORMAL_MAP
-          vec3 Q1 = dFdx(fp);
-          vec3 Q2 = dFdy(fp);
-
-          vec2 st1 = dFdx(v_t);
-          vec2 st2 = dFdy(v_t);
-
-          vec3 tangent = normalize(Q1 * st2.t - Q2 * st1.t);
-          vec3 bitangent = normalize(-Q1 * st2.s + Q2 * st1.s);
-
-          mat3 TBN = mat3(tangent, bitangent, fn);
-
-          vec3 n = normalize(texture(n_m, v_t).rgb * 2.0 - 1.0) * TBN;
-        #else
           vec3 n = fn;
-        #endif
 
         vec4 light = vec4(0.0, 0.0, 0.0, 1.0);
         for (int i = 0; i < al; i++) {
@@ -96,26 +53,7 @@ export function fragment(defines) {
           light += vec4(rgb, p_c.a);
         }
 
-        #ifdef FOG
           frag_color = mix(vec4(fog_color, 1.0), light, fog_factor);
-        #else
-          frag_color = light;
-        #endif
-      #else
-        #ifdef TEXTURE
-            #ifdef FOG
-              frag_color = mix(vec4(fog_color, 1.0), texture(u_t, v_t), fog_factor);
-            #else
-              frag_color = texture(u_t, v_t);
-            #endif
-        #else
-          #ifdef FOG
-            frag_color = mix(vec4(fog_color, 1.0), c, fog_factor);
-          #else
-            frag_color = c;
-          #endif
-        #endif
-      #endif
     }
   `;
 }
