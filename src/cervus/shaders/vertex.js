@@ -27,12 +27,6 @@ export function vertex(defines) {
 
     in vec3 P_current;
 
-    #ifdef MORPH
-      uniform float frame_delta;
-      in vec3 P_next;
-      in vec3 N_next;
-    #endif
-
     #ifdef LIGHTS
       in vec3 N_current;
       out vec3 fn;
@@ -43,36 +37,18 @@ export function vertex(defines) {
       out float f_distance;
     #endif
 
-    #if defined(TEXTURE) || defined(NORMAL_MAP)
-      in vec2 a_t;
-      out vec2 v_t;
-    #endif
-
     out vec3 fp;
 
     void main()
     {
 
-      #ifdef MORPH
-        float next_frame_delta = 1.0 - frame_delta;
-        fp = (w * vec4(P_next * next_frame_delta + P_current * frame_delta, 1.0)).xyz;
-
-        #ifdef LIGHTS
-          fn = (w * vec4(N_next * next_frame_delta + N_current * frame_delta, 0.0)).xyz;
-        #endif
-      #else
         fp = (w * vec4(P_current, 1.0)).xyz;
 
         #ifdef LIGHTS
           fn = (vec4(N_current, 0.0)).xyz;
         #endif
-      #endif
 
       gl_Position = p * v * vec4(fp, 1.0);
-
-      #if defined(TEXTURE) || defined(NORMAL_MAP)
-        v_t = a_t;
-      #endif
 
       #ifdef FOG
         f_distance = distance(w * vec4(P_current, 1.0), vec4(camera, 1.0));

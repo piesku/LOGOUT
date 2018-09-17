@@ -36,18 +36,6 @@ export function fragment(defines) {
       in vec3 fn;
     #endif
 
-    #if defined(TEXTURE) || defined(NORMAL_MAP)
-      in vec2 v_t;
-    #endif
-
-    #ifdef TEXTURE
-      uniform sampler2D u_t;
-    #endif
-
-    #ifdef NORMAL_MAP
-      uniform sampler2D n_m;
-    #endif
-
     #ifdef FOG
       uniform vec3 fog_color;
       uniform vec2 fog_distance;
@@ -63,28 +51,9 @@ export function fragment(defines) {
       #endif
 
       #ifdef LIGHTS
-        #ifdef TEXTURE
-          vec4 p_c = texture(u_t, v_t);
-        #else
           vec4 p_c = c;
-        #endif
 
-        #ifdef NORMAL_MAP
-          vec3 Q1 = dFdx(fp);
-          vec3 Q2 = dFdy(fp);
-
-          vec2 st1 = dFdx(v_t);
-          vec2 st2 = dFdy(v_t);
-
-          vec3 tangent = normalize(Q1 * st2.t - Q2 * st1.t);
-          vec3 bitangent = normalize(-Q1 * st2.s + Q2 * st1.s);
-
-          mat3 TBN = mat3(tangent, bitangent, fn);
-
-          vec3 n = normalize(texture(n_m, v_t).rgb * 2.0 - 1.0) * TBN;
-        #else
           vec3 n = fn;
-        #endif
 
         vec4 light = vec4(0.0, 0.0, 0.0, 1.0);
         for (int i = 0; i < al; i++) {
@@ -102,19 +71,11 @@ export function fragment(defines) {
           frag_color = light;
         #endif
       #else
-        #ifdef TEXTURE
-            #ifdef FOG
-              frag_color = mix(vec4(fog_color, 1.0), texture(u_t, v_t), fog_factor);
-            #else
-              frag_color = texture(u_t, v_t);
-            #endif
-        #else
           #ifdef FOG
             frag_color = mix(vec4(fog_color, 1.0), c, fog_factor);
           #else
             frag_color = c;
           #endif
-        #endif
       #endif
     }
   `;
