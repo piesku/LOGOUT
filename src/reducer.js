@@ -1,9 +1,7 @@
 import * as sys from "./systems";
 import * as act from "./actions";
-import {create_game, destroy_game} from "./game";
-import {create_exit} from "./creators";
+import {create_game, destroy_game, reveal_exit} from "./game";
 import activate from "./activators";
-import map from "./map.json";
 
 const init = {
     view: "intro",
@@ -46,13 +44,7 @@ function reducer(state = init, action, args) {
             let systems_active = systems_all.filter(x => x);
             // If this is the last system, reveal the exit.
             if (systems_all.length - systems_active.length === 1) {
-                game.add(create_exit({
-                    position: [
-                        map.starting_point.x,
-                        63,
-                        map.starting_point.y],
-                    scale: [12, 126, 12],
-                }));
+                reveal_exit(game);
             }
 
             return Object.assign({}, state, {

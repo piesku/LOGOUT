@@ -7,6 +7,7 @@ import {
     MAX_BUILDING_HEIGHT,
     WIREFRAME_COLOR} from "./config";
 import {
+    create_exit,
     create_floor,
     create_building,
     create_powerup} from "./creators";
@@ -97,6 +98,16 @@ export function create_game() {
 
     window.game = game;
     return game;
+}
+
+export function reveal_exit(game) {
+    game.add(create_exit({
+        position: [
+            map.starting_point.x,
+            63,
+            map.starting_point.y],
+        scale: [12, 126, 12],
+    }));
 }
 
 export function destroy_game(game) {
