@@ -14,7 +14,7 @@ import {
     POWERUP_COLOR,
     POWERUP_INTENSITY,
     NEON_INTENSITY,
-    NEON_LIGHT_MOUNT} from "./config";
+    NEON_LIGHT_MOUNT_DISTANCE} from "./config";
 import {
     ACTIVATE,
     EXIT} from "./actions";
@@ -50,7 +50,7 @@ function create_light({position, color, intensity}) {
     });
 }
 
-export function create_neon({position, scale, color}) {
+export function create_neon({position, scale, color, is_north_south, is_negative}) {
     let neon = new Box();
     neon.get_component(Render).set({
         material: wireframe_material,
@@ -63,7 +63,11 @@ export function create_neon({position, scale, color}) {
     });
 
     let neon_light = create_light({
-        position: NEON_LIGHT_MOUNT,
+        position: [
+            is_north_south ? 0 : is_negative * NEON_LIGHT_MOUNT_DISTANCE,
+            0,
+            is_north_south ? is_negative * NEON_LIGHT_MOUNT_DISTANCE : 0
+        ],
         color,
         intensity: NEON_INTENSITY,
     });

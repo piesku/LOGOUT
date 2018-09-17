@@ -1,4 +1,4 @@
-import {Game} from "./cervus/core";
+import { Game, integer, element_of} from "./cervus/core";
 import {Transform, Move} from "./cervus/components";
 import GridMove from "./grid-move";
 
@@ -6,7 +6,8 @@ import Actor from "./actor";
 import {
     SCALE,
     CLEAR_COLOR,
-    WIREFRAME_COLOR} from "./config";
+    WIREFRAME_COLOR,
+    NEON_SCALE} from "./config";
 import {
     create_exit,
     create_floor,
@@ -74,16 +75,28 @@ export function create_game() {
         let building = create_building({
             position: [center_x, height / 2, center_z],
             scale: [xsize, height, zsize],
-            neons: [
-                {
-                    position: [0, 1, - (zsize/2) - 0.2],
-                    scale: [4, 2, 0.1].map(x => x * SCALE),
+            neons: new Array(integer(2, 3)).fill(0).map((gunwo, index, arr) => {
+                const is_noth_south = element_of([true, false]);
+                const is_negative = element_of([1, -1]);
+                const neon_height = (height * NEON_SCALE) / (arr.length + 0.5);
+                return {
+                    position: [
+                      is_noth_south ? 0 : (is_negative * (xsize / 2) + (is_negative * 0.2)),
+                      height / 2 - ((neon_height + 0.5) * (index + 1)),
+                      is_noth_south ? (is_negative * (zsize / 2) + (is_negative * 0.2)) : 0],
+                    scale: [
+                      is_noth_south ? xsize * NEON_SCALE : 0.1,
+                      neon_height,
+                      is_noth_south ? 0.1 : zsize * NEON_SCALE
+                    ],
                     color: WIREFRAME_COLOR,
+                    is_noth_south,
+                    is_negative
                 }
-            ],
+            }),
         });
         game.add(building);
-      game.buildings.push([center_x - xsize / 2, center_x + xsize / 2, center_z - zsize / 2, center_z + zsize/2]);
+        game.buildings.push([center_x - xsize / 2, center_x + xsize / 2, center_z - zsize / 2, center_z + zsize/2]);
     }
 
     // POWER UPS
