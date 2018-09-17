@@ -16,8 +16,7 @@ export default
 function activate(game, system) {
     switch (system) {
         case sys.SOLID:
-            for (let entity of game.get_entities_by_component(Render)) {
-                let render = entity.get_component(Render);
+            for (let render of game.components.get(Render)) {
                 switch (render.tag) {
                     case BUILDING_TAG:
                         render.material = building_material;
@@ -30,8 +29,7 @@ function activate(game, system) {
             }
             break;
         case sys.COLOR:
-            for (let entity of game.get_entities_by_component(Render)) {
-                let render = entity.get_component(Render);
+            for (let render of game.components.get(Render)) {
                 switch (render.tag) {
                     case BUILDING_TAG:
                         // Keep the current building color. It's either
@@ -40,7 +38,7 @@ function activate(game, system) {
                     case NEON_TAG: {
                         let color = element_of(NEON_COLORS);
                         render.set({color});
-                        for (let child of entity.entities) {
+                        for (let child of render.entity.entities) {
                             child.get_component(Light).set({color});
                         }
                         continue;
@@ -48,7 +46,7 @@ function activate(game, system) {
                     case INTERACTABLE_TAG: {
                         let color = POWERUP_COLOR;
                         render.set({color});
-                        for (let child of entity.entities) {
+                        for (let child of render.entity.entities) {
                             child.get_component(Light).set({color});
                         }
                     }

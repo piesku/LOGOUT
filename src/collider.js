@@ -11,11 +11,10 @@ class Collider extends Component {
     }
 
     update() {
-        let collidables = this.entity.game.get_entities_by_component(Bounds);
-        for (let entity of collidables) {
-            let bounds = entity.get_component(Bounds);
+        let collidables = this.entity.game.components.get(Bounds);
+        for (let bounds of collidables) {
             if (bounds.contains(this.transform.position)) {
-                entity.get_component(PowerUp).trigger();
+                bounds.entity.get_component(PowerUp).trigger();
             }
         }
     }
