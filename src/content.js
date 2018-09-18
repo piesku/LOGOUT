@@ -32,5 +32,5 @@ Clearing caches…
 
 Logout complete
 
-<a href="https://js13kgames.com">Enter the real world</a>
+<a href="https://twitter.com/hashtag/js13k">Enter the real world</a>
 `;
