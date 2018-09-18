@@ -5,7 +5,7 @@ import code_anim from "./anim_code";
 
 export default function Code(cls, styles) {
     return new class extends Component {
-        before(root) {
+        before() {
             clearInterval(this.interval);
         }
 

@@ -20,7 +20,7 @@ const formatters = [
 
 export default function Time(cls, styles) {
     return new class extends Component {
-        before(root) {
+        before() {
             clearInterval(this.interval);
         }
 

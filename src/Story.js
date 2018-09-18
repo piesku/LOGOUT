@@ -6,7 +6,7 @@ import {digest} from "./util";
 export default
 function Story(text) {
     return new class extends Component {
-        before(root) {
+        before() {
             clearInterval(this.interval);
         }
 

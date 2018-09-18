@@ -13,15 +13,14 @@ export default function Matrix(cls, styles) {
             });
         }
 
-        before(root) {
-            game.off("afterrender", this.update_from_game);
+        before() {
+            game.off("afterrender", this.up);
         }
 
         after(root) {
             let rows = Array.from(
-                root.querySelectorAll(`.${cls} .l`)
-            ).slice(1);
-            this.update_from_game = () => {
+                root.querySelectorAll(`.${cls} .l`)).slice(1);
+            this.up = game.on("afterrender", () => {
                 // Update local matrix display
                 let matrix = game.camera.get_component(Transform).matrix;
                 let values = [
@@ -37,9 +36,7 @@ export default function Matrix(cls, styles) {
                         line,
                         values[i].map(n => this.nf.format(n)).join(" "));
                 }
-            };
-
-            game.on("afterrender", this.update_from_game);
+            });
         }
 
         render() {
