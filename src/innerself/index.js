@@ -6,11 +6,10 @@ export class Component {
 
 export default function(reducer) {
     let state = reducer();
-    let roots = new Map();
-    let prevs = new Map();
 
     let phase;
     let root;
+    let app;
 
     function renderComponent(component) {
         if (component instanceof Component) {
@@ -32,35 +31,24 @@ export default function(reducer) {
 
     function renderRoots(nextState) {
         let prevState = state;
-        for (let [_root, component] of roots) {
-            root = _root;
 
-            phase = "RENDER";
-            state = nextState;
-            let output = renderComponent(component());
+        phase = "BEFORE";
+        state = prevState;
+        renderComponent(app());
 
-            // Compare the new output with the last output for this root.
-            // Don't trust the current value of root.innerHTML as it may have
-            // been changed by other scripts or extensions.
-            if (output !== prevs.get(root)) {
-                phase = "BEFORE";
-                state = prevState;
-                renderComponent(component());
+        phase = "RENDER";
+        state = nextState;
+        root.innerHTML = renderComponent(app());
 
-                // Render the output of the component to DOM and cache it.
-                root.innerHTML = output;
-                prevs.set(root, output);
-
-                phase = "AFTER";
-                state = nextState;
-                renderComponent(component());
-            }
-        }
+        phase = "AFTER";
+        state = nextState;
+        renderComponent(app());
     };
 
     return {
-        attach(component, root) {
-            roots.set(root, component);
+        attach(_app, _root) {
+            root = _root;
+            app = _app;
             renderRoots(state);
         },
         connect(component) {
