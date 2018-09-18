@@ -29,34 +29,17 @@ function toHex(obj) {
     return `${r}${g}${b}`.toUpperCase();
 }
 
-const checked = [];
 function find_end(height, i, j, input) {
-    // console.log(height, i, j, input[0][0]);
-    const output = {};
-    // console.log(input[0]);
-    // if (!input[0])  {
-    //     return;
-    // }
-
     const x = input.length;
     const y = input[0].length;
 
-    let flag_col = 0;
-    let flag_row = 0;
-
     for (var m = i; m < y; m++) {
         if (input[m][j] !== height) {
-            flag_row = 1;
             break;
         }
 
-        // if (input[m][j] === 'X') {
-        //     continue;
-        // }
-
         for (var n = j; n < x; n++) {
             if (input[m][n] !== height) {
-                flag_col = 1;
                 break;
             }
 
@@ -64,19 +47,10 @@ function find_end(height, i, j, input) {
         }
     }
 
-    if (flag_row === 1) {
-        output.y = m - 1;
-    } else {
-        output.y = m;
-    }
-    // console.log(n);
-    if (flag_col === 1) {
-        output.x = n - 1;
-    } else {
-        output.x = n;
-    }
-
-    return output;
+    return {
+        x: n - 1,
+        y: m - 1,
+    };
 }
 
 parser.parse('./city.vox').then((result) => {
@@ -102,12 +76,12 @@ parser.parse('./city.vox').then((result) => {
         if (powerup_type) {
             output_map.items.push([
                 powerup_type,
-                curr.x,
+                result.size.x - curr.x,
                 curr.y
             ]);
         } else if (vox_color === END_COLOR) {
             output_map.end = [
-                curr.x,
+                result.size.x - curr.x,
                 curr.y
             ];
         } else {
@@ -133,17 +107,17 @@ parser.parse('./city.vox').then((result) => {
                 // });
                 // process.exit();
                 output_map.buildings.push([
-                    x,
+                    result.size.x - end_point.x - 1,
                     y,
-                    (end_point.x + 1),
-                    (end_point.y + 1),
+                    result.size.x - x,
+                    end_point.y + 1,
                     cell,
                 ]);
             }
         });
     });
 
-    // console.log(output_map);
+    console.log(output_map);
     // const map = result.voxels.reduce((memo, curr) => {
     //     let current_cell;
 
