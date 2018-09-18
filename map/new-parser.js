@@ -6,10 +6,10 @@ const BLOCK_COLOR = '99CCFF';
 const END_COLOR = 'FFFFFF';
 
 const POWERUP_MAP = {
-    "320000": 'SOLID',
-    "640000": 'COLOR',
-    "960000": 'CLOCK',
-    "C80000": 'COMPASS',
+    "320000": 'CLOCK',
+    "640000": 'COMPASS',
+    "960000": 'SOLID',
+    "C80000": 'COLOR',
     "FF0000": 'MOUSELOOK',
 };
 

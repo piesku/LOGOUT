@@ -100,24 +100,11 @@ export function create_game() {
         game.buildings.push([center_x - xsize / 2, center_x + xsize / 2, center_z - zsize / 2, center_z + zsize/2]);
     }
 
-    // POWER UPS
-
-    game.add(create_powerup({
-        system: sys.MOUSELOOK,
-        position: [31.5 * SCALE, 1.75, 35 * SCALE]}));
-    game.add(create_powerup({
-        system: sys.COLOR,
-        position: [31.5 * SCALE, 1.75, 38 * SCALE]}));
-    game.add(create_powerup({
-        system: sys.SOLID,
-        position: [31.5 * SCALE, 1.75, 41 * SCALE]}));
-
-    game.add(create_powerup({
-        system: sys.CLOCK,
-        position: [31.5 * SCALE, 1.75, 44 * SCALE]}));
-    game.add(create_powerup({
-        system: sys.COMPASS,
-        position: [31.5 * SCALE, 1.75, 47 * SCALE]}));
+    for (let [name, x, z] of map.items) {
+        game.add(create_powerup({
+            system: sys[name],
+            position: [x * SCALE, 1.75, z * SCALE]}));
+    }
 
     window.game = game;
     return game;
@@ -127,9 +114,9 @@ export function reveal_exit(game) {
     let height = 50 * SCALE;
     game.add(create_exit({
         position: [
-            map.start[0] * SCALE,
+            map.end[0] * SCALE,
             height / 2,
-            map.start[1] * SCALE],
+            map.end[1] * SCALE],
         scale: [5 * SCALE, 200, 5 * SCALE],
     }));
 }
