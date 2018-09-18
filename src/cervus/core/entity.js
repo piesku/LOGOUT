@@ -47,6 +47,15 @@ export class Entity {
     return components.map(component => this.get_component(component));
   }
 
+  *iterall(component) {
+    for (let child of this.entities) {
+      if (child.components.has(component)) {
+        yield child.components.get(component);
+      }
+      yield * child.iterall(component);
+    }
+  }
+
   add(entity) {
     entity.parent = this;
     this.entities.add(entity);

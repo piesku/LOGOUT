@@ -38,8 +38,8 @@ function activate(game, system) {
                     case NEON_TAG: {
                         let color = random_color();
                         render.set({color});
-                        for (let child of render.entity.entities) {
-                            child.get_component(NearbyLight).set({color});
+                        for (let light of render.entity.parent.iterall(NearbyLight)) {
+                            light.set({color});
                         }
                     }
                 }
