@@ -35,23 +35,11 @@ function activate(game, system) {
         case sys.COLOR:
             for (let render of game.components.get(Render)) {
                 switch (render.tag) {
-                    case BUILDING_TAG:
-                        // Keep the current building color. It's either
-                        // wireframe or set in SOLID; both of which look OK.
-                        continue;
                     case NEON_TAG: {
                         let color = random_color();
                         render.set({color});
                         for (let child of render.entity.entities) {
                             child.get_component(NearbyLight).set({color});
-                        }
-                        continue;
-                    }
-                    case POWERUP_TAG: {
-                        let color = POWERUP_COLOR;
-                        render.set({color});
-                        for (let child of render.entity.entities) {
-                            child.get_component(Light).set({color});
                         }
                     }
                 }

@@ -143,7 +143,7 @@ export function create_powerup({system, position}) {
         components: [
             new Transform(),
             new Light({
-                color: WIREFRAME_COLOR,
+                color: POWERUP_COLOR,
                 intensity: POWERUP_INTENSITY,
             }),
         ]
