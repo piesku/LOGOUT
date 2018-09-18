@@ -1,25 +1,10 @@
 import {BasicMaterial, PhongMaterial, WireframeMaterial} from "./cervus/materials";
+import {hex_to_rgb} from "./cervus/utils";
 import {CLEAR_COLOR} from "./config";
 
 export const BUILDING_TAG = 1;
 export const NEON_TAG = 2;
 export const POWERUP_TAG = 3;
-
-function hex_to_rgb(hex) {
-  if (hex.charAt(0) === '#') {
-    hex = hex.substr(1);
-  }
-
-  if (hex.length === 3) {
-    hex = hex.split('').map(
-      el => el + el
-    ).join('');
-  }
-
-  return hex.match(/.{1,2}/g).map(
-    el => parseFloat((parseInt(el, 16) / 255).toFixed(2))
-  );
-}
 
 export let neon_material = new BasicMaterial();
 neon_material.add_fog({
