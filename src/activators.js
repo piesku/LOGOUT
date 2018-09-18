@@ -1,4 +1,3 @@
-import {element_of} from "./cervus/core";
 import {Render, Light} from "./cervus/components";
 import GridMove from "./grid-move";
 import NearbyLight from "./nearbylight";
@@ -12,8 +11,8 @@ import {
     neon_material} from "./materials";
 import {
     BUILDING_COLOR,
-    NEON_COLORS,
     POWERUP_COLOR} from "./config";
+import {random_color} from "./color";
 
 export default
 function activate(game, system) {
@@ -41,7 +40,7 @@ function activate(game, system) {
                         // wireframe or set in SOLID; both of which look OK.
                         continue;
                     case NEON_TAG: {
-                        let color = element_of(NEON_COLORS);
+                        let color = random_color();
                         render.set({color});
                         for (let child of render.entity.entities) {
                             child.get_component(NearbyLight).set({color});
