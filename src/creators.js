@@ -7,8 +7,8 @@ import Trigger from "./trigger";
 import {
     BUILDING_TAG,
     NEON_TAG,
-    INTERACTABLE_TAG,
-    neon_material,
+    POWERUP_TAG,
+    powerup_material,
     wireframe_material} from "./materials";
 import {
     WIREFRAME_COLOR,
@@ -103,7 +103,7 @@ export function create_building({position, scale, neons}) {
 export function create_exit(options) {
     let exit = new Box();
     exit.get_component(Render).set({
-        material: neon_material,
+        material: powerup_material,
         color: POWERUP_COLOR,
     });
     exit.get_component(Transform).set(options);
@@ -122,7 +122,7 @@ export function create_powerup({system, position}) {
     cube.get_component(Render).set({
         material: wireframe_material,
         color: POWERUP_COLOR,
-        tag: INTERACTABLE_TAG,
+        tag: POWERUP_TAG,
     });
     cube.get_component(Transform).set({position});
     cube.add_component(new Trigger({

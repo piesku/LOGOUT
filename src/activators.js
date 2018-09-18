@@ -6,8 +6,9 @@ import * as sys from "./systems";
 import {
     BUILDING_TAG,
     NEON_TAG,
-    INTERACTABLE_TAG,
+    POWERUP_TAG,
     building_material,
+    powerup_material,
     neon_material} from "./materials";
 import {
     BUILDING_COLOR,
@@ -25,8 +26,10 @@ function activate(game, system) {
                         render.color = BUILDING_COLOR;
                         continue;
                     case NEON_TAG:
-                    case INTERACTABLE_TAG:
                         render.material = neon_material;
+                        continue
+                    case POWERUP_TAG:
+                        render.material = powerup_material;
                 }
             }
             break;
@@ -45,7 +48,7 @@ function activate(game, system) {
                         }
                         continue;
                     }
-                    case INTERACTABLE_TAG: {
+                    case POWERUP_TAG: {
                         let color = POWERUP_COLOR;
                         render.set({color});
                         for (let child of render.entity.entities) {

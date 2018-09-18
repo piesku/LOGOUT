@@ -4,7 +4,7 @@ import {CLEAR_COLOR} from "./config";
 
 export const BUILDING_TAG = 1;
 export const NEON_TAG = 2;
-export const INTERACTABLE_TAG = 3;
+export const POWERUP_TAG = 3;
 
 function hex_to_rgb(hex) {
   if (hex.charAt(0) === '#') {
@@ -34,6 +34,13 @@ neon_material.add_fog({
     distance: new Float32Array([25, 100]),
 });
 
+export let powerup_material = new BasicMaterial({
+    requires: [
+        Render,
+        Transform
+    ]
+});
+
 export let building_material = new PhongMaterial({
     requires: [
         Render,
@@ -43,7 +50,7 @@ export let building_material = new PhongMaterial({
 
 building_material.add_fog({
     color: hex_to_rgb(CLEAR_COLOR),
-    distance: new Float32Array([0, 30]),
+    distance: new Float32Array([0, 40]),
 });
 
 export let wireframe_material = new WireframeMaterial({
