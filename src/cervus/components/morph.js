@@ -27,7 +27,7 @@ export class Morph extends Component {
 
   create_buffers() {
     this.number_of_frames = this.frames.length;
-    this.entity.get_component(Render).buffers = this.frames.map(frame => ({
+    this.entity.components.get(Render).buffers = this.frames.map(frame => ({
       vertices: create_float_buffer(frame.vertices),
       indices: create_index_buffer(frame.indices),
       qty: frame.indices.length,

@@ -10,7 +10,9 @@ export class Entity {
     this.entities = new Set();
     this.components = new Map();
 
-    this.add_components(options.components);
+    for (let component of options.components) {
+      this.add_component(component);
+    }
   }
 
   add_component(component) {
@@ -26,14 +28,6 @@ export class Entity {
     }
   }
 
-  add_components(components = []) {
-    components.forEach((component) => this.add_component(component));
-  }
-
-  get_component(component) {
-    return this.components.get(component);
-  }
-
   remove_component(component) {
     let instance = this.components.get(component);
     this.components.delete(component);
@@ -41,10 +35,6 @@ export class Entity {
     if (this.game && this.game.components.has(component)) {
       this.game.components.get(component).delete(instance);
     }
-  }
-
-  get_components(...components) {
-    return components.map(component => this.get_component(component));
   }
 
   *iterall(component) {

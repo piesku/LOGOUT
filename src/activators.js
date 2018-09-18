@@ -46,7 +46,7 @@ function activate(game, system) {
             }
             break;
         case sys.MOUSELOOK:
-            game.camera.get_component(GridMove).set({
+            game.camera.components.get(GridMove).set({
                 mouse_controlled: true,
                 rotate_speed: .5,
             });

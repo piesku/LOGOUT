@@ -33,7 +33,7 @@ export function create_game() {
     document.body.addEventListener(
         "click", () => document.body.requestPointerLock());
 
-    game.camera.get_component(Transform).set({
+    game.camera.components.get(Transform).set({
         position: [
             map.start[0] * SCALE,
             1.75,

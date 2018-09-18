@@ -22,7 +22,7 @@ export default function Matrix(cls, styles) {
                 root.querySelectorAll(`.${cls} .l`)).slice(1);
             this.up = game.on("afterrender", () => {
                 // Update local matrix display
-                let matrix = game.camera.get_component(Transform).matrix;
+                let matrix = game.camera.components.get(Transform).matrix;
                 let values = [
                     [matrix[0], matrix[4], matrix[8], matrix[12]],
                     [matrix[1], matrix[5], matrix[9], matrix[13]],

@@ -20,7 +20,7 @@ import {
     ACTIVATE,
     EXIT} from "./actions";
 
-let cube_render = (new Box()).get_component(Render);
+let cube_render = (new Box()).components.get(Render);
 
 function create_group(position) {
     return new Entity({
@@ -32,12 +32,12 @@ function create_group(position) {
 
 export function create_floor({position, scale}) {
     let plane = new Box();
-    plane.get_component(Render).set({
+    plane.components.get(Render).set({
         material: wireframe_material,
         color: WIREFRAME_COLOR,
         tag: BUILDING_TAG,
     });
-    plane.get_component(Transform).set({
+    plane.components.get(Transform).set({
         position,
         scale
     });
@@ -63,12 +63,12 @@ export function create_neon({position, scale, color, is_north_south, is_negative
     let group = create_group(position);
 
     let neon = new Box();
-    neon.get_component(Render).set({
+    neon.components.get(Render).set({
         material: wireframe_material,
         color,
         tag: NEON_TAG,
     });
-    neon.get_component(Transform).set({
+    neon.components.get(Transform).set({
         scale
     });
     group.add(neon);
@@ -90,12 +90,12 @@ export function create_building({position, scale, neons}) {
     let group = create_group(position);
 
     let building = new Box();
-    building.get_component(Render).set({
+    building.components.get(Render).set({
         material: wireframe_material,
         color: WIREFRAME_COLOR,
         tag: BUILDING_TAG,
     });
-    building.get_component(Transform).set({scale});
+    building.components.get(Transform).set({scale});
     group.add(building);
 
     for (let neon_opts of neons) {
@@ -108,11 +108,11 @@ export function create_building({position, scale, neons}) {
 
 export function create_exit(options) {
     let exit = new Box();
-    exit.get_component(Render).set({
+    exit.components.get(Render).set({
         material: powerup_material,
         color: POWERUP_COLOR,
     });
-    exit.get_component(Transform).set(options);
+    exit.components.get(Transform).set(options);
     exit.add_component(new Trigger({
         radius: 0.6,
         action: [EXIT]
@@ -125,12 +125,12 @@ export function create_exit(options) {
 
 export function create_powerup({system, position}) {
     let cube = new Box();
-    cube.get_component(Render).set({
+    cube.components.get(Render).set({
         material: wireframe_material,
         color: POWERUP_COLOR,
         tag: POWERUP_TAG,
     });
-    cube.get_component(Transform).set({position});
+    cube.components.get(Transform).set({position});
     cube.add_component(new Trigger({
         radius: 1,
         action: [ACTIVATE, system]

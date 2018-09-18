@@ -5,7 +5,7 @@ import Trigger from "./trigger";
 export default
 class Actor extends Component {
     mount() {
-        this.transform = this.entity.get_component(Transform);
+        this.transform = this.entity.components.get(Transform);
     }
 
     update() {

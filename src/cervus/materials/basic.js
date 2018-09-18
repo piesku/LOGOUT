@@ -18,13 +18,13 @@ export class BasicMaterial extends Material {
   }
 
   apply_shader(entity, game) {
-    const render = entity.get_component(Render);
+    const render = entity.components.get(Render);
     let buffers = render.buffers;
 
     if (render.material.has_feature('FOG')) {
       gl.uniform3fv(this.uniforms.fog_color, this.fog.color);
       gl.uniform2fv(this.uniforms.fog_distance, this.fog.distance);
-      gl.uniform3fv(this.uniforms.camera, game.camera.get_component(Transform).position);
+      gl.uniform3fv(this.uniforms.camera, game.camera.components.get(Transform).position);
     }
 
     // current frame

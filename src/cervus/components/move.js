@@ -34,7 +34,7 @@ export class Move extends Component {
   }
 
   handle_keys(tick_length, {f = 0, b = 0, l = 0, r = 0, u = 0, d = 0, pu = 0, pd = 0, yl = 0, yr = 0}) {
-    const entity_transform = this.entity.get_component(Transform);
+    const entity_transform = this.entity.components.get(Transform);
     const dist = tick_length / 1000 * this.move_speed;
 
     // The desired XZ direction vector in self space. This is what the user
@@ -70,7 +70,7 @@ export class Move extends Component {
   }
 
   handle_mouse(tick_length, {x, y}) {
-    const entity_transform = this.entity.get_component(Transform);
+    const entity_transform = this.entity.components.get(Transform);
     // Check if there's any input to handle.
     if (x === 0 && y === 0) {
       return;

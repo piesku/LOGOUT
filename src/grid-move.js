@@ -12,7 +12,7 @@ class GridMove extends Move {
         this.size = 0.5;
     }
     mount() {
-        this.transform = this.entity.get_component(Transform);
+        this.transform = this.entity.components.get(Transform);
         this.buildings = window.bul = this.entity.game.buildings;
         this.last_position = this.transform.position;
     }

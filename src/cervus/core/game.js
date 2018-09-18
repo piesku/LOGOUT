@@ -237,7 +237,7 @@ export class Game {
     this.emit('tick', this.last_tick);
     this.entities.forEach(entity => entity.update(this.tick_delta));
     this.camera.update(this.tick_delta);
-    this.camera.get_component(Transform).get_view_matrix(this.viewMatrix);
+    this.camera.components.get(Transform).get_view_matrix(this.viewMatrix);
   }
 
   render() {

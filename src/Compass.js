@@ -19,7 +19,7 @@ export default function Compass(cls, styles) {
         after(root) {
             let container = root.querySelector(`.${cls}`);
             this.up = game.on("afterrender", () => {
-                let forward = game.camera.get_component(Transform).forward;
+                let forward = game.camera.components.get(Transform).forward;
                 let sign = forward[0] > 0 ? -1 : 1;
                 let start = Math.round(angle([0, 0, 1], forward) / step) * sign;
                 let section = (compass + compass + compass).slice(compass_length + start, compass_length + start + visible_characters);

@@ -6,7 +6,7 @@ class NearbyLight extends Component {
     set(values) {
         super.set(values);
         if (this.active) {
-            this.entity.get_component(Light).set(values);
+            this.entity.components.get(Light).set(values);
         }
     }
 

@@ -132,8 +132,6 @@ export class Material {
       game = ent.game;
     }
 
-    const [entity_transform, entity_render] = entity.get_components(Transform, Render);
-
     gl.useProgram(this.program);
     gl.uniformMatrix4fv(this.uniforms.p, gl.FALSE, game.projMatrix);
     gl.uniformMatrix4fv(this.uniforms.v, gl.FALSE, game.viewMatrix);
@@ -141,12 +139,12 @@ export class Material {
     gl.uniformMatrix4fv(
       this.uniforms.w,
       gl.FALSE,
-      entity_transform.world_matrix
+      entity.components.get(Transform).world_matrix
     );
 
     gl.uniform4fv(
       this.uniforms.c,
-      entity_render.color_vec
+      entity.components.get(Render).color_vec
     );
 
     this.apply_shader(entity, game);

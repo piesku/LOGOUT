@@ -124,7 +124,7 @@ export class Transform extends Component {
     if (this.entity.parent) {
       mat4.multiply(
         this.world_matrix,
-        this.entity.parent.get_component(Transform).world_matrix,
+        this.entity.parent.components.get(Transform).world_matrix,
         this.matrix
       );
     } else {
