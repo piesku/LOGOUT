@@ -13,7 +13,7 @@ import * as sys from "./systems";
 import {ACTIVATE} from "./actions";
 import { MatrixTween } from './cervus/tweens';
 
-function HUD({game, last_active, systems}) {
+function HUD({game, last, systems}) {
     return new class extends Component {
         after(root) {
             if (!systems[sys.PERSPECTIVE]) {
@@ -46,7 +46,7 @@ function HUD({game, last_active, systems}) {
                     })}
 
                     ${Block("mm", [
-                        last_active,
+                        last,
                         "<div class='h e'>Activated</div>",
                     ], { align: "center", justify: "center", cls: "f" })}
 

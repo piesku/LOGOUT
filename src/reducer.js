@@ -5,8 +5,6 @@ import activate from "./activators";
 
 const init = {
     view: "intro",
-    game: null,
-    last_active: null,
     systems: {
         [sys.HUD]: false,
         [sys.PERSPECTIVE]: false,
@@ -31,14 +29,14 @@ function reducer(state = init, action, args) {
             return Object.assign({}, state, {
                 view: "play",
                 game: create_game(),
-                last_active: sys.HUD,
+                last: sys.HUD,
                 systems: Object.assign({}, state.systems, {
                     [sys.HUD]: true
                 })
             });
         case act.ACTIVATE: {
-            let [last_active] = args;
-            activate(game, last_active);
+            let [last] = args;
+            activate(game, last);
 
             let systems_all = [...Object.values(state.systems)];
             let systems_active = systems_all.filter(x => x);
@@ -48,9 +46,9 @@ function reducer(state = init, action, args) {
             }
 
             return Object.assign({}, state, {
-                last_active,
+                last,
                 systems: Object.assign({}, state.systems, {
-                    [last_active]: true
+                    [last]: true
                 })
             });
         }
