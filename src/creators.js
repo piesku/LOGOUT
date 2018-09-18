@@ -20,8 +20,6 @@ import {
     ACTIVATE,
     EXIT} from "./actions";
 
-let cube_render = (new Box()).components.get(Render);
-
 function create_group(position) {
     return new Entity({
         components: [
@@ -49,12 +47,6 @@ function create_light({position, color, intensity}) {
         components: [
             new Transform({position}),
             new NearbyLight({color, intensity}),
-            // new Render({
-            //     color: "fff",
-            //     material: wireframe_material,
-            //     indices: cube_render.indices,
-            //     vertices: cube_render.vertices
-            // })
         ]
     });
 }

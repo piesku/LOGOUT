@@ -76,7 +76,7 @@ export function create_game() {
         let building = create_building({
             position: [center_x, height / 2, center_z],
             scale: [xsize, height, zsize],
-            neons: new Array(integer(2, 3)).fill(0).map((gunwo, index, arr) => {
+            neons: new Array(integer(2, 4)).fill(0).map((_, index, arr) => {
                 const is_north_south = element_of([true, false]);
                 const is_negative = element_of([1, -1]);
                 const neon_height = (height * NEON_SCALE) / (arr.length + 0.5);
