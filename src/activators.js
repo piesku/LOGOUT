@@ -1,6 +1,7 @@
 import {element_of} from "./cervus/core";
-import {Light, Render} from "./cervus/components";
+import {Render, Light} from "./cervus/components";
 import GridMove from "./grid-move";
+import NearbyLight from "./nearbylight";
 import * as sys from "./systems";
 import {
     BUILDING_TAG,
@@ -40,7 +41,7 @@ function activate(game, system) {
                         let color = element_of(NEON_COLORS);
                         render.set({color});
                         for (let child of render.entity.entities) {
-                            child.get_component(Light).set({color});
+                            child.get_component(NearbyLight).set({color});
                         }
                         continue;
                     }

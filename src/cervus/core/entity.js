@@ -17,6 +17,13 @@ export class Entity {
     component.entity = this;
     component.mount();
     this.components.set(component.constructor, component);
+
+    if (this.game) {
+      if (!this.game.components.has(component.constructor)) {
+        this.game.components.set(component.constructor, new Set());
+      }
+      this.game.components.get(component.constructor).add(component);
+    }
   }
 
   add_components(components = []) {
@@ -28,7 +35,12 @@ export class Entity {
   }
 
   remove_component(component) {
-    return this.components.delete(component);
+    let instance = this.components.get(component);
+    this.components.delete(component);
+
+    if (this.game && this.game.components.has(component)) {
+      this.game.components.get(component).delete(instance);
+    }
   }
 
   get_components(...components) {

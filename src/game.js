@@ -1,7 +1,7 @@
 import { Game, integer, element_of} from "./cervus/core";
 import {Transform, Move} from "./cervus/components";
 import GridMove from "./grid-move";
-
+import EnergySaver from "./energysaver";
 import Actor from "./actor";
 import {
     SCALE,
@@ -53,6 +53,7 @@ export function create_game() {
     });
 
     game.camera.add_component(new Actor());
+    game.camera.add_component(new EnergySaver());
 
     // Remove the default light.
     game.remove(game.light);

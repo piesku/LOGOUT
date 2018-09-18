@@ -1,6 +1,7 @@
 import {Entity} from "./cervus/core";
 import {Transform, Render, Light} from "./cervus/components";
 import {Box} from "./cervus/shapes";
+import NearbyLight from "./nearbylight";
 import Rotator from "./rotator";
 import Trigger from "./trigger";
 import {
@@ -39,7 +40,7 @@ function create_light({position, color, intensity}) {
     return new Entity({
         components: [
             new Transform({position}),
-            new Light({color, intensity}),
+            new NearbyLight({color, intensity}),
             // new Render({
             //     color: "fff",
             //     material: wireframe_material,

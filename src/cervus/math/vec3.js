@@ -1,6 +1,7 @@
 const V = Float32Array;
 
 export {
+  distance,
   normalize,
   subtract,
   add,
