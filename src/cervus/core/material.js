@@ -5,7 +5,7 @@ import { vertex } from '../shaders';
 import { fragment } from '../shaders';
 
 export class Material {
-  constructor(options) {
+  constructor(options = {}) {
     this.uniforms = {};
     this.attribs = {};
     this.draw_mode = gl.TRIANGLES;
