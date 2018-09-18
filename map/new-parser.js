@@ -2,10 +2,22 @@ const vox = require('./vox-parser');
 const parser = new vox.Parser();
 const fs = require('fs');
 
+const BLOCK_COLOR = '99CCFF';
+const END_COLOR = 'FFFFFF';
+
+const POWERUP_MAP = {
+    "320000": 'SOLID',
+    "640000": 'COLOR',
+    "960000": 'CLOCK',
+    "C80000": 'COMPASS',
+    "FF0000": 'MOUSELOOK',
+};
+
 const output_map = {
     size: [],
     buildings: [],
     start: [],
+    end: [],
     items: []
 };
 
@@ -84,9 +96,26 @@ parser.parse('./city.vox').then((result) => {
     });
 
     map = result.voxels.reduce((memo, curr) => {
-        memo[curr.y] = memo[curr.y] || [];
-        memo[curr.y][curr.x] = Math.max(memo[curr.y][curr.x] || 1, curr.z + 1);
+        const vox_color = toHex(result.palette[curr.colorIndex]);
+        const powerup_type = POWERUP_MAP[vox_color];
+
+        if (powerup_type) {
+            output_map.items.push([
+                powerup_type,
+                curr.x,
+                curr.y
+            ]);
+        } else if (vox_color === END_COLOR) {
+            output_map.end = [
+                curr.x,
+                curr.y
+            ];
+        } else {
+            memo[curr.y] = memo[curr.y] || [];
+            memo[curr.y][curr.x] = Math.max(memo[curr.y][curr.x] || 1, curr.z + 1);
+        }
         return memo;
+
     }, map);
 
     // console.log(JSON.stringify(map));
@@ -114,7 +143,7 @@ parser.parse('./city.vox').then((result) => {
         });
     });
 
-    console.log(output_map);
+    // console.log(output_map);
     // const map = result.voxels.reduce((memo, curr) => {
     //     let current_cell;
 
