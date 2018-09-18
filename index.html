@@ -2,7 +2,7 @@
 <meta charset="utf8">
 <title>LOGOUT</title>
 <style>
-    html, body {
+    html, body, button, a {
         padding: 0;
         margin: 0;
         overflow: hidden;
@@ -13,8 +13,7 @@
         text-transform: uppercase;
     }
 
-    .screen {
-        pointer-events: none;
+    .m {
         position: absolute;
         top: 1vh;
         right: 1vh;
@@ -23,17 +22,34 @@
         padding: 1vh;
     }
 
-    .layout {
+    .s {
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        grid-template-rows: 1fr 1fr 1fr;
-        grid-template-areas:
-            "tl tm tr"
-            "ml mm mr"
-            "bl bm br";
+        grid-template: 1fr / 1fr;
+        justify-items: center;
     }
 
-    .block {
+    .t {
+        width: 35rem;
+        margin-top: 5vh;
+    }
+
+    button, a {
+        display: block;
+        cursor: pointer;
+        text-decoration: none;
+        border: #eee solid 2px;
+    }
+
+    .u {
+        display: grid;
+        grid-template:
+            "tl tm tr" 1fr
+            "tl mm mr" 1fr
+            "bl bm br" 1fr
+            / 1fr 1fr 1fr;
+    }
+
+    .b {
         min-width: 0;
     }
 
@@ -46,26 +62,26 @@
         }
     }
 
-    .line {
+    .l {
         overflow: hidden;
         animation: typing 1s 1 steps(30, start);
     }
 
-    .box {
+    .e {
         border: #eee solid 2px;
     }
 
-    .big {
+    .h {
         font-size: 200%;
     }
 
-    .glitch {
+    .g {
         position: relative;
         display: inline-block;
         white-space: nowrap;
     }
 
-    .glitch2, .glitch3 {
+    .g2, .g3 {
         position: absolute;
         top: 0;
         right: 0;
@@ -73,17 +89,17 @@
         left: 0;
     }
 
-    .glitch2 {
+    .g2 {
         left: 1px;
         text-shadow: -3px 0 #111, -1px 0 magenta;
     }
 
-    .glitch3 {
+    .g3 {
         left: -1px;
         text-shadow: 3px 0 #111, 1px 0 cyan;
     }
 
-    @keyframes flicker {
+    @keyframes f {
         0%{
             opacity: 1;
         }
@@ -99,14 +115,12 @@
     }
 
 
-    .flicker {
-        animation: flicker 1s 3s 2 steps(5, start) forwards;
+    .f {
+        animation: f 1s 3s 2 steps(5, start) forwards;
     }
 
 </style>
 
 <div id="root"></div>
 
-<script src="innerself.js"></script>
-<script src="cervus.js"></script>
 <script src="game.js"></script>
