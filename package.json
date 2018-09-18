@@ -16,6 +16,7 @@
   "scripts": {
     "deploy": "rollup -c rollup-gh.js && gh-pages -d public",
     "lint": "eslint src",
+    "map": "node map/new-parser.js",
     "prod": "rollup -c rollup-prod.js && printf \"Size gzipped (including HTML): %s\n\" $(gzip public/index.html public/game.min.js --stdout | wc -c | awk '{print $1/1024\"K\"}')",
     "start": "rollup -c rollup-dev.js -w"
   },
