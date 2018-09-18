@@ -2,7 +2,7 @@ const vox = require('./vox-parser');
 const parser = new vox.Parser();
 const fs = require('fs');
 
-const BLOCK_COLOR = '99CCFF';
+const START_COLOR = '00EE00';
 const END_COLOR = 'FFFFFF';
 
 const POWERUP_MAP = {
@@ -59,11 +59,6 @@ parser.parse('./city.vox').then((result) => {
         result.size.y,
     ];
 
-    output_map.start = [
-        result.size.x / 2,
-        result.size.y / 2,
-    ];
-
     let map = new Array(result.size.x).fill([]);
     map = map.map((row) => {
         return new Array(result.size.x).fill(0);
@@ -81,6 +76,11 @@ parser.parse('./city.vox').then((result) => {
             ]);
         } else if (vox_color === END_COLOR) {
             output_map.end = [
+                result.size.x - curr.x,
+                curr.y
+            ];
+        } else if (vox_color === START_COLOR) {
+            output_map.start = [
                 result.size.x - curr.x,
                 curr.y
             ];
