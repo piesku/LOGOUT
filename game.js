@@ -5348,7 +5348,7 @@ function create_game() {
     game.perspe_matrix = JSON.parse(JSON.stringify(game.projMatrix));
     game.setup_ortho_camera();
 
-    document.body.addEventListener(
+    game.canvas.addEventListener(
         "click", () => document.body.requestPointerLock());
 
     game.camera.components.get(Transform).set({
@@ -5591,8 +5591,9 @@ function Line(text) {
 
 function Story(text) {
     return new class extends Component {
-        before() {
+        before(root) {
             clearInterval(this.interval);
+            root.removeEventListener("click", this.onclick);
         }
 
         after(root) {
@@ -5600,7 +5601,7 @@ function Story(text) {
             let lines = text.split("\n")[Symbol.iterator]();
             let container = root.querySelector(".t");
 
-            this.interval = setInterval(() => {
+            let update = () => {
                 // Animate text display
                 let next = lines.next();
                 if (next.done) {
@@ -5609,8 +5610,15 @@ function Story(text) {
                     div.innerHTML = Line(next.value);
                     container.appendChild(div.firstElementChild);
                 }
-            }, 1);
-            // }, 1);
+            };
+
+            this.onclick = () => {
+                this.before(root);
+                this.interval = setInterval(update, 100);
+            };
+
+            this.interval = setInterval(update, 1000);
+            root.addEventListener("click", this.onclick);
         }
 
         render() {
@@ -5641,7 +5649,7 @@ the entire world.
 
 Find the exit and log out into the reality.
 
-<button onclick="dispatch(${DIAGNOSTIC})">Run system diagnostic</button>
+<button onclick="dispatch(${DIAGNOSTIC});event.stopPropagation()">Run system diagnostic</button>
 `;
 
 // No more than 55 chars per line.
@@ -5925,13 +5933,17 @@ function App({view, systems}) {
     switch (view) {
         case "intro":
             return Story(intro);
-        case "diag":
-            let status = [
+        case "diag": {
+            let offlines = get_system_status(systems);
+            let wasd = offlines.pop();
+            let diagnostic = [
                 "Running analysis…\n",
-                ...get_system_status(systems),
-                `\n<button onclick="dispatch(${START})">Initiate recovery sequence</button>`
+                ...offlines,
+                `\n${wasd}`,
+                `\n<button onclick="dispatch(${START});event.stopPropagation()">Initiate recovery sequence</button>`
             ].join("\n");
-            return Story(status);
+            return Story(diagnostic);
+        }
         case "play":
             return HUD$2();
         case "outro":
