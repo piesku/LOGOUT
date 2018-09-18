@@ -6,17 +6,15 @@ import Compass from "./Compass";
 import Matrix from "./Matrix";
 import Status from "./Status";
 import Block from "./Block";
-import Line from "./Line";
-import Glitch, {set_glitch} from "./Glitch";
-import code_anim from "./anim_code";
 import * as sys from "./systems";
 import {ACTIVATE} from "./actions";
 import { MatrixTween } from './cervus/tweens';
 
 function HUD({game, last, systems}) {
     return new class extends Component {
-        after(root) {
-            if (!systems[sys.PERSPECTIVE]) {
+        after() {
+            // Set up timed events the first time we see the HUD.
+            if (last === sys.HUD) {
                 setTimeout(() =>
                     (new MatrixTween({
                         object: game.projMatrix,
