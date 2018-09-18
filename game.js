@@ -5297,29 +5297,29 @@ var start = [
 	18
 ];
 var end = [
-	15,
-	28
+	14,
+	29
 ];
 var items = [
 	[
 		"COMPASS",
-		47,
-		25
-	],
-	[
-		"CLOCK",
-		23,
-		50
+		52,
+		9
 	],
 	[
 		"SOLID",
-		48,
-		45
+		38,
+		39
 	],
 	[
 		"COLOR",
 		37,
 		30
+	],
+	[
+		"COMPASS",
+		23,
+		41
 	],
 	[
 		"MOUSELOOK",
