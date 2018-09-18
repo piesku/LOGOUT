@@ -9,13 +9,17 @@ function App({view, systems}) {
     switch (view) {
         case "intro":
             return Story(intro);
-        case "diag":
-            let status = [
+        case "diag": {
+            let offlines = get_system_status(systems);
+            let wasd = offlines.pop();
+            let diagnostic = [
                 "Running analysis…\n",
-                ...get_system_status(systems),
-                `\n<button onclick="dispatch(${START})">Initiate recovery sequence</button>`
+                ...offlines,
+                `\n${wasd}`,
+                `\n<button onclick="dispatch(${START});event.stopPropagation()">Initiate recovery sequence</button>`
             ].join("\n");
-            return Story(status);
+            return Story(diagnostic);
+        }
         case "play":
             return HUD();
         case "outro":

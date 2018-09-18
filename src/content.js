@@ -18,7 +18,7 @@ the entire world.
 
 Find the exit and log out into the reality.
 
-<button onclick="dispatch(${DIAGNOSTIC})">Run system diagnostic</button>
+<button onclick="dispatch(${DIAGNOSTIC});event.stopPropagation()">Run system diagnostic</button>
 `;
 
 // No more than 55 chars per line.

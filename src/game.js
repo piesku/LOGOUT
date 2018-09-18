@@ -30,7 +30,7 @@ export function create_game() {
     game.perspe_matrix = JSON.parse(JSON.stringify(game.projMatrix));
     game.setup_ortho_camera();
 
-    document.body.addEventListener(
+    game.canvas.addEventListener(
         "click", () => document.body.requestPointerLock());
 
     game.camera.components.get(Transform).set({
