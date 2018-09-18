@@ -5,7 +5,7 @@ export const CLEAR_COLOR = "333";
 export const WIREFRAME_COLOR = "888";
 
 export const BUILDING_COLOR = "222";
-export const NEON_LIGHT_MOUNT_DISTANCE = - 20;
+export const NEON_LIGHT_MOUNT = 2;
 export const NEON_INTENSITY = 20;
 export const NEON_SCALE = 0.8;
 

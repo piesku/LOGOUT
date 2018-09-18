@@ -15,12 +15,20 @@ import {
     POWERUP_COLOR,
     POWERUP_INTENSITY,
     NEON_INTENSITY,
-    NEON_LIGHT_MOUNT_DISTANCE} from "./config";
+    NEON_LIGHT_MOUNT} from "./config";
 import {
     ACTIVATE,
     EXIT} from "./actions";
 
 let cube_render = (new Box()).get_component(Render);
+
+function create_group(position) {
+    return new Entity({
+        components: [
+            new Transform({position})
+        ]
+    });
+}
 
 export function create_floor({position, scale}) {
     let plane = new Box();
@@ -52,6 +60,8 @@ function create_light({position, color, intensity}) {
 }
 
 export function create_neon({position, scale, color, is_north_south, is_negative}) {
+    let group = create_group(position);
+
     let neon = new Box();
     neon.get_component(Render).set({
         material: wireframe_material,
@@ -59,29 +69,25 @@ export function create_neon({position, scale, color, is_north_south, is_negative
         tag: NEON_TAG,
     });
     neon.get_component(Transform).set({
-        position,
         scale
     });
+    group.add(neon);
 
     let neon_light = create_light({
         position: [
-            is_north_south ? 0 : is_negative * NEON_LIGHT_MOUNT_DISTANCE,
+            is_north_south ? 0 : is_negative * NEON_LIGHT_MOUNT,
             0,
-            is_north_south ? is_negative * NEON_LIGHT_MOUNT_DISTANCE : 0
+            is_north_south ? is_negative * NEON_LIGHT_MOUNT : 0
         ],
         color,
         intensity: NEON_INTENSITY,
     });
-    neon.add(neon_light);
-    return neon;
+    group.add(neon_light);
+    return group;
 }
 
 export function create_building({position, scale, neons}) {
-    let group = new Entity({
-        components: [
-            new Transform({position})
-        ]
-    });
+    let group = create_group(position);
 
     let building = new Box();
     building.get_component(Render).set({

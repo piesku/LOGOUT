@@ -77,21 +77,21 @@ export function create_game() {
             position: [center_x, height / 2, center_z],
             scale: [xsize, height, zsize],
             neons: new Array(integer(2, 3)).fill(0).map((gunwo, index, arr) => {
-                const is_noth_south = element_of([true, false]);
+                const is_north_south = element_of([true, false]);
                 const is_negative = element_of([1, -1]);
                 const neon_height = (height * NEON_SCALE) / (arr.length + 0.5);
                 return {
                     position: [
-                      is_noth_south ? 0 : (is_negative * (xsize / 2) + (is_negative * 0.2)),
+                      is_north_south ? 0 : (is_negative * (xsize / 2) + (is_negative * 0.2)),
                       height / 2 - ((neon_height + 0.5) * (index + 1)),
-                      is_noth_south ? (is_negative * (zsize / 2) + (is_negative * 0.2)) : 0],
+                      is_north_south ? (is_negative * (zsize / 2) + (is_negative * 0.2)) : 0],
                     scale: [
-                      is_noth_south ? xsize * NEON_SCALE : 0.1,
+                      is_north_south ? xsize * NEON_SCALE : 0.1,
                       neon_height,
-                      is_noth_south ? 0.1 : zsize * NEON_SCALE
+                      is_north_south ? 0.1 : zsize * NEON_SCALE
                     ],
                     color: WIREFRAME_COLOR,
-                    is_noth_south,
+                    is_north_south,
                     is_negative
                 }
             }),
