@@ -133,13 +133,13 @@ export class Material {
     }
 
     gl.useProgram(this.program);
-    gl.uniformMatrix4fv(this.uniforms.p, gl.FALSE, game.projMatrix);
-    gl.uniformMatrix4fv(this.uniforms.v, gl.FALSE, game.viewMatrix);
+    gl.uniformMatrix4fv(this.uniforms.p, gl.FALSE, game.projMatrix.toFloat32Array());
+    gl.uniformMatrix4fv(this.uniforms.v, gl.FALSE, game.viewMatrix.toFloat32Array());
 
     gl.uniformMatrix4fv(
       this.uniforms.w,
       gl.FALSE,
-      entity.get(Transform).world
+      entity.get(Transform).world.toFloat32Array()
     );
 
     gl.uniform4fv(

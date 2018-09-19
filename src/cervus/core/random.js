@@ -36,16 +36,3 @@ export function position([x, z], max_radius, y = 1.5) {
     z + radius * Math.sin(angle)
   );
 }
-
-export function look_at_target(matrix) {
-  let azimuth = float(-Math.PI/10, Math.PI/10);
-  let polar = float(0, Math.PI / 10);
-
-  let target = vec3.of(
-    Math.cos(polar) * Math.sin(azimuth),
-    Math.sin(polar),
-    Math.cos(polar) * Math.cos(azimuth)
-  );
-  vec3.normalize(target, target);
-  return vec3.transform_mat4(target, target, matrix);
-}

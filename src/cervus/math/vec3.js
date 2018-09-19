@@ -6,7 +6,6 @@ export {
   subtract,
   add,
   scale,
-  transformMat4 as transform_mat4,
   cross,
   angle,
   lerp
@@ -19,3 +18,13 @@ export let up = V.of(0, 1, 0);
 export let forward = V.of(0, 0, 1);
 
 export let of = (...vals) => V.of(...vals);
+
+export function transform_mat4(out, vec, mat) {
+  let [x, y, z] = vec;
+  let res = mat.transformPoint({x, y, z});
+  out[0] = res.x;
+  out[1] = res.y;
+  out[2] = res.z;
+  return out;
+
+}

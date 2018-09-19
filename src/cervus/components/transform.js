@@ -19,22 +19,21 @@ export class Transform extends Component {
   }
 
   get self() {
-    let out = mat4.create()
-    return mat4.invert(out, this.world);
+    return mat4.invert(this.world);
   }
 
   get left() {
-    let out = this.matrix.slice(0, 3);
+    let out = vec3.of(this.matrix.m11, this.matrix.m12, this.matrix.m13);
     return vec3.normalize(out, out);
   }
 
   get up() {
-    let out = this.matrix.slice(4, 7);
+    let out = vec3.of(this.matrix.m21, this.matrix.m22, this.matrix.m23);
     return vec3.normalize(out, out);
   }
 
   get forward() {
-    let out = this.matrix.slice(8, 11);
+    let out = vec3.of(this.matrix.m31, this.matrix.m32, this.matrix.m33);
     return vec3.normalize(out, out);
   }
 
@@ -43,7 +42,7 @@ export class Transform extends Component {
   }
 
   get position() {
-    return this.matrix.slice(12, 15);
+    return vec3.of(this.matrix.m41, this.matrix.m42, this.matrix.m43);
   }
 
   set scale(vec) {
@@ -123,13 +122,12 @@ export class Transform extends Component {
 
   update() {
     if (this.entity.parent) {
-      mat4.multiply(
-        this.world,
+      this.world = mat4.multiply(
         this.entity.parent.get(Transform).world,
         this.matrix
       );
     } else {
-      this.world = this.matrix.slice();
+      this.world = mat4.clone(this.matrix);
     }
   }
 }

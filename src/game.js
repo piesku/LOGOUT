@@ -1,5 +1,6 @@
 import { Game, integer, element_of} from "./cervus/core";
 import {Transform, Move} from "./cervus/components";
+import {mat4} from "./cervus/math";
 import GridMove from "./grid-move";
 import EnergySaver from "./energysaver";
 import Actor from "./actor";
@@ -25,7 +26,7 @@ export function create_game() {
       clear_color: CLEAR_COLOR,
     });
 
-    game.perspe_matrix = JSON.parse(JSON.stringify(game.projMatrix));
+    game.perspe_matrix = mat4.clone(game.projMatrix);
     game.setup_ortho_camera();
 
     game.canvas.addEventListener(

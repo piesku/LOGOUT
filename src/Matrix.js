@@ -15,7 +15,7 @@ export default function Matrix(cls, styles) {
                 root.querySelectorAll(`.${cls} .l`)).slice(1);
             this.up = game.on("afterrender", () => {
                 // Update local matrix display
-                let matrix = game.camera.get(Transform).matrix;
+                let matrix = game.camera.get(Transform).matrix.toFloat32Array();
                 for (let [i, line] of rows.entries()) {
                     set_glitch(
                         line,
