@@ -15,8 +15,12 @@ export class Transform extends Component {
     super(Object.assign({
       matrix: mat4.create(),
       world: mat4.create(),
-      self: mat4.create()
     },  default_options, options));
+  }
+
+  get self() {
+    let out = mat4.create()
+    return mat4.invert(out, this.world);
   }
 
   get left() {
@@ -127,7 +131,5 @@ export class Transform extends Component {
     } else {
       this.world = this.matrix.slice();
     }
-
-    mat4.invert(this.self, this.world);
   }
 }
