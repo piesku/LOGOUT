@@ -2,15 +2,14 @@
 // Variables used by fragment shader
 //
 // vec4 c; // color
-// vec3 fp; // vertex position
+// vec3 fp; // fragment position
 // vec3[MAX_LIGHTS] lp; // light position
 // vec3[MAX_LIGHTS] lc; // light color
 // float[MAX_LIGHTS] li; // light intensity
 // int al; // active lights
 // vec3 fn; // vertex normals
-// vec2 v_t; // texture coordinates
-// sampler2D u_t; //texture
-// sampler2D n_m; // normal map
+// vec3 fc; // fog color
+// vec2 fd; // fog distance
 
 export function fragment(defines) {
   return `#version 300 es
@@ -26,20 +25,18 @@ export function fragment(defines) {
     in vec3 fp;
 
     #ifdef LIGHTS
-      #define MAX_LIGHTS 100
-
-      uniform vec3[MAX_LIGHTS] lp;
-      uniform vec3[MAX_LIGHTS] lc;
-      uniform float[MAX_LIGHTS] li;
+      uniform vec3[100] lp;
+      uniform vec3[100] lc;
+      uniform float[100] li;
       uniform int al;
 
       in vec3 fn;
     #endif
 
     #ifdef FOG
-      uniform vec3 fog_color;
-      uniform vec2 fog_distance;
-      in float f_distance;
+      uniform vec3 fc;
+      uniform vec2 fd;
+      in float fdist;
     #endif
 
     out vec4 frag_color;
@@ -47,32 +44,27 @@ export function fragment(defines) {
     void main()
     {
       #ifdef FOG
-        float fog_factor = clamp((fog_distance.y - f_distance) / (fog_distance.y - fog_distance.x), 0.0, 1.0);
+        float ff = clamp((fd.y - fdist) / (fd.y - fd.x), 0.0, 1.0);
       #endif
 
       #ifdef LIGHTS
-          vec4 p_c = c;
-
-          vec3 n = fn;
-
         vec4 light = vec4(0.0, 0.0, 0.0, 1.0);
         for (int i = 0; i < al; i++) {
-          vec3 light_dir = lp[i] - fp;
-          vec3 L = normalize(light_dir);
-          float light_dist = length(light_dir);
-          float diffuse_factor = max(dot(n, L), 0.0);
-          vec3 rgb = p_c.rgb * diffuse_factor * lc[i] * li[i] / light_dist;
-          light += vec4(rgb, p_c.a);
+          vec3 ldir = lp[i] - fp;
+          vec3 L = normalize(ldir);
+          float df = max(dot(fn, L), 0.0);
+          vec3 rgb = c.rgb * df * lc[i] * li[i] / length(ldir);
+          light += vec4(rgb, c.a);
         }
 
         #ifdef FOG
-          frag_color = mix(vec4(fog_color, 1.0), light, fog_factor);
+          frag_color = mix(vec4(fc, 1.0), light, ff);
         #else
           frag_color = light;
         #endif
       #else
           #ifdef FOG
-            frag_color = mix(vec4(fog_color, 1.0), c, fog_factor);
+            frag_color = mix(vec4(fc, 1.0), c, ff);
           #else
             frag_color = c;
           #endif

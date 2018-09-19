@@ -1,7 +1,7 @@
 import { gl } from '../core/context';
 import { Material } from '../core';
 
-import { Render, Morph, Light, Transform } from '../components';
+import { Render, Light, Transform } from '../components';
 
 export class PhongMaterial extends Material {
   constructor(options) {
@@ -13,8 +13,8 @@ export class PhongMaterial extends Material {
 
   get_locations() {
     this.get_uniforms_and_attrs(
-      ['p', 'v', 'w', 'lp', 'li', 'lc', 'al', 'c', 'u_t', 'n_m', 'frame_delta', 'fog_color', 'fog_distance', 'camera'],
-      ['P_current', 'P_next', 'N_current', 'N_next', 'a_t']
+      ['p', 'v', 'w', 'lp', 'li', 'lc', 'al', 'c', 'fc', 'fd', 'camera'],
+      ['vp', 'vn']
     );
   }
 
@@ -23,28 +23,28 @@ export class PhongMaterial extends Material {
     let buffers = render.buffers;
 
     if (render.material.has_feature('FOG')) {
-      gl.uniform3fv(this.uniforms.fog_color, this.fog.color);
-      gl.uniform2fv(this.uniforms.fog_distance, this.fog.distance);
+      gl.uniform3fv(this.uniforms.fc, this.fog.color);
+      gl.uniform2fv(this.uniforms.fd, this.fog.distance);
       gl.uniform3fv(this.uniforms.camera, game.camera.get(Transform).position);
     }
 
     // current frame
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.vertices);
     gl.vertexAttribPointer(
-      this.attribs.P_current,
+      this.attribs.vp,
       3, gl.FLOAT, gl.FALSE,
       0, 0
     );
 
-    gl.enableVertexAttribArray(this.attribs.P_current);
+    gl.enableVertexAttribArray(this.attribs.vp);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.normals);
     gl.vertexAttribPointer(
-      this.attribs.N_current,
+      this.attribs.vn,
       3, gl.FLOAT, gl.FALSE,
       0, 0
     );
-    gl.enableVertexAttribArray(this.attribs.N_current);
+    gl.enableVertexAttribArray(this.attribs.vn);
 
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.indices);
     gl.drawElements(this.draw_mode, buffers.qty, gl.UNSIGNED_SHORT, 0);
