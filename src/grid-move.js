@@ -9,34 +9,37 @@ class GridMove extends Move {
         delete this.dir_desc[69];
         delete this.dir_desc[81];
         this.tick = 0;
-        this.size = 0.5;
     }
     mount() {
         this.transform = this.entity.get(Transform);
-        this.buildings = window.bul = this.entity.game.buildings;
-        this.last_position = this.transform.position;
+        this.last = this.transform.position;
     }
 
     is_colliding() {
-        let { position } = this.transform;
-        return this.buildings.some((building) => {
-            if (position[0] + this.size >= building[0] &&
-                position[0] - this.size <= building[1] &&
-                position[2] + this.size >= building[2] &&
-                position[2] - this.size <= building[3]) {
+        let padding = 0.5;
+        let { position: [x,, z] } = this.transform;
+
+        for (let building of this.buildings) {
+            if (x + padding >= building[0] &&
+                x - padding <= building[1] &&
+                z + padding >= building[2] &&
+                z - padding <= building[3]) {
                 return true;
             }
-            return false;
-        });
+        }
+
+        if (x < 0 || x > this.size[0] || z < 0 || z > this.size[1]) {
+            return true;
+        }
     }
     update(delta) {
         this.tick++;
 
         if (this.is_colliding()) {
-            this.transform.position = this.last_position;
+            this.transform.position = this.last;
         } else {
             if (this.tick % 10 === 0) {
-                this.last_position = this.transform.position;
+                this.last = this.transform.position;
             }
             super.update(delta);
         }

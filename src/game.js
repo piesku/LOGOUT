@@ -25,8 +25,6 @@ export function create_game() {
       clear_color: CLEAR_COLOR,
     });
 
-    game.buildings = [];
-
     game.perspe_matrix = JSON.parse(JSON.stringify(game.projMatrix));
     game.setup_ortho_camera();
 
@@ -50,6 +48,8 @@ export function create_game() {
         mouse_controlled: false,
         move_speed: 7,
         rotate_speed: 0,
+        buildings: [],
+        size: map.size.map(n => n * SCALE),
     });
 
     game.camera.attach(new Actor());
@@ -97,7 +97,7 @@ export function create_game() {
             }),
         });
         game.add(building);
-        game.buildings.push([center_x - xsize / 2, center_x + xsize / 2, center_z - zsize / 2, center_z + zsize/2]);
+        grid_move.buildings.push([center_x - xsize / 2, center_x + xsize / 2, center_z - zsize / 2, center_z + zsize/2]);
     }
 
     for (let [name, x, z] of map.items) {
