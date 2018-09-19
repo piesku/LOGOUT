@@ -24,7 +24,7 @@ function Compass({game}, cls, styles) {
             let nswe = root.querySelector(`.${cls} > :first-child`);
             let radar = root.querySelector(`.${cls} > :last-child`);
             this.up = game.on("afterrender", () => {
-                let transform = game.camera.components.get(Transform);
+                let transform = game.camera.get(Transform);
                 let forward = transform.forward;
                 let sign = forward[0] > 0 ? -1 : 1;
                 let start = Math.round(vec3.angle([0, 0, 1], forward) / step) * sign;
@@ -33,7 +33,7 @@ function Compass({game}, cls, styles) {
 
                 let counts = new Array(visible_characters).fill(0);
                 for (let trigger of game.components.get(Trigger)) {
-                    let trigger_position = trigger.entity.components.get(Transform).position;
+                    let trigger_position = trigger.entity.get(Transform).position;
                     // Project the position to eye level.
                     trigger_position[1] = 1.75;
                     let direction = vec3.zero.slice();

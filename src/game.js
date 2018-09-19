@@ -33,17 +33,17 @@ export function create_game() {
     game.canvas.addEventListener(
         "click", () => document.body.requestPointerLock());
 
-    game.camera.components.get(Transform).set({
+    game.camera.get(Transform).set({
         position: [
             map.start[0] * SCALE,
             1.75,
             map.start[1] * SCALE],
     });
 
-    game.camera.remove_component(Move);
+    game.camera.detach(Move);
 
     let grid_move = new GridMove();
-    game.camera.add_component(grid_move);
+    game.camera.attach(grid_move);
 
     grid_move.set({
         keyboard_controlled: true,
@@ -52,8 +52,8 @@ export function create_game() {
         rotate_speed: 0,
     });
 
-    game.camera.add_component(new Actor());
-    game.camera.add_component(new EnergySaver());
+    game.camera.attach(new Actor());
+    game.camera.attach(new EnergySaver());
 
     // Remove the default light.
     game.remove(game.light);

@@ -139,12 +139,12 @@ export class Material {
     gl.uniformMatrix4fv(
       this.uniforms.w,
       gl.FALSE,
-      entity.components.get(Transform).world_matrix
+      entity.get(Transform).world_matrix
     );
 
     gl.uniform4fv(
       this.uniforms.c,
-      entity.components.get(Render).color_vec
+      entity.get(Render).color_vec
     );
 
     this.apply_shader(entity, game);

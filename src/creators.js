@@ -30,12 +30,12 @@ function create_group(position) {
 
 export function create_floor({position, scale}) {
     let plane = new Box();
-    plane.components.get(Render).set({
+    plane.get(Render).set({
         material: wireframe_material,
         color: WIREFRAME_COLOR,
         tag: BUILDING_TAG,
     });
-    plane.components.get(Transform).set({
+    plane.get(Transform).set({
         position,
         scale
     });
@@ -55,12 +55,12 @@ export function create_neon({position, scale, color, is_north_south, is_negative
     let group = create_group(position);
 
     let neon = new Box();
-    neon.components.get(Render).set({
+    neon.get(Render).set({
         material: wireframe_material,
         color,
         tag: NEON_TAG,
     });
-    neon.components.get(Transform).set({
+    neon.get(Transform).set({
         scale
     });
     group.add(neon);
@@ -82,12 +82,12 @@ export function create_building({position, scale, neons}) {
     let group = create_group(position);
 
     let building = new Box();
-    building.components.get(Render).set({
+    building.get(Render).set({
         material: wireframe_material,
         color: WIREFRAME_COLOR,
         tag: BUILDING_TAG,
     });
-    building.components.get(Transform).set({scale});
+    building.get(Transform).set({scale});
     group.add(building);
 
     for (let neon_opts of neons) {
@@ -100,16 +100,16 @@ export function create_building({position, scale, neons}) {
 
 export function create_exit(options) {
     let exit = new Box();
-    exit.components.get(Render).set({
+    exit.get(Render).set({
         material: powerup_material,
         color: POWERUP_COLOR,
     });
-    exit.components.get(Transform).set(options);
-    exit.add_component(new Trigger({
+    exit.get(Transform).set(options);
+    exit.attach(new Trigger({
         radius: 0.6,
         action: [EXIT]
     }));
-    exit.add_component(new Rotator({
+    exit.attach(new Rotator({
         speed: [0, 0.0001, 0],
     }));
     return exit;
@@ -117,17 +117,17 @@ export function create_exit(options) {
 
 export function create_powerup({system, position}) {
     let cube = new Box();
-    cube.components.get(Render).set({
+    cube.get(Render).set({
         material: wireframe_material,
         color: POWERUP_COLOR,
         tag: POWERUP_TAG,
     });
-    cube.components.get(Transform).set({position});
-    cube.add_component(new Trigger({
+    cube.get(Transform).set({position});
+    cube.attach(new Trigger({
         radius: 1,
         action: [ACTIVATE, system]
     }));
-    cube.add_component(new Rotator({
+    cube.attach(new Rotator({
         speed: [0.0001, 0.0002, 0.0003],
     }));
 

@@ -15,7 +15,7 @@ export class RigidBody extends Component {
   }
 
   mount() {
-    this.transform = this.entity.components.get(Transform);
+    this.transform = this.entity.get(Transform);
     let shape = new physics.colliders[this.shape](
       this.transform.scale
     );

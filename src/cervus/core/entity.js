@@ -3,22 +3,22 @@ let default_options = {
   skip: false,
 };
 
-export class Entity {
+export class Entity extends Map {
   constructor(options = {}) {
+    super();
     Object.assign(this, default_options, options);
 
     this.entities = new Set();
-    this.components = new Map();
 
     for (let component of options.components) {
-      this.add_component(component);
+      this.attach(component);
     }
   }
 
-  add_component(component) {
+  attach(component) {
     component.entity = this;
     component.mount();
-    this.components.set(component.constructor, component);
+    this.set(component.constructor, component);
 
     if (this.game) {
       if (!this.game.components.has(component.constructor)) {
@@ -28,9 +28,9 @@ export class Entity {
     }
   }
 
-  remove_component(component) {
-    let instance = this.components.get(component);
-    this.components.delete(component);
+  detach(component) {
+    let instance = this.get(component);
+    this.delete(component);
 
     if (this.game && this.game.components.has(component)) {
       this.game.components.get(component).delete(instance);
@@ -39,8 +39,8 @@ export class Entity {
 
   *iterall(component) {
     for (let child of this.entities) {
-      if (child.components.has(component)) {
-        yield child.components.get(component);
+      if (child.has(component)) {
+        yield child.get(component);
       }
       yield * child.iterall(component);
     }
@@ -62,7 +62,7 @@ export class Entity {
     }
 
     let update_each = updatable => updatable.update(tick_delta);
-    this.components.forEach(update_each);
+    this.forEach(update_each);
     this.entities.forEach(update_each);
   }
 
@@ -72,7 +72,7 @@ export class Entity {
     }
 
     let render_each = renderable => renderable.render(tick_delta);
-    this.components.forEach(render_each);
+    this.forEach(render_each);
     this.entities.forEach(render_each);
   }
 }

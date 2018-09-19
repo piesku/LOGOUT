@@ -237,7 +237,7 @@ export class Game {
     this.emit('tick', this.last_tick);
     this.entities.forEach(entity => entity.update(this.tick_delta));
     this.camera.update(this.tick_delta);
-    this.camera.components.get(Transform).get_view_matrix(this.viewMatrix);
+    this.camera.get(Transform).get_view_matrix(this.viewMatrix);
   }
 
   render() {
@@ -250,7 +250,7 @@ export class Game {
   track_entity(entity) {
     entity.game = this;
 
-    for (let component of entity.components.values()) {
+    for (let component of entity.values()) {
       if (!this.components.has(component.constructor)) {
         this.components.set(component.constructor, new Set());
       }
@@ -266,7 +266,7 @@ export class Game {
   untrack_entity(entity) {
     entity.game = null;
 
-    for (let component of entity.components.values()) {
+    for (let component of entity.values()) {
       this.components.get(component.constructor).delete(component);
     }
 

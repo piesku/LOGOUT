@@ -5,7 +5,7 @@ import {vec3} from "./cervus/math";
 export default
 class Trigger extends Component {
     mount() {
-        this.transform = this.entity.components.get(Transform);
+        this.transform = this.entity.get(Transform);
     }
 
     contains(world_point) {

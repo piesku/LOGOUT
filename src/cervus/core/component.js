@@ -11,7 +11,7 @@ export class Component {
     return [];
   }
   /*
-   * Called in Entity.add_component.
+   * Called in Entity.attach.
    *
    * Use this to intialize the component instance. this.entity is available
    * here.

@@ -11,22 +11,22 @@ class NearbyLight extends Component {
     set(values) {
         super.set(values);
         if (this.active) {
-            this.entity.components.get(Light).set(values);
+            this.entity.get(Light).set(values);
         }
     }
 
     on() {
         this.active = true;
         let {color, intensity} = this;
-        this.entity.add_component(new Light({
+        this.entity.attach(new Light({
             color, intensity
         }));
-        // this.entity.add_component(this.gizmo);
+        // this.entity.attach(this.gizmo);
     }
 
     off() {
         this.active = false;
-        this.entity.remove_component(Light);
-        // this.entity.remove_component(Object.getPrototypeOf(this.gizmo));
+        this.entity.detach(Light);
+        // this.entity.detach(Object.getPrototypeOf(this.gizmo));
     }
 }
