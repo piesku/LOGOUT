@@ -127,7 +127,9 @@ export class Transform extends Component {
         this.matrix
       );
     } else {
-      this.world = mat4.clone(this.matrix);
+      // We never modify the elements of the world matrix so it's OK to point it
+      // to the local matrix for perf improvements.
+      this.world = this.matrix;
     }
   }
 }
