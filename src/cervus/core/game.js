@@ -250,11 +250,11 @@ export class Game {
   track_entity(entity) {
     entity.game = this;
 
-    for (let component of entity.values()) {
-      if (!this.all.has(component.constructor)) {
-        this.all.set(component.constructor, new Set());
+    for (let [component, instance] of entity.entries()) {
+      if (!this.all.has(component)) {
+        this.all.set(component, new Set());
       }
-      this.all.get(component.constructor).add(component);
+      this.all.get(component).add(instance);
     }
 
     // Recursively track children.
@@ -266,8 +266,8 @@ export class Game {
   untrack_entity(entity) {
     entity.game = null;
 
-    for (let component of entity.values()) {
-      this.all.get(component.constructor).delete(component);
+    for (let [component, instance] of entity.entries()) {
+      this.all.get(component).delete(instance);
     }
 
     // Recursively untrack children.

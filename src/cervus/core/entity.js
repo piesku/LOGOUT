@@ -15,16 +15,18 @@ export class Entity extends Map {
     }
   }
 
-  attach(component) {
-    component.entity = this;
-    component.mount();
-    this.set(component.constructor, component);
+  attach(instance) {
+    instance.entity = this;
+    instance.mount();
+
+    let component = instance.constructor;
+    this.set(component, instance);
 
     if (this.game) {
-      if (!this.game.all.has(component.constructor)) {
-        this.game.all.set(component.constructor, new Set());
+      if (!this.game.all.has(component)) {
+        this.game.all.set(component, new Set());
       }
-      this.game.all.get(component.constructor).add(component);
+      this.game.all.get(component).add(instance);
     }
   }
 
