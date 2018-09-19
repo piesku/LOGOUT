@@ -8,6 +8,7 @@ export {
   scale,
   transformMat4 as transform_mat4,
   cross,
+  angle,
   lerp
 } from 'gl-matrix/src/gl-matrix/vec3';
 

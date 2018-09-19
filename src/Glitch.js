@@ -15,8 +15,8 @@ function Glitch(text) {
     `;
 }
 
-export function set_glitch(line, text) {
+export function set_glitch(line, content) {
     for (let glitchPart of line.querySelectorAll(".g > div")) {
-        glitchPart.textContent = text;
+        glitchPart.innerHTML = content;
     }
 }

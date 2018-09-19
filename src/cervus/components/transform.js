@@ -19,6 +19,11 @@ export class Transform extends Component {
     },  default_options, options));
   }
 
+  get left() {
+    const out = this.matrix.slice(0, 3);
+    return vec3.normalize(out, out);
+  }
+
   get up() {
     const out = this.matrix.slice(4, 7);
     return vec3.normalize(out, out);
