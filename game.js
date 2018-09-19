@@ -80,14 +80,14 @@ var createStore = function(reducer) {
     };
 };
 
-const HUD = "Heads-Up Display";
-const PERSPECTIVE = "Perspective";
-const SOLID = "Light Sensor";
-const COLOR = "Chromatic Sampling";
-const CLOCK = "Low-Res Timer";
-const COMPASS = "Compass";
-const MOUSELOOK = "Gimbal Mount";
-const GRID = "WASD Movement";
+let HUD = "Heads-Up Display";
+let PERSPECTIVE = "Perspective";
+let SOLID = "Light Sensor";
+let COLOR = "Chromatic Sampling";
+let CLOCK = "Low-Res Timer";
+let COMPASS = "Compass";
+let MOUSELOOK = "Gimbal Mount";
+let GRID = "WASD Movement";
 
 
 var sys = Object.freeze({
@@ -101,10 +101,10 @@ var sys = Object.freeze({
 	GRID: GRID
 });
 
-const DIAGNOSTIC = 0;
-const START = 1;
-const ACTIVATE = 2;
-const EXIT = 3;
+let DIAGNOSTIC = 0;
+let START = 1;
+let ACTIVATE = 2;
+let EXIT = 3;
 
 function hex_to_rgb(hex) {
   if (hex.charAt(0) === '#') {
@@ -577,15 +577,7 @@ function cross(out, a, b) {
  * @param {mat4} m matrix to transform with
  * @returns {vec3} out
  */
-function transformMat4(out, a, m) {
-  let x = a[0], y = a[1], z = a[2];
-  let w = m[3] * x + m[7] * y + m[11] * z + m[15];
-  w = w || 1.0;
-  out[0] = (m[0] * x + m[4] * y + m[8] * z + m[12]) / w;
-  out[1] = (m[1] * x + m[5] * y + m[9] * z + m[13]) / w;
-  out[2] = (m[2] * x + m[6] * y + m[10] * z + m[14]) / w;
-  return out;
-}
+
 
 /**
  * Transforms the vec3 with a mat3.
@@ -772,853 +764,240 @@ const forEach = (function() {
   };
 })();
 
-const V = Float32Array;
+let V = Float32Array;
 
-const zero = V.of(0, 0, 0);
-const unit = V.of(1, 1, 1);
-const left = V.of(1, 0, 0);
-const up = V.of(0, 1, 0);
-const forward = V.of(0, 0, 1);
+let zero = V.of(0, 0, 0);
+let unit = V.of(1, 1, 1);
+let left = V.of(1, 0, 0);
+let up = V.of(0, 1, 0);
+let forward = V.of(0, 0, 1);
 
-const of = (...vals) => V.of(...vals);
+let of = (...vals) => V.of(...vals);
 
-/**
- * 4x4 Matrix<br>Format: column-major, when typed out it looks like row-major<br>The matrices are being post multiplied.
- * @module mat4
- */
+function transform_mat4(out, vec, mat) {
+  let [x, y, z] = vec;
+  let res = mat.transformPoint({x, y, z});
+  out[0] = res.x;
+  out[1] = res.y;
+  out[2] = res.z;
+  return out;
 
-/**
- * Creates a new identity mat4
- *
- * @returns {mat4} a new 4x4 matrix
- */
+}
+
+let EPSILON$1 = 0.000001;
+
 function create$1() {
-  let out = new ARRAY_TYPE(16);
-  if(ARRAY_TYPE != Float32Array) {
-    out[1] = 0;
-    out[2] = 0;
-    out[3] = 0;
-    out[4] = 0;
-    out[6] = 0;
-    out[7] = 0;
-    out[8] = 0;
-    out[9] = 0;
-    out[11] = 0;
-    out[12] = 0;
-    out[13] = 0;
-    out[14] = 0;
-  }
-  out[0] = 1;
-  out[5] = 1;
-  out[10] = 1;
-  out[15] = 1;
-  return out;
+    return new DOMMatrix();
 }
 
-/**
- * Creates a new mat4 initialized with values from an existing matrix
- *
- * @param {mat4} a matrix to clone
- * @returns {mat4} a new 4x4 matrix
- */
-function clone$1(a) {
-  let out = new ARRAY_TYPE(16);
-  out[0] = a[0];
-  out[1] = a[1];
-  out[2] = a[2];
-  out[3] = a[3];
-  out[4] = a[4];
-  out[5] = a[5];
-  out[6] = a[6];
-  out[7] = a[7];
-  out[8] = a[8];
-  out[9] = a[9];
-  out[10] = a[10];
-  out[11] = a[11];
-  out[12] = a[12];
-  out[13] = a[13];
-  out[14] = a[14];
-  out[15] = a[15];
-  return out;
+function clone$1(m) {
+    return new DOMMatrix(m);
 }
 
-/**
- * Copy the values from one mat4 to another
- *
- * @param {mat4} out the receiving matrix
- * @param {mat4} a the source matrix
- * @returns {mat4} out
- */
-
-
-/**
- * Create a new mat4 with the given values
- *
- * @param {Number} m00 Component in column 0, row 0 position (index 0)
- * @param {Number} m01 Component in column 0, row 1 position (index 1)
- * @param {Number} m02 Component in column 0, row 2 position (index 2)
- * @param {Number} m03 Component in column 0, row 3 position (index 3)
- * @param {Number} m10 Component in column 1, row 0 position (index 4)
- * @param {Number} m11 Component in column 1, row 1 position (index 5)
- * @param {Number} m12 Component in column 1, row 2 position (index 6)
- * @param {Number} m13 Component in column 1, row 3 position (index 7)
- * @param {Number} m20 Component in column 2, row 0 position (index 8)
- * @param {Number} m21 Component in column 2, row 1 position (index 9)
- * @param {Number} m22 Component in column 2, row 2 position (index 10)
- * @param {Number} m23 Component in column 2, row 3 position (index 11)
- * @param {Number} m30 Component in column 3, row 0 position (index 12)
- * @param {Number} m31 Component in column 3, row 1 position (index 13)
- * @param {Number} m32 Component in column 3, row 2 position (index 14)
- * @param {Number} m33 Component in column 3, row 3 position (index 15)
- * @returns {mat4} A new mat4
- */
-
-
-/**
- * Set the components of a mat4 to the given values
- *
- * @param {mat4} out the receiving matrix
- * @param {Number} m00 Component in column 0, row 0 position (index 0)
- * @param {Number} m01 Component in column 0, row 1 position (index 1)
- * @param {Number} m02 Component in column 0, row 2 position (index 2)
- * @param {Number} m03 Component in column 0, row 3 position (index 3)
- * @param {Number} m10 Component in column 1, row 0 position (index 4)
- * @param {Number} m11 Component in column 1, row 1 position (index 5)
- * @param {Number} m12 Component in column 1, row 2 position (index 6)
- * @param {Number} m13 Component in column 1, row 3 position (index 7)
- * @param {Number} m20 Component in column 2, row 0 position (index 8)
- * @param {Number} m21 Component in column 2, row 1 position (index 9)
- * @param {Number} m22 Component in column 2, row 2 position (index 10)
- * @param {Number} m23 Component in column 2, row 3 position (index 11)
- * @param {Number} m30 Component in column 3, row 0 position (index 12)
- * @param {Number} m31 Component in column 3, row 1 position (index 13)
- * @param {Number} m32 Component in column 3, row 2 position (index 14)
- * @param {Number} m33 Component in column 3, row 3 position (index 15)
- * @returns {mat4} out
- */
-
-
-
-/**
- * Set a mat4 to the identity matrix
- *
- * @param {mat4} out the receiving matrix
- * @returns {mat4} out
- */
-function identity(out) {
-  out[0] = 1;
-  out[1] = 0;
-  out[2] = 0;
-  out[3] = 0;
-  out[4] = 0;
-  out[5] = 1;
-  out[6] = 0;
-  out[7] = 0;
-  out[8] = 0;
-  out[9] = 0;
-  out[10] = 1;
-  out[11] = 0;
-  out[12] = 0;
-  out[13] = 0;
-  out[14] = 0;
-  out[15] = 1;
-  return out;
+function set$1(m, values) {
+    m.m11 = values[0];
+    m.m12 = values[1];
+    m.m13 = values[2];
+    m.m14 = values[3];
+    m.m21 = values[4];
+    m.m22 = values[5];
+    m.m23 = values[6];
+    m.m24 = values[7];
+    m.m31 = values[8];
+    m.m32 = values[9];
+    m.m33 = values[10];
+    m.m34 = values[11];
+    m.m41 = values[12];
+    m.m42 = values[13];
+    m.m43 = values[14];
+    m.m44 = values[15];
+    return m;
 }
 
-/**
- * Transpose the values of a mat4
- *
- * @param {mat4} out the receiving matrix
- * @param {mat4} a the source matrix
- * @returns {mat4} out
- */
-
-
-/**
- * Inverts a mat4
- *
- * @param {mat4} out the receiving matrix
- * @param {mat4} a the source matrix
- * @returns {mat4} out
- */
-function invert(out, a) {
-  let a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3];
-  let a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7];
-  let a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11];
-  let a30 = a[12], a31 = a[13], a32 = a[14], a33 = a[15];
-
-  let b00 = a00 * a11 - a01 * a10;
-  let b01 = a00 * a12 - a02 * a10;
-  let b02 = a00 * a13 - a03 * a10;
-  let b03 = a01 * a12 - a02 * a11;
-  let b04 = a01 * a13 - a03 * a11;
-  let b05 = a02 * a13 - a03 * a12;
-  let b06 = a20 * a31 - a21 * a30;
-  let b07 = a20 * a32 - a22 * a30;
-  let b08 = a20 * a33 - a23 * a30;
-  let b09 = a21 * a32 - a22 * a31;
-  let b10 = a21 * a33 - a23 * a31;
-  let b11 = a22 * a33 - a23 * a32;
-
-  // Calculate the determinant
-  let det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
-
-  if (!det) {
-    return null;
-  }
-  det = 1.0 / det;
-
-  out[0] = (a11 * b11 - a12 * b10 + a13 * b09) * det;
-  out[1] = (a02 * b10 - a01 * b11 - a03 * b09) * det;
-  out[2] = (a31 * b05 - a32 * b04 + a33 * b03) * det;
-  out[3] = (a22 * b04 - a21 * b05 - a23 * b03) * det;
-  out[4] = (a12 * b08 - a10 * b11 - a13 * b07) * det;
-  out[5] = (a00 * b11 - a02 * b08 + a03 * b07) * det;
-  out[6] = (a32 * b02 - a30 * b05 - a33 * b01) * det;
-  out[7] = (a20 * b05 - a22 * b02 + a23 * b01) * det;
-  out[8] = (a10 * b10 - a11 * b08 + a13 * b06) * det;
-  out[9] = (a01 * b08 - a00 * b10 - a03 * b06) * det;
-  out[10] = (a30 * b04 - a31 * b02 + a33 * b00) * det;
-  out[11] = (a21 * b02 - a20 * b04 - a23 * b00) * det;
-  out[12] = (a11 * b07 - a10 * b09 - a12 * b06) * det;
-  out[13] = (a00 * b09 - a01 * b07 + a02 * b06) * det;
-  out[14] = (a31 * b01 - a30 * b03 - a32 * b00) * det;
-  out[15] = (a20 * b03 - a21 * b01 + a22 * b00) * det;
-
-  return out;
+function multiply$1(a, b) {
+    return a.multiply(b);
 }
 
-/**
- * Calculates the adjugate of a mat4
- *
- * @param {mat4} out the receiving matrix
- * @param {mat4} a the source matrix
- * @returns {mat4} out
- */
-
-
-/**
- * Calculates the determinant of a mat4
- *
- * @param {mat4} a the source matrix
- * @returns {Number} determinant of a
- */
-
-
-/**
- * Multiplies two mat4s
- *
- * @param {mat4} out the receiving matrix
- * @param {mat4} a the first operand
- * @param {mat4} b the second operand
- * @returns {mat4} out
- */
-function multiply$1(out, a, b) {
-  let a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3];
-  let a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7];
-  let a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11];
-  let a30 = a[12], a31 = a[13], a32 = a[14], a33 = a[15];
-
-  // Cache only the current line of the second matrix
-  let b0  = b[0], b1 = b[1], b2 = b[2], b3 = b[3];
-  out[0] = b0*a00 + b1*a10 + b2*a20 + b3*a30;
-  out[1] = b0*a01 + b1*a11 + b2*a21 + b3*a31;
-  out[2] = b0*a02 + b1*a12 + b2*a22 + b3*a32;
-  out[3] = b0*a03 + b1*a13 + b2*a23 + b3*a33;
-
-  b0 = b[4]; b1 = b[5]; b2 = b[6]; b3 = b[7];
-  out[4] = b0*a00 + b1*a10 + b2*a20 + b3*a30;
-  out[5] = b0*a01 + b1*a11 + b2*a21 + b3*a31;
-  out[6] = b0*a02 + b1*a12 + b2*a22 + b3*a32;
-  out[7] = b0*a03 + b1*a13 + b2*a23 + b3*a33;
-
-  b0 = b[8]; b1 = b[9]; b2 = b[10]; b3 = b[11];
-  out[8] = b0*a00 + b1*a10 + b2*a20 + b3*a30;
-  out[9] = b0*a01 + b1*a11 + b2*a21 + b3*a31;
-  out[10] = b0*a02 + b1*a12 + b2*a22 + b3*a32;
-  out[11] = b0*a03 + b1*a13 + b2*a23 + b3*a33;
-
-  b0 = b[12]; b1 = b[13]; b2 = b[14]; b3 = b[15];
-  out[12] = b0*a00 + b1*a10 + b2*a20 + b3*a30;
-  out[13] = b0*a01 + b1*a11 + b2*a21 + b3*a31;
-  out[14] = b0*a02 + b1*a12 + b2*a22 + b3*a32;
-  out[15] = b0*a03 + b1*a13 + b2*a23 + b3*a33;
-  return out;
+function invert(m) {
+    return m.inverse();
 }
 
-/**
- * Translate a mat4 by the given vector
- *
- * @param {mat4} out the receiving matrix
- * @param {mat4} a the matrix to translate
- * @param {vec3} v vector to translate by
- * @returns {mat4} out
- */
-
-
-/**
- * Scales the mat4 by the dimensions in the given vec3 not using vectorization
- *
- * @param {mat4} out the receiving matrix
- * @param {mat4} a the matrix to scale
- * @param {vec3} v the vec3 to scale the matrix by
- * @returns {mat4} out
- **/
-
-
-/**
- * Rotates a mat4 by the given angle around the given axis
- *
- * @param {mat4} out the receiving matrix
- * @param {mat4} a the matrix to rotate
- * @param {Number} rad the angle to rotate the matrix by
- * @param {vec3} axis the axis to rotate around
- * @returns {mat4} out
- */
-
-
-/**
- * Rotates a matrix by the given angle around the X axis
- *
- * @param {mat4} out the receiving matrix
- * @param {mat4} a the matrix to rotate
- * @param {Number} rad the angle to rotate the matrix by
- * @returns {mat4} out
- */
-
-
-/**
- * Rotates a matrix by the given angle around the Y axis
- *
- * @param {mat4} out the receiving matrix
- * @param {mat4} a the matrix to rotate
- * @param {Number} rad the angle to rotate the matrix by
- * @returns {mat4} out
- */
-
-
-/**
- * Rotates a matrix by the given angle around the Z axis
- *
- * @param {mat4} out the receiving matrix
- * @param {mat4} a the matrix to rotate
- * @param {Number} rad the angle to rotate the matrix by
- * @returns {mat4} out
- */
-
-
-/**
- * Creates a matrix from a vector translation
- * This is equivalent to (but much faster than):
- *
- *     mat4.identity(dest);
- *     mat4.translate(dest, dest, vec);
- *
- * @param {mat4} out mat4 receiving operation result
- * @param {vec3} v Translation vector
- * @returns {mat4} out
- */
-
-
-/**
- * Creates a matrix from a vector scaling
- * This is equivalent to (but much faster than):
- *
- *     mat4.identity(dest);
- *     mat4.scale(dest, dest, vec);
- *
- * @param {mat4} out mat4 receiving operation result
- * @param {vec3} v Scaling vector
- * @returns {mat4} out
- */
-
-
-/**
- * Creates a matrix from a given angle around a given axis
- * This is equivalent to (but much faster than):
- *
- *     mat4.identity(dest);
- *     mat4.rotate(dest, dest, rad, axis);
- *
- * @param {mat4} out mat4 receiving operation result
- * @param {Number} rad the angle to rotate the matrix by
- * @param {vec3} axis the axis to rotate around
- * @returns {mat4} out
- */
-
-
-/**
- * Creates a matrix from the given angle around the X axis
- * This is equivalent to (but much faster than):
- *
- *     mat4.identity(dest);
- *     mat4.rotateX(dest, dest, rad);
- *
- * @param {mat4} out mat4 receiving operation result
- * @param {Number} rad the angle to rotate the matrix by
- * @returns {mat4} out
- */
-
-
-/**
- * Creates a matrix from the given angle around the Y axis
- * This is equivalent to (but much faster than):
- *
- *     mat4.identity(dest);
- *     mat4.rotateY(dest, dest, rad);
- *
- * @param {mat4} out mat4 receiving operation result
- * @param {Number} rad the angle to rotate the matrix by
- * @returns {mat4} out
- */
-
-
-/**
- * Creates a matrix from the given angle around the Z axis
- * This is equivalent to (but much faster than):
- *
- *     mat4.identity(dest);
- *     mat4.rotateZ(dest, dest, rad);
- *
- * @param {mat4} out mat4 receiving operation result
- * @param {Number} rad the angle to rotate the matrix by
- * @returns {mat4} out
- */
-
-
-/**
- * Creates a matrix from a quaternion rotation and vector translation
- * This is equivalent to (but much faster than):
- *
- *     mat4.identity(dest);
- *     mat4.translate(dest, vec);
- *     let quatMat = mat4.create();
- *     quat4.toMat4(quat, quatMat);
- *     mat4.multiply(dest, quatMat);
- *
- * @param {mat4} out mat4 receiving operation result
- * @param {quat4} q Rotation quaternion
- * @param {vec3} v Translation vector
- * @returns {mat4} out
- */
-
-
-/**
- * Creates a new mat4 from a dual quat.
- *
- * @param {mat4} out Matrix
- * @param {quat2} a Dual Quaternion
- * @returns {mat4} mat4 receiving operation result
- */
-
-
-/**
- * Returns the translation vector component of a transformation
- *  matrix. If a matrix is built with fromRotationTranslation,
- *  the returned vector will be the same as the translation vector
- *  originally supplied.
- * @param  {vec3} out Vector to receive translation component
- * @param  {mat4} mat Matrix to be decomposed (input)
- * @return {vec3} out
- */
-
-
-/**
- * Returns the scaling factor component of a transformation
- *  matrix. If a matrix is built with fromRotationTranslationScale
- *  with a normalized Quaternion paramter, the returned vector will be
- *  the same as the scaling vector
- *  originally supplied.
- * @param  {vec3} out Vector to receive scaling factor component
- * @param  {mat4} mat Matrix to be decomposed (input)
- * @return {vec3} out
- */
-
-
-/**
- * Returns a quaternion representing the rotational component
- *  of a transformation matrix. If a matrix is built with
- *  fromRotationTranslation, the returned quaternion will be the
- *  same as the quaternion originally supplied.
- * @param {quat} out Quaternion to receive the rotation component
- * @param {mat4} mat Matrix to be decomposed (input)
- * @return {quat} out
- */
-
-
-/**
- * Creates a matrix from a quaternion rotation, vector translation and vector scale
- * This is equivalent to (but much faster than):
- *
- *     mat4.identity(dest);
- *     mat4.translate(dest, vec);
- *     let quatMat = mat4.create();
- *     quat4.toMat4(quat, quatMat);
- *     mat4.multiply(dest, quatMat);
- *     mat4.scale(dest, scale)
- *
- * @param {mat4} out mat4 receiving operation result
- * @param {quat4} q Rotation quaternion
- * @param {vec3} v Translation vector
- * @param {vec3} s Scaling vector
- * @returns {mat4} out
- */
-function fromRotationTranslationScale(out, q, v, s) {
-  // Quaternion math
-  let x = q[0], y = q[1], z = q[2], w = q[3];
-  let x2 = x + x;
-  let y2 = y + y;
-  let z2 = z + z;
-
-  let xx = x * x2;
-  let xy = x * y2;
-  let xz = x * z2;
-  let yy = y * y2;
-  let yz = y * z2;
-  let zz = z * z2;
-  let wx = w * x2;
-  let wy = w * y2;
-  let wz = w * z2;
-  let sx = s[0];
-  let sy = s[1];
-  let sz = s[2];
-
-  out[0] = (1 - (yy + zz)) * sx;
-  out[1] = (xy + wz) * sx;
-  out[2] = (xz - wy) * sx;
-  out[3] = 0;
-  out[4] = (xy - wz) * sy;
-  out[5] = (1 - (xx + zz)) * sy;
-  out[6] = (yz + wx) * sy;
-  out[7] = 0;
-  out[8] = (xz + wy) * sz;
-  out[9] = (yz - wx) * sz;
-  out[10] = (1 - (xx + yy)) * sz;
-  out[11] = 0;
-  out[12] = v[0];
-  out[13] = v[1];
-  out[14] = v[2];
-  out[15] = 1;
-
-  return out;
-}
-
-/**
- * Creates a matrix from a quaternion rotation, vector translation and vector scale, rotating and scaling around the given origin
- * This is equivalent to (but much faster than):
- *
- *     mat4.identity(dest);
- *     mat4.translate(dest, vec);
- *     mat4.translate(dest, origin);
- *     let quatMat = mat4.create();
- *     quat4.toMat4(quat, quatMat);
- *     mat4.multiply(dest, quatMat);
- *     mat4.scale(dest, scale)
- *     mat4.translate(dest, negativeOrigin);
- *
- * @param {mat4} out mat4 receiving operation result
- * @param {quat4} q Rotation quaternion
- * @param {vec3} v Translation vector
- * @param {vec3} s Scaling vector
- * @param {vec3} o The origin vector around which to scale and rotate
- * @returns {mat4} out
- */
-
-
-/**
- * Calculates a 4x4 matrix from the given quaternion
- *
- * @param {mat4} out mat4 receiving operation result
- * @param {quat} q Quaternion to create matrix from
- *
- * @returns {mat4} out
- */
-
-
-/**
- * Generates a frustum matrix with the given bounds
- *
- * @param {mat4} out mat4 frustum matrix will be written into
- * @param {Number} left Left bound of the frustum
- * @param {Number} right Right bound of the frustum
- * @param {Number} bottom Bottom bound of the frustum
- * @param {Number} top Top bound of the frustum
- * @param {Number} near Near bound of the frustum
- * @param {Number} far Far bound of the frustum
- * @returns {mat4} out
- */
-
-
-/**
- * Generates a perspective projection matrix with the given bounds.
- * Passing null/undefined/no value for far will generate infinite projection matrix.
- *
- * @param {mat4} out mat4 frustum matrix will be written into
- * @param {number} fovy Vertical field of view in radians
- * @param {number} aspect Aspect ratio. typically viewport width/height
- * @param {number} near Near bound of the frustum
- * @param {number} far Far bound of the frustum, can be null or Infinity
- * @returns {mat4} out
- */
-function perspective(out, fovy, aspect, near, far) {
-  let f = 1.0 / Math.tan(fovy / 2), nf;
-  out[0] = f / aspect;
-  out[1] = 0;
-  out[2] = 0;
-  out[3] = 0;
-  out[4] = 0;
-  out[5] = f;
-  out[6] = 0;
-  out[7] = 0;
-  out[8] = 0;
-  out[9] = 0;
-  out[11] = -1;
-  out[12] = 0;
-  out[13] = 0;
-  out[15] = 0;
-  if (far != null && far !== Infinity) {
-    nf = 1 / (near - far);
-    out[10] = (far + near) * nf;
-    out[14] = (2 * far * near) * nf;
-  } else {
-    out[10] = -1;
-    out[14] = -2 * near;
-  }
-  return out;
-}
-
-/**
- * Generates a perspective projection matrix with the given field of view.
- * This is primarily useful for generating projection matrices to be used
- * with the still experiemental WebVR API.
- *
- * @param {mat4} out mat4 frustum matrix will be written into
- * @param {Object} fov Object containing the following values: upDegrees, downDegrees, leftDegrees, rightDegrees
- * @param {number} near Near bound of the frustum
- * @param {number} far Far bound of the frustum
- * @returns {mat4} out
- */
-
-
-/**
- * Generates a orthogonal projection matrix with the given bounds
- *
- * @param {mat4} out mat4 frustum matrix will be written into
- * @param {number} left Left bound of the frustum
- * @param {number} right Right bound of the frustum
- * @param {number} bottom Bottom bound of the frustum
- * @param {number} top Top bound of the frustum
- * @param {number} near Near bound of the frustum
- * @param {number} far Far bound of the frustum
- * @returns {mat4} out
- */
 function ortho(out, left, right, bottom, top, near, far) {
-  let lr = 1 / (left - right);
-  let bt = 1 / (bottom - top);
-  let nf = 1 / (near - far);
-  out[0] = -2 * lr;
-  out[1] = 0;
-  out[2] = 0;
-  out[3] = 0;
-  out[4] = 0;
-  out[5] = -2 * bt;
-  out[6] = 0;
-  out[7] = 0;
-  out[8] = 0;
-  out[9] = 0;
-  out[10] = 2 * nf;
-  out[11] = 0;
-  out[12] = (left + right) * lr;
-  out[13] = (top + bottom) * bt;
-  out[14] = (far + near) * nf;
-  out[15] = 1;
-  return out;
+    let lr = 1 / (left - right);
+    let bt = 1 / (bottom - top);
+    let nf = 1 / (near - far);
+    return set$1(out, [
+        -2 * lr,
+        0,
+        0,
+        0,
+        0,
+        -2 * bt,
+        0,
+        0,
+        0,
+        0,
+        2 * nf,
+        0,
+        (left + right) * lr,
+        (top + bottom) * bt,
+        (far + near) * nf,
+        1
+    ]);
 }
 
-/**
- * Generates a look-at matrix with the given eye position, focal point, and up axis.
- * If you want a matrix that actually makes an object look at another object, you should use targetTo instead.
- *
- * @param {mat4} out mat4 frustum matrix will be written into
- * @param {vec3} eye Position of the viewer
- * @param {vec3} center Point the viewer is looking at
- * @param {vec3} up vec3 pointing up
- * @returns {mat4} out
- */
-function lookAt(out, eye, center, up) {
-  let x0, x1, x2, y0, y1, y2, z0, z1, z2, len;
-  let eyex = eye[0];
-  let eyey = eye[1];
-  let eyez = eye[2];
-  let upx = up[0];
-  let upy = up[1];
-  let upz = up[2];
-  let centerx = center[0];
-  let centery = center[1];
-  let centerz = center[2];
+function perspective(out, fovy, aspect, near, far) {
+    let f = 1.0 / Math.tan(fovy / 2), nf;
+    set$1(out, [
+        f / aspect,
+        0,
+        0,
+        0,
+        0,
+        f,
+        0,
+        0,
+        0,
+        0,
+        0, // set below
+        -1,
+        0,
+        0,
+        0, // set below
+        0
+    ]);
 
-  if (Math.abs(eyex - centerx) < EPSILON &&
-      Math.abs(eyey - centery) < EPSILON &&
-      Math.abs(eyez - centerz) < EPSILON) {
-    return identity(out);
-  }
+    if (far != null && far !== Infinity) {
+        nf = 1 / (near - far);
+        out.m33 = (far + near) * nf;
+        out.m43 = (2 * far * near) * nf;
+    } else {
+        out.m33 = -1;
+        out.m43 = -2 * near;
+    }
 
-  z0 = eyex - centerx;
-  z1 = eyey - centery;
-  z2 = eyez - centerz;
-
-  len = 1 / Math.sqrt(z0 * z0 + z1 * z1 + z2 * z2);
-  z0 *= len;
-  z1 *= len;
-  z2 *= len;
-
-  x0 = upy * z2 - upz * z1;
-  x1 = upz * z0 - upx * z2;
-  x2 = upx * z1 - upy * z0;
-  len = Math.sqrt(x0 * x0 + x1 * x1 + x2 * x2);
-  if (!len) {
-    x0 = 0;
-    x1 = 0;
-    x2 = 0;
-  } else {
-    len = 1 / len;
-    x0 *= len;
-    x1 *= len;
-    x2 *= len;
-  }
-
-  y0 = z1 * x2 - z2 * x1;
-  y1 = z2 * x0 - z0 * x2;
-  y2 = z0 * x1 - z1 * x0;
-
-  len = Math.sqrt(y0 * y0 + y1 * y1 + y2 * y2);
-  if (!len) {
-    y0 = 0;
-    y1 = 0;
-    y2 = 0;
-  } else {
-    len = 1 / len;
-    y0 *= len;
-    y1 *= len;
-    y2 *= len;
-  }
-
-  out[0] = x0;
-  out[1] = y0;
-  out[2] = z0;
-  out[3] = 0;
-  out[4] = x1;
-  out[5] = y1;
-  out[6] = z1;
-  out[7] = 0;
-  out[8] = x2;
-  out[9] = y2;
-  out[10] = z2;
-  out[11] = 0;
-  out[12] = -(x0 * eyex + x1 * eyey + x2 * eyez);
-  out[13] = -(y0 * eyex + y1 * eyey + y2 * eyez);
-  out[14] = -(z0 * eyex + z1 * eyey + z2 * eyez);
-  out[15] = 1;
-
-  return out;
+    return out;
 }
 
-/**
- * Generates a matrix that makes something look at something else.
- *
- * @param {mat4} out mat4 frustum matrix will be written into
- * @param {vec3} eye Position of the viewer
- * @param {vec3} center Point the viewer is looking at
- * @param {vec3} up vec3 pointing up
- * @returns {mat4} out
- */
+function look_at(out, eye, center, up) {
+    let x0, x1, x2, y0, y1, y2, z0, z1, z2, len;
+    let eyex = eye[0];
+    let eyey = eye[1];
+    let eyez = eye[2];
+    let upx = up[0];
+    let upy = up[1];
+    let upz = up[2];
+    let centerx = center[0];
+    let centery = center[1];
+    let centerz = center[2];
+
+    if (Math.abs(eyex - centerx) < EPSILON$1 &&
+        Math.abs(eyey - centery) < EPSILON$1 &&
+        Math.abs(eyez - centerz) < EPSILON$1) {
+        return identity(out);
+    }
+
+    z0 = eyex - centerx;
+    z1 = eyey - centery;
+    z2 = eyez - centerz;
+
+    len = 1 / Math.sqrt(z0 * z0 + z1 * z1 + z2 * z2);
+    z0 *= len;
+    z1 *= len;
+    z2 *= len;
+
+    x0 = upy * z2 - upz * z1;
+    x1 = upz * z0 - upx * z2;
+    x2 = upx * z1 - upy * z0;
+    len = Math.sqrt(x0 * x0 + x1 * x1 + x2 * x2);
+    if (!len) {
+        x0 = 0;
+        x1 = 0;
+        x2 = 0;
+    } else {
+        len = 1 / len;
+        x0 *= len;
+        x1 *= len;
+        x2 *= len;
+    }
+
+    y0 = z1 * x2 - z2 * x1;
+    y1 = z2 * x0 - z0 * x2;
+    y2 = z0 * x1 - z1 * x0;
+
+    len = Math.sqrt(y0 * y0 + y1 * y1 + y2 * y2);
+    if (!len) {
+        y0 = 0;
+        y1 = 0;
+        y2 = 0;
+    } else {
+        len = 1 / len;
+        y0 *= len;
+        y1 *= len;
+        y2 *= len;
+    }
+
+    return set$1(out, [
+        x0,
+        y0,
+        z0,
+        0,
+        x1,
+        y1,
+        z1,
+        0,
+        x2,
+        y2,
+        z2,
+        0,
+        -(x0 * eyex + x1 * eyey + x2 * eyez),
+        -(y0 * eyex + y1 * eyey + y2 * eyez),
+        -(z0 * eyex + z1 * eyey + z2 * eyez),
+        1,
+    ]);
+}
 
 
-/**
- * Returns a string representation of a mat4
- *
- * @param {mat4} a matrix to represent as a string
- * @returns {String} string representation of the matrix
- */
 
+function compose(out, q, v, s) {
+    // Quaternion math
+    let x = q[0], y = q[1], z = q[2], w = q[3];
+    let x2 = x + x;
+    let y2 = y + y;
+    let z2 = z + z;
 
-/**
- * Returns Frobenius norm of a mat4
- *
- * @param {mat4} a the matrix to calculate Frobenius norm of
- * @returns {Number} Frobenius norm
- */
+    let xx = x * x2;
+    let xy = x * y2;
+    let xz = x * z2;
+    let yy = y * y2;
+    let yz = y * z2;
+    let zz = z * z2;
+    let wx = w * x2;
+    let wy = w * y2;
+    let wz = w * z2;
+    let sx = s[0];
+    let sy = s[1];
+    let sz = s[2];
 
-
-/**
- * Adds two mat4's
- *
- * @param {mat4} out the receiving matrix
- * @param {mat4} a the first operand
- * @param {mat4} b the second operand
- * @returns {mat4} out
- */
-
-
-/**
- * Subtracts matrix b from matrix a
- *
- * @param {mat4} out the receiving matrix
- * @param {mat4} a the first operand
- * @param {mat4} b the second operand
- * @returns {mat4} out
- */
-
-
-/**
- * Multiply each element of the matrix by a scalar.
- *
- * @param {mat4} out the receiving matrix
- * @param {mat4} a the matrix to scale
- * @param {Number} b amount to scale the matrix's elements by
- * @returns {mat4} out
- */
-
-
-/**
- * Adds two mat4's after multiplying each element of the second operand by a scalar value.
- *
- * @param {mat4} out the receiving vector
- * @param {mat4} a the first operand
- * @param {mat4} b the second operand
- * @param {Number} scale the amount to scale b's elements by before adding
- * @returns {mat4} out
- */
-
-
-/**
- * Returns whether or not the matrices have exactly the same elements in the same position (when compared with ===)
- *
- * @param {mat4} a The first matrix.
- * @param {mat4} b The second matrix.
- * @returns {Boolean} True if the matrices are equal, false otherwise.
- */
-
-
-/**
- * Returns whether or not the matrices have approximately the same elements in the same position.
- *
- * @param {mat4} a The first matrix.
- * @param {mat4} b The second matrix.
- * @returns {Boolean} True if the matrices are equal, false otherwise.
- */
-
-
-/**
- * Alias for {@link mat4.multiply}
- * @function
- */
-
-
-/**
- * Alias for {@link mat4.subtract}
- * @function
- */
+    return set$1(out, [
+        (1 - (yy + zz)) * sx,
+        (xy + wz) * sx,
+        (xz - wy) * sx,
+        0,
+        (xy - wz) * sy,
+        (1 - (xx + zz)) * sy,
+        (yz + wx) * sy,
+        0,
+        (xz + wy) * sz,
+        (yz - wx) * sz,
+        (1 - (xx + yy)) * sz,
+        0,
+        v[0],
+        v[1],
+        v[2],
+        1
+    ]);
+}
 
 /**
  * 3x3 Matrix
@@ -2873,7 +2252,7 @@ const setAxes = (function() {
 // The following implementation changes the order of axes to match our
 // interpretation.
 function set_axes(out, left, up, forward) {
-  const matrix = Float32Array.of(...left, ...up, ...forward);
+  let matrix = Float32Array.of(...left, ...up, ...forward);
   return normalize$1(out, fromMat3(out, matrix));
 }
 
@@ -2881,11 +2260,11 @@ function to_radian(a) {
   return a * Math.PI / 180;
 }
 
-const canvas = document.createElement('canvas');
-const gl = canvas.getContext('webgl2');
+let canvas = document.createElement('canvas');
+let gl = canvas.getContext('webgl2');
 
 function create_float_buffer(data) {
-  const buffer = gl.createBuffer();
+  let buffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data), gl.STATIC_DRAW);
 
@@ -2893,14 +2272,14 @@ function create_float_buffer(data) {
 }
 
 function create_index_buffer(data) {
-  const buffer = gl.createBuffer();
+  let buffer = gl.createBuffer();
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer);
   gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(data), gl.STATIC_DRAW);
   return buffer;
 }
 
 function create_shader_object(shader_type, source) {
-  const shader = gl.createShader(shader_type);
+  let shader = gl.createShader(shader_type);
   gl.shaderSource(shader, source);
   gl.compileShader(shader);
   if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
@@ -2911,7 +2290,7 @@ function create_shader_object(shader_type, source) {
 }
 
 function create_program_object(vs, fs) {
-  const program = gl.createProgram();
+  let program = gl.createProgram();
   gl.attachShader(program, vs);
   gl.attachShader(program, fs);
   gl.linkProgram(program);
@@ -2922,49 +2301,51 @@ function create_program_object(vs, fs) {
   return program;
 }
 
-const default_options$1 = {
+let default_options$1 = {
   components: [],
   skip: false,
 };
 
-class Entity {
+class Entity extends Map {
   constructor(options = {}) {
+    super();
     Object.assign(this, default_options$1, options);
 
     this.entities = new Set();
-    this.components = new Map();
 
     for (let component of options.components) {
-      this.add_component(component);
+      this.attach(component);
     }
   }
 
-  add_component(component) {
-    component.entity = this;
-    component.mount();
-    this.components.set(component.constructor, component);
+  attach(instance) {
+    instance.entity = this;
+    instance.mount();
+
+    let component = instance.constructor;
+    this.set(component, instance);
 
     if (this.game) {
-      if (!this.game.components.has(component.constructor)) {
-        this.game.components.set(component.constructor, new Set());
+      if (!this.game.all.has(component)) {
+        this.game.all.set(component, new Set());
       }
-      this.game.components.get(component.constructor).add(component);
+      this.game.all.get(component).add(instance);
     }
   }
 
-  remove_component(component) {
-    let instance = this.components.get(component);
-    this.components.delete(component);
+  detach(component) {
+    let instance = this.get(component);
+    this.delete(component);
 
-    if (this.game && this.game.components.has(component)) {
-      this.game.components.get(component).delete(instance);
+    if (this.game && this.game.all.has(component)) {
+      this.game.all.get(component).delete(instance);
     }
   }
 
   *iterall(component) {
     for (let child of this.entities) {
-      if (child.components.has(component)) {
-        yield child.components.get(component);
+      if (child.has(component)) {
+        yield child.get(component);
       }
       yield * child.iterall(component);
     }
@@ -2985,8 +2366,8 @@ class Entity {
       return;
     }
 
-    const update_each = updatable => updatable.update(tick_delta);
-    this.components.forEach(update_each);
+    let update_each = updatable => updatable.update(tick_delta);
+    this.forEach(update_each);
     this.entities.forEach(update_each);
   }
 
@@ -2995,13 +2376,13 @@ class Entity {
       return;
     }
 
-    const render_each = renderable => renderable.render(tick_delta);
-    this.components.forEach(render_each);
+    let render_each = renderable => renderable.render(tick_delta);
+    this.forEach(render_each);
     this.entities.forEach(render_each);
   }
 }
 
-const default_options$3 = {
+let default_options$3 = {
   entity: null
 };
 
@@ -3014,7 +2395,7 @@ class Component$1 {
     return [];
   }
   /*
-   * Called in Entity.add_component.
+   * Called in Entity.attach.
    *
    * Use this to intialize the component instance. this.entity is available
    * here.
@@ -3039,7 +2420,7 @@ class Component$1 {
   }
 }
 
-const default_options$2 = {
+let default_options$2 = {
   _scale: unit.slice(),
   _rotation: create$2(),
 
@@ -3052,37 +2433,40 @@ class Transform extends Component$1 {
   constructor(options) {
     super(Object.assign({
       matrix: create$1(),
-      world_matrix: create$1(),
-      world_to_self: create$1()
+      world: create$1(),
     },  default_options$2, options));
   }
 
+  get self() {
+    return invert(this.world);
+  }
+
   get left() {
-    const out = this.matrix.slice(0, 3);
+    let out = of(this.matrix.m11, this.matrix.m12, this.matrix.m13);
     return normalize(out, out);
   }
 
   get up() {
-    const out = this.matrix.slice(4, 7);
+    let out = of(this.matrix.m21, this.matrix.m22, this.matrix.m23);
     return normalize(out, out);
   }
 
   get forward() {
-    const out = this.matrix.slice(8, 11);
+    let out = of(this.matrix.m31, this.matrix.m32, this.matrix.m33);
     return normalize(out, out);
   }
 
   set position(vec) {
-    fromRotationTranslationScale(this.matrix, this.rotation, vec, this.scale);
+    compose(this.matrix, this.rotation, vec, this.scale);
   }
 
   get position() {
-    return this.matrix.slice(12, 15);
+    return of(this.matrix.m41, this.matrix.m42, this.matrix.m43);
   }
 
   set scale(vec) {
     this._scale = vec;
-    fromRotationTranslationScale(this.matrix, this.rotation, this.position, vec);
+    compose(this.matrix, this.rotation, this.position, vec);
   }
 
   get scale() {
@@ -3091,7 +2475,7 @@ class Transform extends Component$1 {
 
   set rotation(quaternion) {
     this._rotation = quaternion;
-    fromRotationTranslationScale(this.matrix, quaternion, this.position, this.scale);
+    compose(this.matrix, quaternion, this.position, this.scale);
   }
 
   get rotation() {
@@ -3100,10 +2484,10 @@ class Transform extends Component$1 {
 
   look_at(target_position) {
     // Find the direction we're looking at. target_position must be given in
-    // the current entity's coordinate space.  Use target's world_matrix and
-    // the current entity's world_to_self to go from target's space to the
+    // the current entity's coordinate space.  Use target's world and
+    // the current entity's self to go from target's space to the
     // current entity space.
-    const forward$$1 = zero.slice();
+    let forward$$1 = zero.slice();
     subtract(forward$$1, target_position, this.position);
     normalize(forward$$1, forward$$1);
 
@@ -3114,24 +2498,24 @@ class Transform extends Component$1 {
     // Find left by projecting forward onto the world's horizontal plane and
     // rotating it 90 degress counter-clockwise. For any (x, y, z), the rotated
     // vector is (z, y, -x).
-    const left$$1 = of(forward$$1[2], 0, -forward$$1[0]);
+    let left$$1 = of(forward$$1[2], 0, -forward$$1[0]);
     normalize(left$$1, left$$1);
 
     // Find up by computing the cross-product of forward and left according to
     // the right-hand rule.
-    const up$$1 = zero.slice();
+    let up$$1 = zero.slice();
     cross(up$$1, forward$$1, left$$1);
 
     // Create a quaternion out of the three axes. The vectors represent axes:
     // they are perpenticular and normalized.
-    const rotation = create$2();
+    let rotation = create$2();
     set_axes(rotation, left$$1, up$$1, forward$$1);
 
     this.rotation = rotation;
   }
 
   rotate_along(vec, rad) {
-    const rotation = create$2();
+    let rotation = create$2();
     setAxisAngle(rotation, vec, rad);
 
     // Quaternion multiplication: A * B applies the A rotation first, B second,
@@ -3140,45 +2524,36 @@ class Transform extends Component$1 {
     this.rotation = rotation;
   }
 
-  rotate_rl(rad) {
-    this.rotate_along(up, rad);
-  }
-
-  rotate_ud(rad) {
-    this.rotate_along(left, rad);
-  }
-
   // XXX Add a relative_to attribute for interpreting the translation in spaces
   // other than the local space (relative to the parent).
   translate(vec) {
-    const movement = zero.slice();
+    let movement = zero.slice();
     add(movement, this.position, vec);
     this.position = movement;
   }
 
   get_view_matrix(out) {
-    const look_at_vect = [];
+    let look_at_vect = [];
     add(look_at_vect, this.position, this.forward);
-    lookAt(out, this.position, look_at_vect, this.up);
+    look_at(out, this.position, look_at_vect, this.up);
     return out;
   }
 
   update() {
     if (this.entity.parent) {
-      multiply$1(
-        this.world_matrix,
-        this.entity.parent.components.get(Transform).world_matrix,
+      this.world = multiply$1(
+        this.entity.parent.get(Transform).world,
         this.matrix
       );
     } else {
-      this.world_matrix = this.matrix.slice();
+      // We never modify the elements of the world matrix so it's OK to point it
+      // to the local matrix for perf improvements.
+      this.world = this.matrix;
     }
-
-    invert(this.world_to_self, this.world_matrix);
   }
 }
 
-const default_options$4 = {
+let default_options$4 = {
   material: null,
   vertices: [],
   indices: [],
@@ -3221,9 +2596,9 @@ class Render extends Component$1 {
 }
 
 // When using arrow keys for rotation simulate the mouse delta of this value.
-const KEY_ROTATION_DELTA = 3;
+let KEY_ROTATION_DELTA = 3;
 
-const default_options$5 = {
+let default_options$5 = {
   keyboard_controlled: false,
   mouse_controlled: false,
 
@@ -3251,16 +2626,16 @@ class Move extends Component$1 {
   }
 
   handle_keys(tick_length, {f = 0, b = 0, l = 0, r = 0, u = 0, d = 0, pu = 0, pd = 0, yl = 0, yr = 0}) {
-    const entity_transform = this.entity.components.get(Transform);
-    const dist = tick_length / 1000 * this.move_speed;
+    let entity_transform = this.entity.get(Transform);
+    let dist = tick_length / 1000 * this.move_speed;
 
     // The desired XZ direction vector in self space. This is what the user
     // wanted to do: walk forward/backward and left/right.
-    const direction = of(l - r, 0, f - b);
+    let direction = of(l - r, 0, f - b);
 
     // Transform the input from self to local space.  If the user wanted to go
     // "left" in the entity's self space what does it mean in the local space?
-    transformMat4(direction, direction, entity_transform.matrix);
+    transform_mat4(direction, direction, entity_transform.matrix);
     // Direction is now a point in the entity's local space. Subtract the
     // position to go back to a movement vector.
     subtract(direction, direction, entity_transform.position);
@@ -3278,7 +2653,7 @@ class Move extends Component$1 {
     entity_transform.translate(direction);
 
     // Simulate mouse deltas for rotation.
-    const mouse_delta = {
+    let mouse_delta = {
       x: yl * KEY_ROTATION_DELTA - yr * KEY_ROTATION_DELTA,
       y: pu * KEY_ROTATION_DELTA - pd * KEY_ROTATION_DELTA,
     };
@@ -3287,20 +2662,20 @@ class Move extends Component$1 {
   }
 
   handle_mouse(tick_length, {x, y}) {
-    const entity_transform = this.entity.components.get(Transform);
+    let entity_transform = this.entity.get(Transform);
     // Check if there's any input to handle.
     if (x === 0 && y === 0) {
       return;
     }
 
-    const time_delta = tick_length / 1000;
-    const azimuth = this.rotate_speed * time_delta * x;
-    const polar = this.rotate_speed * time_delta * y;
+    let time_delta = tick_length / 1000;
+    let azimuth = this.rotate_speed * time_delta * x;
+    let polar = this.rotate_speed * time_delta * y;
 
     // Polar (with the zenith being the Y axis) to Cartesian, but polar is
     // counted from Z to Y rather than from Y to Z, so we swap cos(polar) for
     // sin(polar) and vice versa.
-    const forward$$1 = of(
+    let forward$$1 = of(
       Math.cos(polar) * Math.sin(azimuth),
       Math.sin(polar),
       Math.cos(polar) * Math.cos(azimuth)
@@ -3308,15 +2683,15 @@ class Move extends Component$1 {
     normalize(forward$$1, forward$$1);
     // Transform forward to the object's local coordinate space (relative to
     // the parent).
-    transformMat4(forward$$1, forward$$1, entity_transform.matrix);
+    transform_mat4(forward$$1, forward$$1, entity_transform.matrix);
     entity_transform.look_at(forward$$1);
   }
 
   update(tick_length) {
     if (this.keyboard_controlled && this.entity.game) {
-      const current_dirs = {};
+      let current_dirs = {};
 
-      for (const [key_code, dir] of Object.entries(this.dir_desc)) {
+      for (let [key_code, dir] of Object.entries(this.dir_desc)) {
         current_dirs[dir] = this.entity.game.get_key(key_code);
       }
 
@@ -3329,7 +2704,7 @@ class Move extends Component$1 {
   }
 }
 
-const default_options$7 = {
+let default_options$7 = {
   intensity: 0.5,
   color: '#ffffff'
 };
@@ -3351,7 +2726,7 @@ class Light extends Component$1 {
 
 // export * from './rigid_body';
 
-const default_options = {
+let default_options = {
   canvas,
   width: 800,
   height: 600,
@@ -3370,7 +2745,7 @@ const default_options = {
   projection: 'perspective'
 };
 
-const EVENTS = ["keydown", "keyup", "mousemove"];
+let EVENTS = ["keydown", "keyup", "mousemove"];
 
 class Game {
   constructor(options) {
@@ -3411,8 +2786,8 @@ class Game {
 
     this.tick_delta = 1000 / this.fps;
 
-    for (const event_name of EVENTS) {
-      const handler_name = "on" + event_name;
+    for (let event_name of EVENTS) {
+      let handler_name = "on" + event_name;
       this[handler_name] = this[handler_name].bind(this);
       window.addEventListener(event_name, this[handler_name]);
     }
@@ -3455,7 +2830,7 @@ class Game {
 
   set clear_color(hex) {
     this._clear_color = hex;
-    const color_vec = hex_to_rgb(hex);
+    let color_vec = hex_to_rgb(hex);
 
     gl.clearColor(
       color_vec[0],
@@ -3467,7 +2842,7 @@ class Game {
 
   set clear_opacity(value) {
     this._clear_opacity = value;
-    const color_vec = hex_to_rgb(this._clear_color);
+    let color_vec = hex_to_rgb(this._clear_color);
 
     gl.clearColor(
       color_vec[0],
@@ -3496,18 +2871,18 @@ class Game {
     this.listeners = new Map();
     this.keys = {};
     this.mouse_delta = {x: 0, y: 0};
-    this.components = new WeakMap();
+    this.all = new WeakMap();
   }
 
   destroy() {
-    for (const event_name of EVENTS) {
+    for (let event_name of EVENTS) {
       window.removeEventListener(event_name, this[event_name]);
     }
   }
 
   emit(event_name, ...args) {
     if (this.listeners.has(event_name)) {
-      for (const handler of this.listeners.get(event_name)) {
+      for (let handler of this.listeners.get(event_name)) {
         handler(...args);
       }
     }
@@ -3556,8 +2931,8 @@ class Game {
     }
 
     if (frame_time > this.last_tick + this.tick_delta) {
-      const accumulated_delta = frame_time - this.last_tick;
-      const ticks_qty = Math.floor(accumulated_delta / this.tick_delta);
+      let accumulated_delta = frame_time - this.last_tick;
+      let ticks_qty = Math.floor(accumulated_delta / this.tick_delta);
       this.perform_ticks(ticks_qty);
       this.render();
     }
@@ -3584,7 +2959,7 @@ class Game {
     this.emit('tick', this.last_tick);
     this.entities.forEach(entity => entity.update(this.tick_delta));
     this.camera.update(this.tick_delta);
-    this.camera.components.get(Transform).get_view_matrix(this.viewMatrix);
+    this.camera.get(Transform).get_view_matrix(this.viewMatrix);
   }
 
   render() {
@@ -3597,11 +2972,11 @@ class Game {
   track_entity(entity) {
     entity.game = this;
 
-    for (let component of entity.components.values()) {
-      if (!this.components.has(component.constructor)) {
-        this.components.set(component.constructor, new Set());
+    for (let [component, instance] of entity.entries()) {
+      if (!this.all.has(component)) {
+        this.all.set(component, new Set());
       }
-      this.components.get(component.constructor).add(component);
+      this.all.get(component).add(instance);
     }
 
     // Recursively track children.
@@ -3613,8 +2988,8 @@ class Game {
   untrack_entity(entity) {
     entity.game = null;
 
-    for (let component of entity.components.values()) {
-      this.components.get(component.constructor).delete(component);
+    for (let [component, instance] of entity.entries()) {
+      this.all.get(component).delete(instance);
     }
 
     // Recursively untrack children.
@@ -3664,7 +3039,7 @@ class Tween {
   start() {
     this.pre_start();
     return new Promise((resolve) => {
-      const bound = (tick) => {
+      let bound = (tick) => {
         if (this.current_step === 1) {
           this.game.off('tick', bound);
           resolve();
@@ -3681,15 +3056,14 @@ class Tween {
 // Variables used by fragment shader
 //
 // vec4 c; // color
-// vec3 fp; // vertex position
+// vec3 fp; // fragment position
 // vec3[MAX_LIGHTS] lp; // light position
 // vec3[MAX_LIGHTS] lc; // light color
 // float[MAX_LIGHTS] li; // light intensity
 // int al; // active lights
 // vec3 fn; // vertex normals
-// vec2 v_t; // texture coordinates
-// sampler2D u_t; //texture
-// sampler2D n_m; // normal map
+// vec3 fc; // fog color
+// vec2 fd; // fog distance
 
 function fragment(defines) {
   return `#version 300 es
@@ -3705,20 +3079,18 @@ function fragment(defines) {
     in vec3 fp;
 
     #ifdef LIGHTS
-      #define MAX_LIGHTS 100
-
-      uniform vec3[MAX_LIGHTS] lp;
-      uniform vec3[MAX_LIGHTS] lc;
-      uniform float[MAX_LIGHTS] li;
+      uniform vec3[100] lp;
+      uniform vec3[100] lc;
+      uniform float[100] li;
       uniform int al;
 
       in vec3 fn;
     #endif
 
     #ifdef FOG
-      uniform vec3 fog_color;
-      uniform vec2 fog_distance;
-      in float f_distance;
+      uniform vec3 fc;
+      uniform vec2 fd;
+      in float fdist;
     #endif
 
     out vec4 frag_color;
@@ -3726,32 +3098,27 @@ function fragment(defines) {
     void main()
     {
       #ifdef FOG
-        float fog_factor = clamp((fog_distance.y - f_distance) / (fog_distance.y - fog_distance.x), 0.0, 1.0);
+        float ff = clamp((fd.y - fdist) / (fd.y - fd.x), 0.0, 1.0);
       #endif
 
       #ifdef LIGHTS
-          vec4 p_c = c;
-
-          vec3 n = fn;
-
         vec4 light = vec4(0.0, 0.0, 0.0, 1.0);
         for (int i = 0; i < al; i++) {
-          vec3 light_dir = lp[i] - fp;
-          vec3 L = normalize(light_dir);
-          float light_dist = length(light_dir);
-          float diffuse_factor = max(dot(n, L), 0.0);
-          vec3 rgb = p_c.rgb * diffuse_factor * lc[i] * li[i] / light_dist;
-          light += vec4(rgb, p_c.a);
+          vec3 ldir = lp[i] - fp;
+          vec3 L = normalize(ldir);
+          float df = max(dot(fn, L), 0.0);
+          vec3 rgb = c.rgb * df * lc[i] * li[i] / length(ldir);
+          light += vec4(rgb, c.a);
         }
 
         #ifdef FOG
-          frag_color = mix(vec4(fog_color, 1.0), light, fog_factor);
+          frag_color = mix(vec4(fc, 1.0), light, ff);
         #else
           frag_color = light;
         #endif
       #else
           #ifdef FOG
-            frag_color = mix(vec4(fog_color, 1.0), c, fog_factor);
+            frag_color = mix(vec4(fc, 1.0), c, ff);
           #else
             frag_color = c;
           #endif
@@ -3765,14 +3132,9 @@ function fragment(defines) {
 // mat4 p; //projection
 // mat4 v; //view
 // mat4 w; // world
-// vec3 P_current; // current frame vertex position
-// float frame_delta;
-// vec3 P_next; // next frame vertex position
-// vec3 N_next; // next frame normal
-// vec3 N_current; // current frame normal
+// vec3 vp; // current frame vertex position
+// vec3 vn; // current frame normal
 // vec3 fn; // output normal
-// vec2 a_t; // texture coordinates
-// vec2 v_t; // texture coordinates output
 
 function vertex(defines) {
   return `#version 300 es
@@ -3787,16 +3149,16 @@ function vertex(defines) {
     uniform mat4 v;
     uniform mat4 w;
 
-    in vec3 P_current;
+    in vec3 vp;
 
     #ifdef LIGHTS
-      in vec3 N_current;
+      in vec3 vn;
       out vec3 fn;
     #endif
 
     #ifdef FOG
       uniform vec3 camera;
-      out float f_distance;
+      out float fdist;
     #endif
 
     out vec3 fp;
@@ -3804,16 +3166,16 @@ function vertex(defines) {
     void main()
     {
 
-        fp = (w * vec4(P_current, 1.0)).xyz;
+        fp = (w * vec4(vp, 1.0)).xyz;
 
         #ifdef LIGHTS
-          fn = (vec4(N_current, 0.0)).xyz;
+          fn = (vec4(vn, 0.0)).xyz;
         #endif
 
       gl_Position = p * v * vec4(fp, 1.0);
 
       #ifdef FOG
-        f_distance = distance(w * vec4(P_current, 1.0), vec4(camera, 1.0));
+        fdist = distance(w * vec4(vp, 1.0), vec4(camera, 1.0));
       #endif
     }
   `;
@@ -3948,31 +3310,31 @@ class Material {
     }
 
     gl.useProgram(this.program);
-    gl.uniformMatrix4fv(this.uniforms.p, gl.FALSE, game.projMatrix);
-    gl.uniformMatrix4fv(this.uniforms.v, gl.FALSE, game.viewMatrix);
+    gl.uniformMatrix4fv(this.uniforms.p, gl.FALSE, game.projMatrix.toFloat32Array());
+    gl.uniformMatrix4fv(this.uniforms.v, gl.FALSE, game.viewMatrix.toFloat32Array());
 
     gl.uniformMatrix4fv(
       this.uniforms.w,
       gl.FALSE,
-      entity.components.get(Transform).world_matrix
+      entity.get(Transform).world.toFloat32Array()
     );
 
     gl.uniform4fv(
       this.uniforms.c,
-      entity.components.get(Render).color_vec
+      entity.get(Render).color_vec
     );
 
     this.apply_shader(entity, game);
   }
 }
 
-const base_seed = 19870306 * 6647088;
+let base_seed = 19870306 * 6647088;
 
 let seed = base_seed;
 
 
 
-const rand = function() {
+let rand = function() {
   seed = seed * 16807 % 2147483647;
   return (seed - 1) / 2147483646;
 };
@@ -4001,34 +3363,37 @@ class GridMove extends Move {
         delete this.dir_desc[69];
         delete this.dir_desc[81];
         this.tick = 0;
-        this.size = 0.5;
     }
     mount() {
-        this.transform = this.entity.components.get(Transform);
-        this.buildings = window.bul = this.entity.game.buildings;
-        this.last_position = this.transform.position;
+        this.transform = this.entity.get(Transform);
+        this.last = this.transform.position;
     }
 
     is_colliding() {
-        const { position } = this.transform;
-        return this.buildings.some((building) => {
-            if (position[0] + this.size >= building[0] &&
-                position[0] - this.size <= building[1] &&
-                position[2] + this.size >= building[2] &&
-                position[2] - this.size <= building[3]) {
+        let padding = 0.5;
+        let { position: [x,, z] } = this.transform;
+
+        for (let building of this.buildings) {
+            if (x + padding >= building[0] &&
+                x - padding <= building[1] &&
+                z + padding >= building[2] &&
+                z - padding <= building[3]) {
                 return true;
             }
-            return false;
-        });
+        }
+
+        if (x < 0 || x > this.size[0] || z < 0 || z > this.size[1]) {
+            return true;
+        }
     }
     update(delta) {
         this.tick++;
 
         if (this.is_colliding()) {
-            this.transform.position = this.last_position;
+            this.transform.position = this.last;
         } else {
             if (this.tick % 10 === 0) {
-                this.last_position = this.transform.position;
+                this.last = this.transform.position;
             }
             super.update(delta);
         }
@@ -4045,62 +3410,70 @@ class NearbyLight extends Component$1 {
     set(values) {
         super.set(values);
         if (this.active) {
-            this.entity.components.get(Light).set(values);
+            this.entity.get(Light).set(values);
         }
     }
 
     on() {
         this.active = true;
         let {color, intensity} = this;
-        this.entity.add_component(new Light({
+        this.entity.attach(new Light({
             color, intensity
         }));
-        // this.entity.add_component(this.gizmo);
+        // this.entity.attach(this.gizmo);
     }
 
     off() {
         this.active = false;
-        this.entity.remove_component(Light);
-        // this.entity.remove_component(Object.getPrototypeOf(this.gizmo));
+        this.entity.detach(Light);
+        // this.entity.detach(Object.getPrototypeOf(this.gizmo));
     }
 }
 
 // 1 vox = this many units/meters
-const SCALE = 4;
-const CLEAR_COLOR = "333";
+let SCALE = 4;
+let CLEAR_COLOR = "333";
 
-const WIREFRAME_COLOR = "888";
+let WIREFRAME_COLOR = "888";
 
-const BUILDING_COLOR = "222";
-const BUILDING_FOG_MIN = 0;
-const BUILDING_FOG_MAX = 40;
+let BUILDING_COLOR = "222";
+let BUILDING_FOG_MIN = 0;
+let BUILDING_FOG_MAX = 40;
 
-const NEON_FOG_MIN = 25;
-const NEON_FOG_MAX = 100;
-const NEON_LIGHT_MOUNT = 2;
-const NEON_INTENSITY = 10;
-const NEON_SCALE = 0.8;
+let NEON_FOG_MIN = 25;
+let NEON_FOG_MAX = 100;
+let NEON_LIGHT_MOUNT = 2;
+let NEON_INTENSITY = 10;
+let NEON_SCALE = 0.8;
 
-const POWERUP_COLOR = "fff";
-const POWERUP_INTENSITY = 5;
+let POWERUP_COLOR = "fff";
+let POWERUP_INTENSITY = 5;
 
-const LIGHT_DISTANCE = 30;
+let LIGHT_DISTANCE = 30;
 
-const HUE_MIN = -.09;
-const HUE_MAX = .55;
-const SATURATION = .9;
-const LUMINANCE = .6;
+let HUE_MIN = -.09;
+let HUE_MAX = .55;
+let SATURATION = .9;
+let LUMINANCE = .6;
+
+function world_pos(world_matrix) {
+    return of(
+        world_matrix.m41,
+        world_matrix.m42,
+        world_matrix.m43,
+    );
+}
 
 class EnergySaver extends Component$1 {
     update() {
-        let transform = this.entity.components.get(Transform);
-        let position = transform.world_matrix.slice(12, 15);
+        let transform = this.entity.get(Transform);
 
-        let lights = this.entity.game.components.get(NearbyLight);
+        let lights = this.entity.game.all.get(NearbyLight);
         for (let light of lights) {
-            let light_transform = light.entity.components.get(Transform);
-            let light_position = light_transform.world_matrix.slice(12, 15);
-            let dist = distance(position, light_position);
+            let light_transform = light.entity.get(Transform);
+            let dist = distance(
+                world_pos(transform.world),
+                world_pos(light_transform.world));
 
             if (dist > LIGHT_DISTANCE && light.active) {
                 light.off();
@@ -4116,14 +3489,14 @@ class EnergySaver extends Component$1 {
 
 class Trigger extends Component$1 {
     mount() {
-        this.transform = this.entity.components.get(Transform);
+        this.transform = this.entity.get(Transform);
     }
 
     contains(world_point) {
         // Point in self space.
         let point = zero.slice();
-        transformMat4(
-            point, world_point, this.transform.world_to_self);
+        transform_mat4(
+            point, world_point, this.transform.self);
         // XXX How to parametrize each shape?
         return point.map(Math.abs).every(n => n <= this.radius);
     }
@@ -4136,11 +3509,11 @@ class Trigger extends Component$1 {
 
 class Actor extends Component$1 {
     mount() {
-        this.transform = this.entity.components.get(Transform);
+        this.transform = this.entity.get(Transform);
     }
 
     update() {
-        let collidables = this.entity.game.components.get(Trigger);
+        let collidables = this.entity.game.all.get(Trigger);
         for (let trigger of collidables) {
             if (trigger.contains(this.transform.position)) {
                 trigger.trigger();
@@ -4149,7 +3522,7 @@ class Actor extends Component$1 {
     }
 }
 
-const vertices = [
+let vertices = [
   0.5, 0.5, 0.5,
   0.5, 0.5, -0.5,
   0.5, -0.5, 0.5,
@@ -4176,7 +3549,7 @@ const vertices = [
   -0.5, -0.5, -0.5
 ];
 
-const indices = [
+let indices = [
   0, 2, 1,
   2, 3, 1,
   4, 6, 5,
@@ -4191,7 +3564,7 @@ const indices = [
   22, 23, 21
 ];
 
-const normals = [
+let normals = [
   1, 0, 0,
   1, 0, 0,
   1, 0, 0,
@@ -4218,7 +3591,7 @@ const normals = [
   0, 0, -1
 ];
 
-const uvs = [
+let uvs = [
   0, 0,
   1, 0,
   0, 1,
@@ -4270,7 +3643,7 @@ class Box extends Entity {
 
 class Rotator extends Component$1 {
     mount() {
-        this.transform = this.entity.components.get(Transform);
+        this.transform = this.entity.get(Transform);
     }
 
     update(delta) {
@@ -4290,30 +3663,30 @@ class BasicMaterial extends Material {
 
   get_locations() {
     this.get_uniforms_and_attrs(
-      ['p', 'v', 'w', 'c', 'frame_delta', 'fog_color', 'fog_distance', 'camera'],
-      ['P_current', 'P_next', 'a_t']
+      ['p', 'v', 'w', 'c', 'fc', 'fd', 'camera'],
+      ['vp']
     );
   }
 
   apply_shader(entity, game) {
-    const render = entity.components.get(Render);
+    let render = entity.get(Render);
     let buffers = render.buffers;
 
     if (render.material.has_feature('FOG')) {
-      gl.uniform3fv(this.uniforms.fog_color, this.fog.color);
-      gl.uniform2fv(this.uniforms.fog_distance, this.fog.distance);
-      gl.uniform3fv(this.uniforms.camera, game.camera.components.get(Transform).position);
+      gl.uniform3fv(this.uniforms.fc, this.fog.color);
+      gl.uniform2fv(this.uniforms.fd, this.fog.distance);
+      gl.uniform3fv(this.uniforms.camera, game.camera.get(Transform).position);
     }
 
     // current frame
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.vertices);
     gl.vertexAttribPointer(
-      this.attribs.P_current,
+      this.attribs.vp,
       3, gl.FLOAT, gl.FALSE,
       0, 0
     );
 
-    gl.enableVertexAttribArray(this.attribs.P_current);
+    gl.enableVertexAttribArray(this.attribs.vp);
 
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.indices);
     gl.drawElements(this.draw_mode, buffers.qty, gl.UNSIGNED_SHORT, 0);
@@ -4330,51 +3703,55 @@ class PhongMaterial extends Material {
 
   get_locations() {
     this.get_uniforms_and_attrs(
-      ['p', 'v', 'w', 'lp', 'li', 'lc', 'al', 'c', 'u_t', 'n_m', 'frame_delta', 'fog_color', 'fog_distance', 'camera'],
-      ['P_current', 'P_next', 'N_current', 'N_next', 'a_t']
+      ['p', 'v', 'w', 'lp', 'li', 'lc', 'al', 'c', 'fc', 'fd', 'camera'],
+      ['vp', 'vn']
     );
   }
 
   apply_shader(entity, game) {
-    const render = entity.components.get(Render);
+    let render = entity.get(Render);
     let buffers = render.buffers;
 
     if (render.material.has_feature('FOG')) {
-      gl.uniform3fv(this.uniforms.fog_color, this.fog.color);
-      gl.uniform2fv(this.uniforms.fog_distance, this.fog.distance);
-      gl.uniform3fv(this.uniforms.camera, game.camera.components.get(Transform).position);
+      gl.uniform3fv(this.uniforms.fc, this.fog.color);
+      gl.uniform2fv(this.uniforms.fd, this.fog.distance);
+      gl.uniform3fv(this.uniforms.camera, game.camera.get(Transform).position);
     }
 
     // current frame
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.vertices);
     gl.vertexAttribPointer(
-      this.attribs.P_current,
+      this.attribs.vp,
       3, gl.FLOAT, gl.FALSE,
       0, 0
     );
 
-    gl.enableVertexAttribArray(this.attribs.P_current);
+    gl.enableVertexAttribArray(this.attribs.vp);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.normals);
     gl.vertexAttribPointer(
-      this.attribs.N_current,
+      this.attribs.vn,
       3, gl.FLOAT, gl.FALSE,
       0, 0
     );
-    gl.enableVertexAttribArray(this.attribs.N_current);
+    gl.enableVertexAttribArray(this.attribs.vn);
 
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.indices);
     gl.drawElements(this.draw_mode, buffers.qty, gl.UNSIGNED_SHORT, 0);
 
-    const lights = Array.from(game.components.get(Light));
-    const lights_count = lights.length;
+    let lights = Array.from(game.all.get(Light));
+    let lights_count = lights.length;
     let light_position = new Float32Array(lights_count * 3);
     let light_color = new Float32Array(lights_count * 3);
     let light_intensity = new Float32Array(lights_count);
 
     for (let i = 0; i < lights_count; i++) {
-      let light_transform = lights[i].entity.components.get(Transform);
-      let world_position = light_transform.world_matrix.slice(12, 15);
+      let light_transform = lights[i].entity.get(Transform);
+      let world_position = [
+          light_transform.world.m41,
+          light_transform.world.m42,
+          light_transform.world.m43,
+      ];
       light_position.set(world_position, i * 3);
       light_color.set(lights[i].color_vec, i * 3);
       light_intensity[i] = lights[i].intensity;
@@ -4398,9 +3775,9 @@ class WireframeMaterial extends BasicMaterial {
   }
 }
 
-const BUILDING_TAG = 1;
-const NEON_TAG = 2;
-const POWERUP_TAG = 3;
+let BUILDING_TAG = 1;
+let NEON_TAG = 2;
+let POWERUP_TAG = 3;
 
 let neon_material = new BasicMaterial();
 neon_material.add_fog({
@@ -4428,12 +3805,12 @@ function create_group(position) {
 
 function create_floor({position, scale}) {
     let plane = new Box();
-    plane.components.get(Render).set({
+    plane.get(Render).set({
         material: wireframe_material,
         color: WIREFRAME_COLOR,
         tag: BUILDING_TAG,
     });
-    plane.components.get(Transform).set({
+    plane.get(Transform).set({
         position,
         scale
     });
@@ -4453,12 +3830,12 @@ function create_neon({position, scale, color, is_north_south, is_negative}) {
     let group = create_group(position);
 
     let neon = new Box();
-    neon.components.get(Render).set({
+    neon.get(Render).set({
         material: wireframe_material,
         color,
         tag: NEON_TAG,
     });
-    neon.components.get(Transform).set({
+    neon.get(Transform).set({
         scale
     });
     group.add(neon);
@@ -4480,12 +3857,12 @@ function create_building({position, scale, neons}) {
     let group = create_group(position);
 
     let building = new Box();
-    building.components.get(Render).set({
+    building.get(Render).set({
         material: wireframe_material,
         color: WIREFRAME_COLOR,
         tag: BUILDING_TAG,
     });
-    building.components.get(Transform).set({scale});
+    building.get(Transform).set({scale});
     group.add(building);
 
     for (let neon_opts of neons) {
@@ -4498,16 +3875,16 @@ function create_building({position, scale, neons}) {
 
 function create_exit(options) {
     let exit = new Box();
-    exit.components.get(Render).set({
+    exit.get(Render).set({
         material: powerup_material,
         color: POWERUP_COLOR,
     });
-    exit.components.get(Transform).set(options);
-    exit.add_component(new Trigger({
+    exit.get(Transform).set(options);
+    exit.attach(new Trigger({
         radius: 0.6,
         action: [EXIT]
     }));
-    exit.add_component(new Rotator({
+    exit.attach(new Rotator({
         speed: [0, 0.0001, 0],
     }));
     return exit;
@@ -4515,17 +3892,17 @@ function create_exit(options) {
 
 function create_powerup({system, position}) {
     let cube = new Box();
-    cube.components.get(Render).set({
+    cube.get(Render).set({
         material: wireframe_material,
         color: POWERUP_COLOR,
         tag: POWERUP_TAG,
     });
-    cube.components.get(Transform).set({position});
-    cube.add_component(new Trigger({
+    cube.get(Transform).set({position});
+    cube.attach(new Trigger({
         radius: 1,
         action: [ACTIVATE, system]
     }));
-    cube.add_component(new Rotator({
+    cube.attach(new Rotator({
         speed: [0.0001, 0.0002, 0.0003],
     }));
 
@@ -4548,53 +3925,39 @@ var size = [
 ];
 var buildings = [
 	[
-		56,
-		0,
-		63,
-		4,
-		26
-	],
-	[
-		46,
+		48,
 		0,
 		54,
-		3,
+		5,
 		37
-	],
-	[
-		25,
-		0,
-		32,
-		2,
-		35
 	],
 	[
 		17,
 		0,
 		23,
-		6,
+		7,
 		39
 	],
 	[
-		8,
-		0,
-		13,
-		3,
+		25,
+		1,
+		32,
+		5,
 		35
 	],
 	[
-		0,
-		0,
-		8,
-		12,
-		30
+		6,
+		2,
+		13,
+		9,
+		35
 	],
 	[
-		24,
+		42,
 		3,
-		32,
-		8,
-		8
+		45,
+		10,
+		22
 	],
 	[
 		35,
@@ -4604,67 +3967,11 @@ var buildings = [
 		32
 	],
 	[
-		32,
-		4,
-		35,
-		7,
-		21
-	],
-	[
-		60,
+		59,
 		5,
 		63,
 		13,
 		23
-	],
-	[
-		58,
-		5,
-		60,
-		10,
-		16
-	],
-	[
-		46,
-		5,
-		58,
-		8,
-		6
-	],
-	[
-		8,
-		5,
-		12,
-		13,
-		4
-	],
-	[
-		42,
-		6,
-		46,
-		11,
-		8
-	],
-	[
-		35,
-		7,
-		39,
-		9,
-		17
-	],
-	[
-		21,
-		8,
-		27,
-		12,
-		7
-	],
-	[
-		12,
-		8,
-		21,
-		11,
-		21
 	],
 	[
 		48,
@@ -4674,25 +3981,25 @@ var buildings = [
 		28
 	],
 	[
-		16,
+		33,
 		12,
-		18,
-		15,
-		4
+		38,
+		17,
+		11
 	],
 	[
-		0,
+		24,
+		12,
+		31,
+		15,
+		17
+	],
+	[
+		1,
 		12,
 		5,
-		16,
-		13
-	],
-	[
-		57,
-		13,
-		63,
-		16,
-		6
+		21,
+		25
 	],
 	[
 		44,
@@ -4702,25 +4009,18 @@ var buildings = [
 		18
 	],
 	[
-		33,
-		13,
-		37,
-		17,
-		8
-	],
-	[
 		11,
 		13,
 		14,
 		16,
-		16
+		18
 	],
 	[
 		8,
 		13,
 		11,
-		16,
-		20
+		19,
+		24
 	],
 	[
 		42,
@@ -4730,13 +4030,6 @@ var buildings = [
 		15
 	],
 	[
-		24,
-		14,
-		31,
-		16,
-		18
-	],
-	[
 		60,
 		16,
 		63,
@@ -4744,11 +4037,11 @@ var buildings = [
 		32
 	],
 	[
-		16,
+		17,
 		16,
 		22,
-		18,
-		6
+		22,
+		17
 	],
 	[
 		11,
@@ -4758,45 +4051,17 @@ var buildings = [
 		12
 	],
 	[
-		8,
-		16,
-		11,
-		19,
-		24
-	],
-	[
-		0,
-		16,
-		4,
 		24,
-		21
-	],
-	[
-		28,
 		17,
-		30,
+		29,
 		20,
-		4
-	],
-	[
-		24,
-		17,
-		27,
-		23,
-		8
+		12
 	],
 	[
 		34,
 		19,
 		36,
 		20,
-		3
-	],
-	[
-		17,
-		19,
-		22,
-		21,
 		3
 	],
 	[
@@ -4810,8 +4075,8 @@ var buildings = [
 		37,
 		20,
 		40,
-		23,
-		3
+		22,
+		11
 	],
 	[
 		33,
@@ -4845,29 +4110,15 @@ var buildings = [
 		28,
 		21,
 		31,
-		28,
+		27,
 		3
 	],
 	[
-		17,
-		21,
-		22,
-		24,
-		18
-	],
-	[
-		11,
+		10,
 		21,
 		15,
 		24,
-		9
-	],
-	[
-		4,
-		21,
-		9,
-		27,
-		3
+		22
 	],
 	[
 		56,
@@ -4891,9 +4142,9 @@ var buildings = [
 		3
 	],
 	[
-		33,
+		34,
 		24,
-		35,
+		36,
 		27,
 		4
 	],
@@ -4901,7 +4152,7 @@ var buildings = [
 		24,
 		24,
 		28,
-		28,
+		27,
 		11
 	],
 	[
@@ -4912,37 +4163,23 @@ var buildings = [
 		5
 	],
 	[
-		60,
-		26,
-		63,
-		31,
-		26
-	],
-	[
 		0,
 		26,
 		3,
-		34,
+		36,
 		34
-	],
-	[
-		51,
-		27,
-		54,
-		30,
-		17
 	],
 	[
 		48,
 		27,
-		51,
+		54,
 		30,
 		6
 	],
 	[
-		4,
+		5,
 		27,
-		6,
+		8,
 		33,
 		15
 	],
@@ -4958,14 +4195,7 @@ var buildings = [
 		28,
 		36,
 		31,
-		5
-	],
-	[
-		57,
-		29,
-		60,
-		40,
-		9
+		7
 	],
 	[
 		25,
@@ -4996,23 +4226,16 @@ var buildings = [
 		3
 	],
 	[
-		6,
+		58,
 		31,
-		10,
-		34,
-		4
-	],
-	[
-		61,
-		33,
-		63,
+		62,
 		38,
-		29
+		28
 	],
 	[
-		21,
+		20,
 		33,
-		23,
+		22,
 		40,
 		13
 	],
@@ -5024,31 +4247,10 @@ var buildings = [
 		21
 	],
 	[
-		28,
-		34,
-		31,
-		39,
-		17
-	],
-	[
-		17,
-		34,
-		20,
-		37,
-		8
-	],
-	[
-		8,
-		34,
-		13,
-		38,
-		10
-	],
-	[
-		48,
+		49,
 		35,
 		52,
-		40,
+		39,
 		13
 	],
 	[
@@ -5073,25 +4275,18 @@ var buildings = [
 		3
 	],
 	[
-		15,
+		12,
 		35,
 		17,
 		38,
-		5
+		8
 	],
 	[
 		0,
 		36,
-		8,
-		39,
+		7,
+		41,
 		28
-	],
-	[
-		3,
-		39,
-		6,
-		47,
-		21
 	],
 	[
 		54,
@@ -5099,13 +4294,6 @@ var buildings = [
 		63,
 		43,
 		20
-	],
-	[
-		33,
-		40,
-		39,
-		45,
-		30
 	],
 	[
 		24,
@@ -5117,7 +4305,7 @@ var buildings = [
 	[
 		16,
 		40,
-		19,
+		18,
 		42,
 		7
 	],
@@ -5129,25 +4317,32 @@ var buildings = [
 		14
 	],
 	[
-		47,
+		46,
 		41,
 		51,
-		44,
-		15
+		45,
+		8
+	],
+	[
+		33,
+		41,
+		39,
+		45,
+		30
 	],
 	[
 		16,
 		42,
-		22,
+		21,
 		44,
 		11
 	],
 	[
-		55,
+		37,
 		43,
-		63,
+		40,
 		46,
-		11
+		4
 	],
 	[
 		25,
@@ -5157,11 +4352,11 @@ var buildings = [
 		8
 	],
 	[
-		52,
-		46,
-		56,
-		52,
-		5
+		0,
+		45,
+		7,
+		49,
+		19
 	],
 	[
 		17,
@@ -5171,39 +4366,25 @@ var buildings = [
 		8
 	],
 	[
-		9,
-		46,
-		13,
-		58,
-		10
-	],
-	[
-		58,
+		57,
 		47,
 		63,
 		54,
 		35
 	],
 	[
-		45,
-		47,
-		50,
-		52,
-		31
-	],
-	[
-		0,
-		47,
-		9,
-		51,
-		3
-	],
-	[
-		34,
+		44,
 		49,
-		41,
-		52,
-		5
+		49,
+		54,
+		27
+	],
+	[
+		33,
+		50,
+		38,
+		56,
+		18
 	],
 	[
 		24,
@@ -5215,86 +4396,44 @@ var buildings = [
 	[
 		15,
 		50,
-		18,
+		19,
 		54,
 		28
 	],
 	[
-		20,
+		47,
+		52,
 		51,
-		24,
-		54,
-		19
+		56,
+		13
 	],
 	[
-		53,
+		5,
 		52,
-		56,
-		55,
-		19
+		12,
+		58,
+		39
 	],
 	[
 		34,
-		52,
-		43,
-		55,
-		23
-	],
-	[
-		0,
-		53,
-		7,
-		63,
-		35
-	],
-	[
-		44,
 		54,
-		53,
-		58,
-		9
+		42,
+		60,
+		7
 	],
 	[
-		31,
-		55,
-		44,
-		58,
-		17
-	],
-	[
-		57,
-		56,
-		63,
-		63,
-		28
-	],
-	[
-		23,
+		20,
 		57,
 		31,
 		63,
 		41
 	],
 	[
-		9,
-		58,
-		23,
-		61,
-		17
-	],
-	[
 		46,
-		59,
+		58,
 		54,
 		63,
 		36
-	],
-	[
-		34,
-		60,
-		42,
-		63,
-		38
 	]
 ];
 var start = [
@@ -5317,9 +4456,9 @@ var items = [
 		39
 	],
 	[
-		"COMPASS",
-		37,
-		30
+		"MOUSELOOK",
+		32,
+		26
 	],
 	[
 		"CLOCK",
@@ -5327,9 +4466,9 @@ var items = [
 		41
 	],
 	[
-		"MOUSELOOK",
-		32,
-		26
+		"COMPASS",
+		37,
+		30
 	]
 ];
 var map = {
@@ -5341,42 +4480,42 @@ var map = {
 };
 
 function create_game() {
-    const game = new Game({
+    let game = new Game({
       width: window.innerWidth,
       height: window.innerHeight,
       far: 126,
       clear_color: CLEAR_COLOR,
     });
 
-    game.buildings = [];
-
-    game.perspe_matrix = JSON.parse(JSON.stringify(game.projMatrix));
+    game.perspe_matrix = clone$1(game.projMatrix);
     game.setup_ortho_camera();
 
     game.canvas.addEventListener(
         "click", () => document.body.requestPointerLock());
 
-    game.camera.components.get(Transform).set({
+    game.camera.get(Transform).set({
         position: [
             map.start[0] * SCALE,
             1.75,
             map.start[1] * SCALE],
     });
 
-    game.camera.remove_component(Move);
+    game.camera.detach(Move);
 
-    const grid_move = new GridMove();
-    game.camera.add_component(grid_move);
+    let grid_move = new GridMove();
+    game.camera.attach(grid_move);
 
     grid_move.set({
         keyboard_controlled: true,
         mouse_controlled: false,
-        move_speed: 5,
+        move_speed: 7,
         rotate_speed: 0,
+        buildings: [],
+        size: map.size.map(n => n * SCALE),
     });
 
-    game.camera.add_component(new Actor());
-    game.camera.add_component(new EnergySaver());
+    game.camera.attach(new Actor());
+    game.camera.attach(new EnergySaver());
 
     // Remove the default light.
     game.remove(game.light);
@@ -5400,9 +4539,9 @@ function create_game() {
             position: [center_x, height / 2, center_z],
             scale: [xsize, height, zsize],
             neons: new Array(integer(2, 4)).fill(0).map((_, index, arr) => {
-                const is_north_south = element_of([true, false]);
-                const is_negative = element_of([1, -1]);
-                const neon_height = (height * NEON_SCALE) / (arr.length + 0.5);
+                let is_north_south = element_of([true, false]);
+                let is_negative = element_of([1, -1]);
+                let neon_height = (height * NEON_SCALE) / (arr.length + 0.5);
                 return {
                     position: [
                       is_north_south ? 0 : (is_negative * (xsize / 2) + (is_negative * 0.2)),
@@ -5420,7 +4559,7 @@ function create_game() {
             }),
         });
         game.add(building);
-        game.buildings.push([center_x - xsize / 2, center_x + xsize / 2, center_z - zsize / 2, center_z + zsize/2]);
+        grid_move.buildings.push([center_x - xsize / 2, center_x + xsize / 2, center_z - zsize / 2, center_z + zsize/2]);
     }
 
     for (let [name, x, z] of map.items) {
@@ -5459,7 +4598,7 @@ function random_color() {
 function activate(game, system) {
     switch (system) {
         case SOLID:
-            for (let render of game.components.get(Render)) {
+            for (let render of game.all.get(Render)) {
                 switch (render.tag) {
                     case BUILDING_TAG:
                         render.material = building_material;
@@ -5474,7 +4613,7 @@ function activate(game, system) {
             }
             break;
         case COLOR:
-            for (let render of game.components.get(Render)) {
+            for (let render of game.all.get(Render)) {
                 switch (render.tag) {
                     case NEON_TAG: {
                         let color = random_color();
@@ -5487,7 +4626,7 @@ function activate(game, system) {
             }
             break;
         case MOUSELOOK:
-            game.camera.components.get(GridMove).set({
+            game.camera.get(GridMove).set({
                 mouse_controlled: true,
                 rotate_speed: .5,
             });
@@ -5497,7 +4636,7 @@ function activate(game, system) {
     }
 }
 
-const init = {
+let init = {
     view: "intro",
     systems: {
         [HUD]: false,
@@ -5557,7 +4696,7 @@ function reducer(state = init, action, args) {
 }
 
 //import with_logger from "./innerself/logger";
-const {attach, connect, dispatch: dispatch$1, html} =
+let {attach, connect, dispatch: dispatch$1, html} =
     //createStore(with_logger(reducer));
     createStore(reducer);
 
@@ -5646,7 +4785,7 @@ function Story(text) {
 
 // No more than 55 chars per line.
 // Any HTML must be on a single line.
-const intro = `
+let intro = `
 <div class="h">LOGOUT</div>
 
 In 2018, people live their lives in virtual reality.
@@ -5667,7 +4806,7 @@ Find the exit and log out into the reality.
 
 // No more than 55 chars per line.
 // Any HTML must be on a single line.
-const outro = `\
+let outro = `\
 Initiating logout sequence…
 
 Reticulating splines…
@@ -5749,7 +4888,7 @@ function Code(cls, styles) {
     }
 }
 
-const formatters = [
+let formatters = [
     // Weekday and Date
     new Intl.DateTimeFormat("en", {
         weekday: "short",
@@ -5809,7 +4948,7 @@ function Compass({game}, cls, styles) {
             let nswe = root.querySelector(`.${cls} > :first-child`);
             let radar = root.querySelector(`.${cls} > :last-child`);
             this.up = game.on("afterrender", () => {
-                let transform = game.camera.components.get(Transform);
+                let transform = game.camera.get(Transform);
                 let forward$$1 = transform.forward;
                 let sign = forward$$1[0] > 0 ? -1 : 1;
                 let start = Math.round(angle([0, 0, 1], forward$$1) / step) * sign;
@@ -5817,8 +4956,8 @@ function Compass({game}, cls, styles) {
                 set_glitch(nswe, section);
 
                 let counts = new Array(visible_characters).fill(0);
-                for (let trigger of game.components.get(Trigger)) {
-                    let trigger_position = trigger.entity.components.get(Transform).position;
+                for (let trigger of game.all.get(Trigger)) {
+                    let trigger_position = trigger.entity.get(Transform).position;
                     // Project the position to eye level.
                     trigger_position[1] = 1.75;
                     let direction = zero.slice();
@@ -5855,43 +4994,28 @@ var Compass$1 = connect(Compass);
 
 function Matrix(cls, styles) {
     return new class extends Component {
-        constructor() {
-            super();
-            this.nf = new Intl.NumberFormat("en", {
-                minimumFractionDigits: 3,
-                maximumFractionDigits: 3
-            });
-        }
-
         before() {
             game.off("afterrender", this.up);
         }
 
         after(root) {
+            // Skip the header.
             let rows = Array.from(
                 root.querySelectorAll(`.${cls} .l`)).slice(1);
             this.up = game.on("afterrender", () => {
                 // Update local matrix display
-                let matrix = game.camera.components.get(Transform).matrix;
-                let values = [
-                    [matrix[0], matrix[4], matrix[8], matrix[12]],
-                    [matrix[1], matrix[5], matrix[9], matrix[13]],
-                    [matrix[2], matrix[6], matrix[10], matrix[14]],
-                    [matrix[3], matrix[7], matrix[11], matrix[15]]
-                ];
-
-                // Skip the header.
+                let matrix = game.camera.get(Transform).matrix.toFloat32Array();
                 for (let [i, line] of rows.entries()) {
                     set_glitch(
                         line,
-                        values[i].map(n => this.nf.format(n)).join(" "));
+                        Array.from(matrix.slice(4 * i, 4 * i + 4), n => n.toFixed(3)).join(" "));
                 }
             });
         }
 
         render() {
             return Block(cls, [
-                "Avatar entity matrix", "1", "2", "3", "4"
+                "Entity matrix", "1", "2", "3", "4"
             ], styles);
         }
     }
@@ -5899,8 +5023,11 @@ function Matrix(cls, styles) {
 
 class MatrixTween extends Tween {
   action() {
-    for (let i = 0; i < this.from.length; i++) {
-        this.object[i] = this.from[i] + this.current_step * (this.to[i] - this.from[i]);
+    for (let i = 1; i < 5; i++) {
+      for (let j = 1; j < 5; j++) {
+        let m = `m${i}${j}`;
+        this.object[m] = this.from[m] + this.current_step * (this.to[m] - this.from[m]);
+      }
     }
   }
 
