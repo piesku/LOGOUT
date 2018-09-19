@@ -3,8 +3,8 @@ import { Entity } from '../core';
 import { Render } from '../components';
 import { Transform } from '../components';
 
-const t = 0.5 + Math.sqrt(5) / 2;
-const vertices = [
+let t = 0.5 + Math.sqrt(5) / 2;
+let vertices = [
   -1, t,  0,
   1, t,  0,
   -1, -t,  0,
@@ -19,7 +19,7 @@ const vertices = [
   -t,  0, 1
 ];
 
-const normals = [
+let normals = [
   -1, t,  0,
   1, t,  0,
   -1, -t,  0,
@@ -34,7 +34,7 @@ const normals = [
   -t,  0, 1
 ];
 
-const indices = [
+let indices = [
   0, 11, 5,
   0, 5, 1,
   0, 1, 7,
@@ -57,7 +57,7 @@ const indices = [
   9, 8, 1
 ];
 
-const uvs = [
+let uvs = [
   0.5881, 0.5,
   0.75, 0.6762,
   0.5, 0.8237,

@@ -1,4 +1,4 @@
-const default_options = {
+let default_options = {
   entity: null
 };
 

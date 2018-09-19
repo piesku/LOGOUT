@@ -1,8 +1,8 @@
-export const HUD = "Heads-Up Display";
-export const PERSPECTIVE = "Perspective";
-export const SOLID = "Light Sensor";
-export const COLOR = "Chromatic Sampling";
-export const CLOCK = "Low-Res Timer";
-export const COMPASS = "Compass";
-export const MOUSELOOK = "Gimbal Mount";
-export const GRID = "WASD Movement";
+export let HUD = "Heads-Up Display";
+export let PERSPECTIVE = "Perspective";
+export let SOLID = "Light Sensor";
+export let COLOR = "Chromatic Sampling";
+export let CLOCK = "Low-Res Timer";
+export let COMPASS = "Compass";
+export let MOUSELOOK = "Gimbal Mount";
+export let GRID = "WASD Movement";

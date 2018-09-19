@@ -4,9 +4,9 @@ import { Transform } from './transform';
 import { vec3 } from '../math';
 
 // When using arrow keys for rotation simulate the mouse delta of this value.
-const KEY_ROTATION_DELTA = 3;
+let KEY_ROTATION_DELTA = 3;
 
-const default_options = {
+let default_options = {
   keyboard_controlled: false,
   mouse_controlled: false,
 
@@ -34,12 +34,12 @@ export class Move extends Component {
   }
 
   handle_keys(tick_length, {f = 0, b = 0, l = 0, r = 0, u = 0, d = 0, pu = 0, pd = 0, yl = 0, yr = 0}) {
-    const entity_transform = this.entity.components.get(Transform);
-    const dist = tick_length / 1000 * this.move_speed;
+    let entity_transform = this.entity.components.get(Transform);
+    let dist = tick_length / 1000 * this.move_speed;
 
     // The desired XZ direction vector in self space. This is what the user
     // wanted to do: walk forward/backward and left/right.
-    const direction = vec3.of(l - r, 0, f - b);
+    let direction = vec3.of(l - r, 0, f - b);
 
     // Transform the input from self to local space.  If the user wanted to go
     // "left" in the entity's self space what does it mean in the local space?
@@ -61,7 +61,7 @@ export class Move extends Component {
     entity_transform.translate(direction);
 
     // Simulate mouse deltas for rotation.
-    const mouse_delta = {
+    let mouse_delta = {
       x: yl * KEY_ROTATION_DELTA - yr * KEY_ROTATION_DELTA,
       y: pu * KEY_ROTATION_DELTA - pd * KEY_ROTATION_DELTA,
     };
@@ -70,20 +70,20 @@ export class Move extends Component {
   }
 
   handle_mouse(tick_length, {x, y}) {
-    const entity_transform = this.entity.components.get(Transform);
+    let entity_transform = this.entity.components.get(Transform);
     // Check if there's any input to handle.
     if (x === 0 && y === 0) {
       return;
     }
 
-    const time_delta = tick_length / 1000;
-    const azimuth = this.rotate_speed * time_delta * x;
-    const polar = this.rotate_speed * time_delta * y;
+    let time_delta = tick_length / 1000;
+    let azimuth = this.rotate_speed * time_delta * x;
+    let polar = this.rotate_speed * time_delta * y;
 
     // Polar (with the zenith being the Y axis) to Cartesian, but polar is
     // counted from Z to Y rather than from Y to Z, so we swap cos(polar) for
     // sin(polar) and vice versa.
-    const forward = vec3.of(
+    let forward = vec3.of(
       Math.cos(polar) * Math.sin(azimuth),
       Math.sin(polar),
       Math.cos(polar) * Math.cos(azimuth)
@@ -97,9 +97,9 @@ export class Move extends Component {
 
   update(tick_length) {
     if (this.keyboard_controlled && this.entity.game) {
-      const current_dirs = {};
+      let current_dirs = {};
 
-      for (const [key_code, dir] of Object.entries(this.dir_desc)) {
+      for (let [key_code, dir] of Object.entries(this.dir_desc)) {
         current_dirs[dir] = this.entity.game.get_key(key_code);
       }
 

@@ -7,9 +7,9 @@ import {
     NEON_FOG_MIN,
     NEON_FOG_MAX} from "./config";
 
-export const BUILDING_TAG = 1;
-export const NEON_TAG = 2;
-export const POWERUP_TAG = 3;
+export let BUILDING_TAG = 1;
+export let NEON_TAG = 2;
+export let POWERUP_TAG = 3;
 
 export let neon_material = new BasicMaterial();
 neon_material.add_fog({

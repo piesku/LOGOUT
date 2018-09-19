@@ -1,4 +1,4 @@
-const default_options = {
+let default_options = {
   components: [],
   skip: false,
 };
@@ -61,7 +61,7 @@ export class Entity {
       return;
     }
 
-    const update_each = updatable => updatable.update(tick_delta);
+    let update_each = updatable => updatable.update(tick_delta);
     this.components.forEach(update_each);
     this.entities.forEach(update_each);
   }
@@ -71,7 +71,7 @@ export class Entity {
       return;
     }
 
-    const render_each = renderable => renderable.render(tick_delta);
+    let render_each = renderable => renderable.render(tick_delta);
     this.components.forEach(render_each);
     this.entities.forEach(render_each);
   }

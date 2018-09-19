@@ -2,7 +2,7 @@ import {DIAGNOSTIC} from "./actions";
 
 // No more than 55 chars per line.
 // Any HTML must be on a single line.
-export const intro = `
+export let intro = `
 <div class="h">LOGOUT</div>
 
 In 2018, people live their lives in virtual reality.
@@ -23,7 +23,7 @@ Find the exit and log out into the reality.
 
 // No more than 55 chars per line.
 // Any HTML must be on a single line.
-export const outro = `\
+export let outro = `\
 Initiating logout sequence…
 
 Reticulating splines…

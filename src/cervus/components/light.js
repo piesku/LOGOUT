@@ -3,7 +3,7 @@ import { Component } from '../core';
 import { hex_to_rgb } from '../utils';
 
 
-const default_options = {
+let default_options = {
   intensity: 0.5,
   color: '#ffffff'
 }

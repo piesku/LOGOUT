@@ -28,7 +28,7 @@ export class Tween {
   start() {
     this.pre_start();
     return new Promise((resolve) => {
-      const bound = (tick) => {
+      let bound = (tick) => {
         if (this.current_step === 1) {
           this.game.off('tick', bound);
           resolve();

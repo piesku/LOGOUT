@@ -1,7 +1,7 @@
 import { get_scaling } from '../math/mat4';
 
 export function model_loader(url) {
-  const meshes = [];
+  let meshes = [];
 
   function validate_response(data) {
     if (!data.ok) {
@@ -12,13 +12,13 @@ export function model_loader(url) {
   }
 
   function parse_model(json) {
-    for (const child of json.rootnode.children) {
+    for (let child of json.rootnode.children) {
       if (!child.meshes) {
         console.warn("Model doesn't contain any mesh (is it Camera?)");
         continue;
       }
 
-      for (const mesh of child.meshes) {
+      for (let mesh of child.meshes) {
         meshes.push({
           vertices: json.meshes[mesh].vertices,
           indices: [].concat(...json.meshes[mesh].faces),

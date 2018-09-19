@@ -3,7 +3,7 @@ import { Entity } from '../core';
 import { Render } from '../components';
 import { Transform } from '../components';
 
-const vertices = [
+let vertices = [
   0.5, 0.5, 0.5,
   0.5, 0.5, -0.5,
   0.5, -0.5, 0.5,
@@ -30,7 +30,7 @@ const vertices = [
   -0.5, -0.5, -0.5
 ];
 
-const indices = [
+let indices = [
   0, 2, 1,
   2, 3, 1,
   4, 6, 5,
@@ -45,7 +45,7 @@ const indices = [
   22, 23, 21
 ];
 
-const normals = [
+let normals = [
   1, 0, 0,
   1, 0, 0,
   1, 0, 0,
@@ -72,7 +72,7 @@ const normals = [
   0, 0, -1
 ];
 
-const uvs = [
+let uvs = [
   0, 0,
   1, 0,
   0, 1,

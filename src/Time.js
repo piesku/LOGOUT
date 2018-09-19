@@ -2,7 +2,7 @@ import {Component} from "./innerself";
 import Block from "./Block";
 import Glitch from "./Glitch";
 
-const formatters = [
+let formatters = [
     // Weekday and Date
     new Intl.DateTimeFormat("en", {
         weekday: "short",

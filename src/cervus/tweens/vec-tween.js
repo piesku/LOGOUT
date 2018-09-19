@@ -3,7 +3,7 @@ import { Tween } from '../core';
 
 export class VecTween extends Tween {
   action() {
-    const _from = [];
+    let _from = [];
     vec3.lerp(_from, this.from, this.to, this.current_step);
     this.object[this.property] = _from;
   }

@@ -3,26 +3,26 @@ import { Entity } from '../core';
 import { Render } from '../components';
 import { Transform } from '../components';
 
-const vertices = [
+let vertices = [
   -1,  0,  1,
    1,  0,  1,
    1, 0,  -1,
   -1, 0,  -1
 ];
 
-const indices = [
+let indices = [
    0,  1,  3,
    3,  1,  2
 ];
 
-const normals = [
+let normals = [
   0, 1, 0,
   0, 1, 0,
   0, 1, 0,
   0, 1, 0
 ];
 
-const uvs = [
+let uvs = [
   1, 0,
   0, 0,
   0, 1,

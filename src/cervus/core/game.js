@@ -4,7 +4,7 @@ import { gl, canvas } from './context';
 import { Entity } from './entity';
 import { Transform, Move, Light } from '../components';
 
-const default_options = {
+let default_options = {
   canvas,
   width: 800,
   height: 600,
@@ -23,7 +23,7 @@ const default_options = {
   projection: 'perspective'
 };
 
-const EVENTS = ["keydown", "keyup", "mousemove"];
+let EVENTS = ["keydown", "keyup", "mousemove"];
 
 export class Game {
   constructor(options) {
@@ -64,8 +64,8 @@ export class Game {
 
     this.tick_delta = 1000 / this.fps;
 
-    for (const event_name of EVENTS) {
-      const handler_name = "on" + event_name;
+    for (let event_name of EVENTS) {
+      let handler_name = "on" + event_name;
       this[handler_name] = this[handler_name].bind(this);
       window.addEventListener(event_name, this[handler_name]);
     }
@@ -108,7 +108,7 @@ export class Game {
 
   set clear_color(hex) {
     this._clear_color = hex;
-    const color_vec = hex_to_rgb(hex);
+    let color_vec = hex_to_rgb(hex);
 
     gl.clearColor(
       color_vec[0],
@@ -120,7 +120,7 @@ export class Game {
 
   set clear_opacity(value) {
     this._clear_opacity = value;
-    const color_vec = hex_to_rgb(this._clear_color);
+    let color_vec = hex_to_rgb(this._clear_color);
 
     gl.clearColor(
       color_vec[0],
@@ -153,14 +153,14 @@ export class Game {
   }
 
   destroy() {
-    for (const event_name of EVENTS) {
+    for (let event_name of EVENTS) {
       window.removeEventListener(event_name, this[event_name]);
     }
   }
 
   emit(event_name, ...args) {
     if (this.listeners.has(event_name)) {
-      for (const handler of this.listeners.get(event_name)) {
+      for (let handler of this.listeners.get(event_name)) {
         handler(...args);
       }
     }
@@ -209,8 +209,8 @@ export class Game {
     }
 
     if (frame_time > this.last_tick + this.tick_delta) {
-      const accumulated_delta = frame_time - this.last_tick;
-      const ticks_qty = Math.floor(accumulated_delta / this.tick_delta);
+      let accumulated_delta = frame_time - this.last_tick;
+      let ticks_qty = Math.floor(accumulated_delta / this.tick_delta);
       this.perform_ticks(ticks_qty);
       this.render();
     }

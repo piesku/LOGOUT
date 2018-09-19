@@ -1,7 +1,7 @@
 import { Component } from '../core/component';
 import { vec3, mat4, quat } from '../math';
 
-const default_options = {
+let default_options = {
   _scale: vec3.unit.slice(),
   _rotation: quat.create(),
 
@@ -20,17 +20,17 @@ export class Transform extends Component {
   }
 
   get left() {
-    const out = this.matrix.slice(0, 3);
+    let out = this.matrix.slice(0, 3);
     return vec3.normalize(out, out);
   }
 
   get up() {
-    const out = this.matrix.slice(4, 7);
+    let out = this.matrix.slice(4, 7);
     return vec3.normalize(out, out);
   }
 
   get forward() {
-    const out = this.matrix.slice(8, 11);
+    let out = this.matrix.slice(8, 11);
     return vec3.normalize(out, out);
   }
 
@@ -65,7 +65,7 @@ export class Transform extends Component {
     // the current entity's coordinate space.  Use target's world_matrix and
     // the current entity's world_to_self to go from target's space to the
     // current entity space.
-    const forward = vec3.zero.slice();
+    let forward = vec3.zero.slice();
     vec3.subtract(forward, target_position, this.position);
     vec3.normalize(forward, forward);
 
@@ -76,24 +76,24 @@ export class Transform extends Component {
     // Find left by projecting forward onto the world's horizontal plane and
     // rotating it 90 degress counter-clockwise. For any (x, y, z), the rotated
     // vector is (z, y, -x).
-    const left = vec3.of(forward[2], 0, -forward[0]);
+    let left = vec3.of(forward[2], 0, -forward[0]);
     vec3.normalize(left, left);
 
     // Find up by computing the cross-product of forward and left according to
     // the right-hand rule.
-    const up = vec3.zero.slice();
+    let up = vec3.zero.slice();
     vec3.cross(up, forward, left);
 
     // Create a quaternion out of the three axes. The vectors represent axes:
     // they are perpenticular and normalized.
-    const rotation = quat.create();
+    let rotation = quat.create();
     quat.set_axes(rotation, left, up, forward);
 
     this.rotation = rotation;
   }
 
   rotate_along(vec, rad) {
-    const rotation = quat.create();
+    let rotation = quat.create();
     quat.set_axis_angle(rotation, vec, rad);
 
     // Quaternion multiplication: A * B applies the A rotation first, B second,
@@ -113,13 +113,13 @@ export class Transform extends Component {
   // XXX Add a relative_to attribute for interpreting the translation in spaces
   // other than the local space (relative to the parent).
   translate(vec) {
-    const movement = vec3.zero.slice();
+    let movement = vec3.zero.slice();
     vec3.add(movement, this.position, vec);
     this.position = movement;
   }
 
   get_view_matrix(out) {
-    const look_at_vect = [];
+    let look_at_vect = [];
     vec3.add(look_at_vect, this.position, this.forward);
     mat4.look_at(out, this.position, look_at_vect, this.up);
     return out;

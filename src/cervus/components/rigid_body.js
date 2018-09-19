@@ -2,7 +2,7 @@ import { Component } from '../core/component';
 import { Transform } from './';
 import * as physics from '../physics';
 
-const default_options = {
+let default_options = {
   world: null,
   mass: 5,
   shape: 'box'
@@ -16,7 +16,7 @@ export class RigidBody extends Component {
 
   mount() {
     this.transform = this.entity.components.get(Transform);
-    const shape = new physics.colliders[this.shape](
+    let shape = new physics.colliders[this.shape](
       this.transform.scale
     );
 

@@ -1,4 +1,4 @@
-const V = Float32Array;
+let V = Float32Array;
 
 export {
   distance,
@@ -12,10 +12,10 @@ export {
   lerp
 } from 'gl-matrix/src/gl-matrix/vec3';
 
-export const zero = V.of(0, 0, 0);
-export const unit = V.of(1, 1, 1);
-export const left = V.of(1, 0, 0);
-export const up = V.of(0, 1, 0);
-export const forward = V.of(0, 0, 1);
+export let zero = V.of(0, 0, 0);
+export let unit = V.of(1, 1, 1);
+export let left = V.of(1, 0, 0);
+export let up = V.of(0, 1, 0);
+export let forward = V.of(0, 0, 1);
 
-export const of = (...vals) => V.of(...vals);
+export let of = (...vals) => V.of(...vals);

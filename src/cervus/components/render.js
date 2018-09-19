@@ -2,7 +2,7 @@ import { Component } from '../core';
 import { create_float_buffer, create_index_buffer } from '../core/context';
 import { hex_to_rgb } from '../utils';
 
-const default_options = {
+let default_options = {
   material: null,
   vertices: [],
   indices: [],

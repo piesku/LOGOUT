@@ -18,7 +18,7 @@ class GridMove extends Move {
     }
 
     is_colliding() {
-        const { position } = this.transform;
+        let { position } = this.transform;
         return this.buildings.some((building) => {
             if (position[0] + this.size >= building[0] &&
                 position[0] - this.size <= building[1] &&

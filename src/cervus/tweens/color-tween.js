@@ -4,7 +4,7 @@ import { Tween } from '../core';
 
 export class ColorTween extends Tween {
   action() {
-    const _from = [];
+    let _from = [];
     vec3.lerp(_from, this.from, this.to, this.current_step);
     // console.log(this.from, this.to, _from, this.current_step);
     this.object[this.property] = rgb_to_hex(_from);

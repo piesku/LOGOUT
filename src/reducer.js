@@ -3,7 +3,7 @@ import * as act from "./actions";
 import {create_game, destroy_game, reveal_exit} from "./game";
 import activate from "./activators";
 
-const init = {
+let init = {
     view: "intro",
     systems: {
         [sys.HUD]: false,

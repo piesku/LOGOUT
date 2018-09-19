@@ -19,7 +19,7 @@ export class PhongMaterial extends Material {
   }
 
   apply_shader(entity, game) {
-    const render = entity.components.get(Render);
+    let render = entity.components.get(Render);
     let buffers = render.buffers;
 
     if (render.material.has_feature('FOG')) {
@@ -49,8 +49,8 @@ export class PhongMaterial extends Material {
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.indices);
     gl.drawElements(this.draw_mode, buffers.qty, gl.UNSIGNED_SHORT, 0);
 
-    const lights = Array.from(game.components.get(Light));
-    const lights_count = lights.length;
+    let lights = Array.from(game.components.get(Light));
+    let lights_count = lights.length;
     let light_position = new Float32Array(lights_count * 3);
     let light_color = new Float32Array(lights_count * 3);
     let light_intensity = new Float32Array(lights_count);

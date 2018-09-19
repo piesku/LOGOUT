@@ -18,7 +18,7 @@ export class BasicMaterial extends Material {
   }
 
   apply_shader(entity, game) {
-    const render = entity.components.get(Render);
+    let render = entity.components.get(Render);
     let buffers = render.buffers;
 
     if (render.material.has_feature('FOG')) {

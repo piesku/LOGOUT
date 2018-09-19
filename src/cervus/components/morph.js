@@ -3,7 +3,7 @@ import { create_float_buffer, create_index_buffer } from '../core';
 
 import { Render } from './render';
 
-const default_options = {
+let default_options = {
   buffers: [],
   current_frame: 0,
   next_frame: 1,

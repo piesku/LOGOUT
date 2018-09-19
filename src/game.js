@@ -18,7 +18,7 @@ import * as sys from "./systems";
 import map from "./new-map.json";
 
 export function create_game() {
-    const game = new Game({
+    let game = new Game({
       width: window.innerWidth,
       height: window.innerHeight,
       far: 126,
@@ -42,7 +42,7 @@ export function create_game() {
 
     game.camera.remove_component(Move);
 
-    const grid_move = new GridMove();
+    let grid_move = new GridMove();
     game.camera.add_component(grid_move);
 
     grid_move.set({
@@ -77,9 +77,9 @@ export function create_game() {
             position: [center_x, height / 2, center_z],
             scale: [xsize, height, zsize],
             neons: new Array(integer(2, 4)).fill(0).map((_, index, arr) => {
-                const is_north_south = element_of([true, false]);
-                const is_negative = element_of([1, -1]);
-                const neon_height = (height * NEON_SCALE) / (arr.length + 0.5);
+                let is_north_south = element_of([true, false]);
+                let is_negative = element_of([1, -1]);
+                let neon_height = (height * NEON_SCALE) / (arr.length + 0.5);
                 return {
                     position: [
                       is_north_south ? 0 : (is_negative * (xsize / 2) + (is_negative * 0.2)),
