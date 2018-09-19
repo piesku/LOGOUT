@@ -102,14 +102,6 @@ export class Transform extends Component {
     this.rotation = rotation;
   }
 
-  rotate_rl(rad) {
-    this.rotate_along(vec3.up, rad);
-  }
-
-  rotate_ud(rad) {
-    this.rotate_along(vec3.left, rad);
-  }
-
   // XXX Add a relative_to attribute for interpreting the translation in spaces
   // other than the local space (relative to the parent).
   translate(vec) {
