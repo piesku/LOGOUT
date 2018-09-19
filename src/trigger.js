@@ -12,7 +12,7 @@ class Trigger extends Component {
         // Point in self space.
         let point = vec3.zero.slice();
         vec3.transform_mat4(
-            point, world_point, this.transform.world_to_self);
+            point, world_point, this.transform.self);
         // XXX How to parametrize each shape?
         return point.map(Math.abs).every(n => n <= this.radius);
     }

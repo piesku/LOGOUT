@@ -14,8 +14,8 @@ export class Transform extends Component {
   constructor(options) {
     super(Object.assign({
       matrix: mat4.create(),
-      world_matrix: mat4.create(),
-      world_to_self: mat4.create()
+      world: mat4.create(),
+      self: mat4.create()
     },  default_options, options));
   }
 
@@ -62,8 +62,8 @@ export class Transform extends Component {
 
   look_at(target_position) {
     // Find the direction we're looking at. target_position must be given in
-    // the current entity's coordinate space.  Use target's world_matrix and
-    // the current entity's world_to_self to go from target's space to the
+    // the current entity's coordinate space.  Use target's world and
+    // the current entity's self to go from target's space to the
     // current entity space.
     let forward = vec3.zero.slice();
     vec3.subtract(forward, target_position, this.position);
@@ -120,14 +120,14 @@ export class Transform extends Component {
   update() {
     if (this.entity.parent) {
       mat4.multiply(
-        this.world_matrix,
-        this.entity.parent.get(Transform).world_matrix,
+        this.world,
+        this.entity.parent.get(Transform).world,
         this.matrix
       );
     } else {
-      this.world_matrix = this.matrix.slice();
+      this.world = this.matrix.slice();
     }
 
-    mat4.invert(this.world_to_self, this.world_matrix);
+    mat4.invert(this.self, this.world);
   }
 }

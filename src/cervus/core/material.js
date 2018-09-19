@@ -139,7 +139,7 @@ export class Material {
     gl.uniformMatrix4fv(
       this.uniforms.w,
       gl.FALSE,
-      entity.get(Transform).world_matrix
+      entity.get(Transform).world
     );
 
     gl.uniform4fv(

@@ -8,12 +8,12 @@ export default
 class EnergySaver extends Component {
     update() {
         let transform = this.entity.get(Transform);
-        let position = transform.world_matrix.slice(12, 15);
+        let position = transform.world.slice(12, 15);
 
         let lights = this.entity.game.all.get(NearbyLight);
         for (let light of lights) {
             let light_transform = light.entity.get(Transform);
-            let light_position = light_transform.world_matrix.slice(12, 15);
+            let light_position = light_transform.world.slice(12, 15);
             let dist = vec3.distance(position, light_position);
 
             if (dist > LIGHT_DISTANCE && light.active) {
