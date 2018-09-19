@@ -49,7 +49,7 @@ export class PhongMaterial extends Material {
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.indices);
     gl.drawElements(this.draw_mode, buffers.qty, gl.UNSIGNED_SHORT, 0);
 
-    let lights = Array.from(game.components.get(Light));
+    let lights = Array.from(game.all.get(Light));
     let lights_count = lights.length;
     let light_position = new Float32Array(lights_count * 3);
     let light_color = new Float32Array(lights_count * 3);

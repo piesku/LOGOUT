@@ -9,7 +9,7 @@ class Actor extends Component {
     }
 
     update() {
-        let collidables = this.entity.game.components.get(Trigger);
+        let collidables = this.entity.game.all.get(Trigger);
         for (let trigger of collidables) {
             if (trigger.contains(this.transform.position)) {
                 trigger.trigger();

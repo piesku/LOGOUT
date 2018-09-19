@@ -21,10 +21,10 @@ export class Entity extends Map {
     this.set(component.constructor, component);
 
     if (this.game) {
-      if (!this.game.components.has(component.constructor)) {
-        this.game.components.set(component.constructor, new Set());
+      if (!this.game.all.has(component.constructor)) {
+        this.game.all.set(component.constructor, new Set());
       }
-      this.game.components.get(component.constructor).add(component);
+      this.game.all.get(component.constructor).add(component);
     }
   }
 
@@ -32,8 +32,8 @@ export class Entity extends Map {
     let instance = this.get(component);
     this.delete(component);
 
-    if (this.game && this.game.components.has(component)) {
-      this.game.components.get(component).delete(instance);
+    if (this.game && this.game.all.has(component)) {
+      this.game.all.get(component).delete(instance);
     }
   }
 

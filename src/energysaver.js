@@ -10,7 +10,7 @@ class EnergySaver extends Component {
         let transform = this.entity.get(Transform);
         let position = transform.world_matrix.slice(12, 15);
 
-        let lights = this.entity.game.components.get(NearbyLight);
+        let lights = this.entity.game.all.get(NearbyLight);
         for (let light of lights) {
             let light_transform = light.entity.get(Transform);
             let light_position = light_transform.world_matrix.slice(12, 15);

@@ -32,7 +32,7 @@ function Compass({game}, cls, styles) {
                 set_glitch(nswe, section);
 
                 let counts = new Array(visible_characters).fill(0);
-                for (let trigger of game.components.get(Trigger)) {
+                for (let trigger of game.all.get(Trigger)) {
                     let trigger_position = trigger.entity.get(Transform).position;
                     // Project the position to eye level.
                     trigger_position[1] = 1.75;

@@ -18,7 +18,7 @@ export default
 function activate(game, system) {
     switch (system) {
         case sys.SOLID:
-            for (let render of game.components.get(Render)) {
+            for (let render of game.all.get(Render)) {
                 switch (render.tag) {
                     case BUILDING_TAG:
                         render.material = building_material;
@@ -33,7 +33,7 @@ function activate(game, system) {
             }
             break;
         case sys.COLOR:
-            for (let render of game.components.get(Render)) {
+            for (let render of game.all.get(Render)) {
                 switch (render.tag) {
                     case NEON_TAG: {
                         let color = random_color();

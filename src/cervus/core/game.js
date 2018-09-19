@@ -149,7 +149,7 @@ export class Game {
     this.listeners = new Map();
     this.keys = {};
     this.mouse_delta = {x: 0, y: 0};
-    this.components = new WeakMap();
+    this.all = new WeakMap();
   }
 
   destroy() {
@@ -251,10 +251,10 @@ export class Game {
     entity.game = this;
 
     for (let component of entity.values()) {
-      if (!this.components.has(component.constructor)) {
-        this.components.set(component.constructor, new Set());
+      if (!this.all.has(component.constructor)) {
+        this.all.set(component.constructor, new Set());
       }
-      this.components.get(component.constructor).add(component);
+      this.all.get(component.constructor).add(component);
     }
 
     // Recursively track children.
@@ -267,7 +267,7 @@ export class Game {
     entity.game = null;
 
     for (let component of entity.values()) {
-      this.components.get(component.constructor).delete(component);
+      this.all.get(component.constructor).delete(component);
     }
 
     // Recursively untrack children.
