@@ -48,7 +48,7 @@ export function create_game() {
     grid_move.set({
         keyboard_controlled: true,
         mouse_controlled: false,
-        move_speed: 5,
+        move_speed: 7,
         rotate_speed: 0,
     });
 
