@@ -124,17 +124,9 @@ export class Material {
   }
 
   render(entity) {
-    let ent = entity;
-    let game = ent.game;
-
-    while(ent.parent && !game) {
-      ent = ent.parent;
-      game = ent.game;
-    }
-
     gl.useProgram(this.program);
-    gl.uniformMatrix4fv(this.uniforms.p, gl.FALSE, game.projMatrix.toFloat32Array());
-    gl.uniformMatrix4fv(this.uniforms.v, gl.FALSE, game.viewMatrix.toFloat32Array());
+    gl.uniformMatrix4fv(this.uniforms.p, gl.FALSE, entity.game.projMatrix.toFloat32Array());
+    gl.uniformMatrix4fv(this.uniforms.v, gl.FALSE, entity.game.viewMatrix.toFloat32Array());
 
     gl.uniformMatrix4fv(
       this.uniforms.w,
